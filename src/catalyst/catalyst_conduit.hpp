@@ -1282,6 +1282,33 @@ public:
   void print_detailed() const { conduit_node_print_detailed(this->c_node); }
 
   //-----------------------------------------------------------------------------
+  // -- data structure print methods ---
+  //-----------------------------------------------------------------------------
+  std::string to_json() const { return conduit_node_to_json(this->c_node); }
+  std::string to_json_with_options(const Node& options) const
+  {
+    return conduit_node_to_json_with_options(this->c_node, options.c_node);
+  }
+
+  std::string to_string() const { return conduit_node_to_string(this->c_node); }
+  std::string to_string_with_options(const Node& options) const
+  {
+    return conduit_node_to_string_with_options(this->c_node, options.c_node);
+  }
+
+  std::string to_summary_string() const { return conduit_node_to_summary_string(this->c_node); }
+  std::string to_summary_string_with_options(const Node& options) const
+  {
+    return conduit_node_to_summary_string_with_options(this->c_node, options.c_node);
+  }
+
+  std::string to_yaml() const { return conduit_node_to_yaml(this->c_node); }
+  std::string to_yaml_with_options(const Node& options) const
+  {
+    return conduit_node_to_yaml_with_options(this->c_node, options.c_node);
+  }
+
+  //-----------------------------------------------------------------------------
   ///@}
   //-----------------------------------------------------------------------------
   //
