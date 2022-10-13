@@ -72,11 +72,13 @@ if (BUILD_TESTING)
       FIXTURES_SETUP write_out
       FIXTURES_REQUIRED prepare)
 
-  add_test(
-    NAME replay_test_read_in
-    COMMAND ${mpi_prefix_or_blank} ${catalyst_replay_command} "${example_data_dump_directory}")
+  if (catalyst_replay_command)
+    add_test(
+      NAME replay_test_read_in
+      COMMAND ${mpi_prefix_or_blank} ${catalyst_replay_command} "${example_data_dump_directory}")
 
-  set_tests_properties(replay_test_read_in
-    PROPERTIES
-      FIXTURES_REQUIRED write_out)
+    set_tests_properties(replay_test_read_in
+      PROPERTIES
+        FIXTURES_REQUIRED write_out)
+  endif ()
 endif()
