@@ -11,6 +11,8 @@ endif()
 
 if (NOT DEFINED CATALYST_BINARY_DIR)
   find_package(catalyst 2.0 REQUIRED)
+  include(CTest)
+  enable_testing()
 endif()
 
 foreach(example ${examples})
