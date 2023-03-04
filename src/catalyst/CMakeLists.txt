@@ -51,10 +51,10 @@ target_link_libraries(catalyst
     catalyst::conduit_headers
     catalyst::catalyst_headers
   PRIVATE
-    conduit
-    blueprint
-    conduit_libyaml
-    conduit_b64
+    catalyst::conduit
+    catalyst::blueprint
+    catalyst::conduit_libyaml
+    catalyst::conduit_b64
     ${CMAKE_DL_LIBS})
 
 if (WIN32)
