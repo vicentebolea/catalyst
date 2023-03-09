@@ -4,7 +4,6 @@
 module catalyst_api
 
   use iso_c_binding
-  use conduit
 
   implicit none
 
