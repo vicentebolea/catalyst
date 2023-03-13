@@ -95,14 +95,14 @@
         - build
         - paraview
         - docker
-        - linux
+        - linux-x86_64
 
 .linux_sanitizer_tags:
     tags:
         - privileged
         - paraview
         - docker
-        - linux
+        - linux-x86_64
 
 ## Linux-specific scripts
 
