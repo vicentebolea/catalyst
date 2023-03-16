@@ -28,7 +28,7 @@ set(BUILD_SHARED_LIBS ${CATALYST_BUILD_SHARED_LIBS})
 # `CATALYST_ABI_VERSION` is the version of the ABI. This should
 # only be the major version number since minor version number changes
 # should not affect ABI at all.
-set(CATALYST_ABI_VERSION "${CATALYST_VERSION_MAJOR}" CACHE INTERNAL "")
+set(CATALYST_ABI_VERSION "${CATALYST_VERSION_MAJOR}")
 
 # `CATALYST_CUSTOM_LIBRARY_SUFFIX` can be used to override the suffix used
 # for static libraries built by this project. Note this does not affect the
