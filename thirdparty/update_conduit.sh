@@ -7,8 +7,8 @@ shopt -s dotglob
 readonly name="conduit"
 readonly ownership="Conduit Upstream <kwrobot@kitware.com>"
 readonly subtree="thirdparty/$name"
-readonly repo="https://gitlab.kitware.com/third-party/conduit.git"
-readonly tag="for/catalyst-20220827-v0.8.4"
+readonly repo="$HOME/code/depot/group-kitware/third-party/conduit/src"
+readonly tag="for/catalyst-20230320-v0.8.6"
 readonly paths="
 .gitattributes
 COPYRIGHT
