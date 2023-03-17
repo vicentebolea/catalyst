@@ -7,9 +7,22 @@ set(headers
   catalyst_conduit.hpp
   catalyst_conduit_blueprint.hpp
   catalyst_conduit_error.hpp
+  ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit.h
+  ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit_abi.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_export.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_version.h)
 configure_file(catalyst_version.h.in catalyst_version.h)
+
+set(catalyst_conduit_state internal)
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/catalyst_conduit_abi_${catalyst_conduit_state}.h"
+  "${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit_abi.h"
+  COPYONLY)
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/catalyst_conduit_${catalyst_conduit_state}.h"
+  "${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit.h"
+  COPYONLY)
 
 set(private_headers
   catalyst_dump_node.hpp)
@@ -34,6 +47,7 @@ add_library(catalyst
   catalyst_api.c
   catalyst_api_default.cpp
   catalyst_stub.cpp
+  catalyst_conduit_abi_${catalyst_conduit_state}.c
   ${headers}
   ${private_headers})
 target_compile_features(catalyst
