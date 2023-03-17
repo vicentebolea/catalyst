@@ -167,6 +167,17 @@ static int test_conduit_datatype_abi()
   // - adding `const` qualification to parameter pointers
   // - removing `const` qualification from return pointers
 
+  // conduit_datatype_sizeof_index_t
+  {
+    using func_types = funcinfo<decltype(conduit_datatype_sizeof_index_t)>;
+    abi_require(
+      &conduit_datatype_sizeof_index_t, "conduit_datatype_sizeof_index_t must be defined");
+    static_assert(std::is_same<func_types::return_t, int>::value,
+      "conduit_datatype_sizeof_index_t must return int");
+    abi_require(std::tuple_size<func_types::argument_t>::value == 0,
+      "conduit_datatype_sizeof_index_t must take no arguments");
+  }
+
   static_assert(!is_type_complete<conduit_datatype>::value, "conduit_datatype must be incomplete");
 
   // conduit_datatype_id
@@ -453,6 +464,51 @@ static int test_conduit_node_abi()
     static_assert(
       std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
       "conduit_node_number_of_elements should take a conduit_node*");
+  }
+
+  // conduit_node_reset
+  {
+    using func_types = funcinfo<decltype(conduit_node_reset)>;
+    abi_require(&conduit_node_reset, "conduit_node_reset must be defined");
+    static_assert(
+      std::is_same<func_types::return_t, void>::value, "conduit_node_reset must return void");
+    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      "conduit_node_reset must take one argument");
+    static_assert(
+      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      "conduit_node_reset should take a conduit_node*");
+  }
+
+  // conduit_node_move
+  {
+    using func_types = funcinfo<decltype(conduit_node_move)>;
+    abi_require(&conduit_node_move, "conduit_node_move must be defined");
+    static_assert(
+      std::is_same<func_types::return_t, void>::value, "conduit_node_move must return void");
+    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      "conduit_node_move must take one argument");
+    static_assert(
+      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      "conduit_node_move should take a conduit_node*");
+    static_assert(
+      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+      "conduit_node_move should take a conduit_node*");
+  }
+
+  // conduit_node_swap
+  {
+    using func_types = funcinfo<decltype(conduit_node_swap)>;
+    abi_require(&conduit_node_swap, "conduit_node_swap must be defined");
+    static_assert(
+      std::is_same<func_types::return_t, void>::value, "conduit_node_swap must return void");
+    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      "conduit_node_swap must take one argument");
+    static_assert(
+      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      "conduit_node_swap should take a conduit_node*");
+    static_assert(
+      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+      "conduit_node_swap should take a conduit_node*");
   }
 
   // conduit_node_remove_path
