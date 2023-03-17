@@ -141,7 +141,7 @@ static int test_catalyst_impl()
   constexpr size_t offsets_32bit[] = { 0, 4, 8, 12, 16, 20 };
   constexpr size_t offsets_64bit[] = { 0, 8, 16, 24, 32, 40 };
   constexpr size_t offsets_64bit_packed[] = { 0, 4, 12, 20, 28, 36 };
-  constexpr size_t offsets_128bit[] = { 0, 16, 32, 40, 48, 64 };
+  constexpr size_t offsets_128bit[] = { 0, 16, 32, 40, 56, 72 };
   constexpr size_t offsets_128bit_half_packed[] = { 0, 8, 24, 32, 40, 56 };
   constexpr size_t offsets_128bit_packed[] = { 0, 4, 20, 28, 36, 52 };
 
