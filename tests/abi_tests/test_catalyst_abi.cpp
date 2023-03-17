@@ -178,7 +178,18 @@ static int test_catalyst_impl()
     }
   }
 
-  if (!offsets)
+  if (offsets)
+  {
+    fprintf(stdout, "recognized ABI layout; expected offsets:\n");
+    fprintf(stdout, "version: %zu\n", offsets[0]);
+    fprintf(stdout, "initialize: %zu\n", offsets[1]);
+    fprintf(stdout, "execute: %zu\n", offsets[2]);
+    fprintf(stdout, "finalize: %zu\n", offsets[3]);
+    fprintf(stdout, "about: %zu\n", offsets[4]);
+    fprintf(stdout, "results: %zu\n", offsets[5]);
+    fprintf(stdout, "conduit_is_external: %zu\n", offsets[6]);
+  }
+  else
   {
     fprintf(stderr, "unknown ABI layout; actual offsets:\n");
     fprintf(stderr, "version: %zu\n", offsetof(catalyst_impl, version));
