@@ -139,12 +139,12 @@ static int test_catalyst_impl()
   // Only add assertions to this list; removal or modification of any
   // checks constitutes an ABI break.
 
-  constexpr std::array<size_t, 6> offsets_32bit = { 0, 4, 8, 12, 16, 20 };
-  constexpr std::array<size_t, 6> offsets_64bit = { 0, 8, 16, 24, 32, 40 };
-  constexpr std::array<size_t, 6> offsets_64bit_packed = { 0, 4, 12, 20, 28, 36 };
-  constexpr std::array<size_t, 6> offsets_128bit = { 0, 16, 32, 40, 56, 72 };
-  constexpr std::array<size_t, 6> offsets_128bit_half_packed = { 0, 8, 24, 32, 40, 56 };
-  constexpr std::array<size_t, 6> offsets_128bit_packed = { 0, 4, 20, 28, 36, 52 };
+  constexpr std::array<size_t, 7> offsets_32bit = { 0, 4, 8, 12, 16, 20, 24 };
+  constexpr std::array<size_t, 7> offsets_64bit = { 0, 8, 16, 24, 32, 40, 48 };
+  constexpr std::array<size_t, 7> offsets_64bit_packed = { 0, 4, 12, 20, 28, 36, 44 };
+  constexpr std::array<size_t, 7> offsets_128bit = { 0, 16, 32, 40, 56, 72, 88 };
+  constexpr std::array<size_t, 7> offsets_128bit_half_packed = { 0, 8, 24, 32, 40, 56, 72 };
+  constexpr std::array<size_t, 7> offsets_128bit_packed = { 0, 4, 20, 28, 36, 52, 68 };
 
   const size_t* offsets = nullptr;
 
@@ -188,6 +188,7 @@ static int test_catalyst_impl()
     fprintf(stdout, "finalize: %zu\n", offsets[3]);
     fprintf(stdout, "about: %zu\n", offsets[4]);
     fprintf(stdout, "results: %zu\n", offsets[5]);
+    fprintf(stdout, "conduit_is_external: %zu\n", offsets[6]);
   }
   else
   {
@@ -198,6 +199,7 @@ static int test_catalyst_impl()
     fprintf(stderr, "finalize: %zu\n", offsetof(catalyst_impl, finalize));
     fprintf(stderr, "about: %zu\n", offsetof(catalyst_impl, about));
     fprintf(stderr, "results: %zu\n", offsetof(catalyst_impl, results));
+    fprintf(stderr, "conduit_is_external: %zu\n", offsetof(catalyst_impl, conduit_is_external));
     return EXIT_FAILURE;
   }
 
@@ -251,6 +253,14 @@ static int test_catalyst_impl()
       "the results member must be a compatible function pointer");
     abi_require(offsetof(catalyst_impl, results) == offsets[5],
       "the offset of the catalyst_impl::results is not expected");
+  }
+
+  // conduit_is_external
+  {
+    static_assert(std::is_same<decltype(catalyst_impl::conduit_is_external), conduit_uint64>::value,
+      "the conduit_is_external member must be a conduit_uint64");
+    abi_require(offsetof(catalyst_impl, conduit_is_external) == offsets[6],
+      "the offset of the catalyst_impl::conduit_is_external is not expected");
   }
 
   return ret;

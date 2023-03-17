@@ -78,7 +78,10 @@ Important `CMake`_ options that affect how Catalyst is built are:
   requested.
 
 * ``CATALYST_WITH_EXTERNAL_CONDUIT`` (default: ``OFF``): Build Catalyst
-  against an external Conduit library.
+  against an external Conduit library. Note that this option affects
+  implementation compatibility (i.e., an implementation built against a
+  Catalyst with external Conduit will refuse to initialize from a Catalyst
+  with the internal Conduit and vice versa).
 
 * ``CATALYST_RELOCATABLE_INSTALL`` (default: ``ON``): If unset, and to any
   external dependencies will be embedded into the install tree rendering it

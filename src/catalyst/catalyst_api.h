@@ -8,7 +8,7 @@
 
 #include <catalyst_export.h>
 
-// include mangled conduit C API.
+// include conduit C API.
 #include <conduit.h>
 
 #ifdef __cplusplus
@@ -32,6 +32,9 @@ extern "C"
     catalyst_status_error_incomplete,
     // The library did not provide a supported version of the API.
     catalyst_status_error_unsupported_version,
+    // The Conduit state for the implementation does not match Catalyst's
+    // Conduit state.
+    catalyst_status_error_conduit_mismatch,
   };
 
   /**

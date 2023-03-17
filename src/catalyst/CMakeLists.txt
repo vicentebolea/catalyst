@@ -84,6 +84,19 @@ else ()
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_libyaml>"
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>")
 endif ()
+set(catalyst_conduit_is_external 0)
+if (CATALYST_WITH_EXTERNAL_CONDUIT)
+  set(catalyst_conduit_is_external 1)
+endif ()
+target_compile_definitions(catalyst
+  PRIVATE
+    "CATALYST_WITH_EXTERNAL_CONDUIT=${catalyst_conduit_is_external}")
+set_property(TARGET catalyst
+  PROPERTY CATALYST_WITH_EXTERNAL_CONDUIT
+    "${catalyst_conduit_is_external}")
+set_property(TARGET catalyst APPEND
+  PROPERTY EXPORT_PROPERTIES
+    CATALYST_WITH_EXTERNAL_CONDUIT)
 
 if (WIN32)
   set_property(TARGET catalyst

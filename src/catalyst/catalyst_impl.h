@@ -8,7 +8,7 @@
 
 #include <catalyst_api.h>
 
-// include mangled conduit C API.
+// include conduit C API.
 #include <conduit.h>
 
 #ifdef __cplusplus
@@ -24,6 +24,7 @@ extern "C"
     enum catalyst_status (*finalize)(const conduit_node*);
     enum catalyst_status (*about)(conduit_node*);
     enum catalyst_status (*results)(conduit_node*);
+    conduit_uint64 conduit_is_external;
   };
 
 #ifdef __cplusplus
