@@ -3,6 +3,15 @@
 
 set(_binary_package_dir "${CMAKE_BINARY_DIR}/${CATALYST_INSTALL_PACKAGE_DIR}")
 
+export(
+  TARGETS
+    catalyst_blueprint_headers
+    catalyst_conduit_headers
+  NAMESPACE
+    catalyst::
+  FILE
+    ${_binary_package_dir}/catalyst-conduit-targets.cmake)
+
 # These are targets for users of Catalyst
 # i.e the simulation codes.
 export(

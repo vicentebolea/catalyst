@@ -47,14 +47,14 @@ set_target_properties(catalyst
     SOVERSION 3)
 target_link_libraries(catalyst
   PUBLIC
-    catalyst::blueprint_headers
-    catalyst::conduit_headers
+    "$<BUILD_INTERFACE:catalyst::blueprint_headers>"
+    "$<BUILD_INTERFACE:catalyst::conduit_headers>"
     catalyst::catalyst_headers
   PRIVATE
-    catalyst::conduit
-    catalyst::blueprint
-    catalyst::conduit_libyaml
-    catalyst::conduit_b64
+    "$<BUILD_LOCAL_INTERFACE:catalyst::conduit>"
+    "$<BUILD_LOCAL_INTERFACE:catalyst::blueprint>"
+    "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_libyaml>"
+    "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>"
     ${CMAKE_DL_LIBS})
 
 if (WIN32)

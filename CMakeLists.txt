@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13...3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 project(CATALYST VERSION 2.0 LANGUAGES C CXX)
 
 include(CMakeDependentOption)
