@@ -26,6 +26,7 @@ execute_process(
             "${CMAKE_CTEST_COMMAND}"
               -C $<CONFIGURATION>
               -V
+              --output-on-failure
   RESULT_VARIABLE status)
 
 if (NOT status EQUAL 0)
