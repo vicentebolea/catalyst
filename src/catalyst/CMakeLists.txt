@@ -13,7 +13,11 @@ set(headers
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_version.h)
 configure_file(catalyst_version.h.in catalyst_version.h)
 
-set(catalyst_conduit_state internal)
+if (CATALYST_WITH_EXTERNAL_CONDUIT)
+  set(catalyst_conduit_state external)
+else ()
+  set(catalyst_conduit_state internal)
+endif ()
 
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/catalyst_conduit_abi_${catalyst_conduit_state}.h"
@@ -61,15 +65,25 @@ set_target_properties(catalyst
     SOVERSION 3)
 target_link_libraries(catalyst
   PUBLIC
-    "$<BUILD_INTERFACE:catalyst::blueprint_headers>"
-    "$<BUILD_INTERFACE:catalyst::conduit_headers>"
     catalyst::catalyst_headers
   PRIVATE
-    "$<BUILD_LOCAL_INTERFACE:catalyst::conduit>"
-    "$<BUILD_LOCAL_INTERFACE:catalyst::blueprint>"
-    "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_libyaml>"
-    "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>"
     ${CMAKE_DL_LIBS})
+if (CATALYST_WITH_EXTERNAL_CONDUIT)
+  find_package(Conduit 0.8.6 REQUIRED)
+  target_link_libraries(catalyst
+    PUBLIC
+      conduit::conduit)
+else ()
+  target_link_libraries(catalyst
+    PUBLIC
+      "$<BUILD_INTERFACE:catalyst::blueprint_headers>"
+      "$<BUILD_INTERFACE:catalyst::conduit_headers>"
+    PRIVATE
+      "$<BUILD_LOCAL_INTERFACE:catalyst::conduit>"
+      "$<BUILD_LOCAL_INTERFACE:catalyst::blueprint>"
+      "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_libyaml>"
+      "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>")
+endif ()
 
 if (WIN32)
   set_property(TARGET catalyst

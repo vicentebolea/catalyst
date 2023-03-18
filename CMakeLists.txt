@@ -48,7 +48,11 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_subdirectory(src)
 
-add_subdirectory(thirdparty/conduit)
+option(CATALYST_WITH_EXTERNAL_CONDUIT "Build Catalyst with an external Conduit library" OFF)
+mark_as_advanced(CATALYST_WITH_EXTERNAL_CONDUIT)
+if (NOT CATALYST_WITH_EXTERNAL_CONDUIT)
+  add_subdirectory(thirdparty/conduit)
+endif ()
 
 # include install/package rules.
 include(cInstallCMakePackage)

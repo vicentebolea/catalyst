@@ -3,14 +3,43 @@
 
 set(_binary_package_dir "${CMAKE_BINARY_DIR}/${CATALYST_INSTALL_PACKAGE_DIR}")
 
-export(
-  TARGETS
-    catalyst_blueprint_headers
-    catalyst_conduit_headers
-  NAMESPACE
-    catalyst::
-  FILE
-    ${_binary_package_dir}/catalyst-conduit-targets.cmake)
+set(catalyst_conduit_files)
+
+include(CMakeDependentOption)
+cmake_dependent_option(CATALYST_RELOCATABLE_INSTALL "If set, the install tree will not reference any paths outside the prefix" ON
+  "CATALYST_WITH_EXTERNAL_CONDUIT" ON)
+
+if (NOT CATALYST_WITH_EXTERNAL_CONDUIT)
+  export(
+    TARGETS
+      catalyst_blueprint_headers
+      catalyst_conduit_headers
+    NAMESPACE
+      catalyst::
+    FILE
+      ${_binary_package_dir}/catalyst-conduit-targets.cmake)
+else ()
+  set(non_relocatable_content
+"if (NOT Conduit_DIR)
+  set(Conduit_DIR \"${Conduit_DIR}\")
+endif ()
+")
+  set(relocatable_content
+"include(CMakeFindDependencyMacro)
+find_dependency(Conduit 0.8.6)
+")
+  file(WRITE "${_binary_package_dir}/catalyst-conduit-targets.cmake"
+    "${non_relocatable_content}${relocatable_content}")
+  if (CATALYST_RELOCATABLE_INSTALL)
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/catalyst-conduit-targets.cmake"
+      "${relocatable_content}")
+  else ()
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/catalyst-conduit-targets.cmake"
+      "${non_relocatable_content}${relocatable_content}")
+  endif ()
+  list(APPEND catalyst_conduit_files
+    "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/catalyst-conduit-targets.cmake")
+endif ()
 
 # These are targets for users of Catalyst
 # i.e the simulation codes.
@@ -52,4 +81,5 @@ install(
               "${_binary_package_dir}/catalyst-macros.cmake"
               "${_binary_package_dir}/catalyst_impl.c.in"
               "${_binary_package_dir}/catalyst_impl.h.in"
+              ${catalyst_conduit_files}
   DESTINATION "${CATALYST_INSTALL_PACKAGE_DIR}")
