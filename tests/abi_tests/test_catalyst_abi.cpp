@@ -141,7 +141,7 @@ static int test_catalyst_impl()
   constexpr size_t offsets_32bit[] = { 0, 4, 8, 12, 16, 20 };
   constexpr size_t offsets_64bit[] = { 0, 8, 16, 24, 32, 40 };
   constexpr size_t offsets_64bit_packed[] = { 0, 4, 12, 20, 28, 36 };
-  constexpr size_t offsets_128bit[] = { 0, 16, 32, 40, 48, 64 };
+  constexpr size_t offsets_128bit[] = { 0, 16, 32, 40, 56, 72 };
   constexpr size_t offsets_128bit_half_packed[] = { 0, 8, 24, 32, 40, 56 };
   constexpr size_t offsets_128bit_packed[] = { 0, 4, 20, 28, 36, 52 };
 
@@ -178,7 +178,18 @@ static int test_catalyst_impl()
     }
   }
 
-  if (!offsets)
+  if (offsets)
+  {
+    fprintf(stdout, "recognized ABI layout; expected offsets:\n");
+    fprintf(stdout, "version: %zu\n", offsets[0]);
+    fprintf(stdout, "initialize: %zu\n", offsets[1]);
+    fprintf(stdout, "execute: %zu\n", offsets[2]);
+    fprintf(stdout, "finalize: %zu\n", offsets[3]);
+    fprintf(stdout, "about: %zu\n", offsets[4]);
+    fprintf(stdout, "results: %zu\n", offsets[5]);
+    fprintf(stdout, "conduit_is_external: %zu\n", offsets[6]);
+  }
+  else
   {
     fprintf(stderr, "unknown ABI layout; actual offsets:\n");
     fprintf(stderr, "version: %zu\n", offsetof(catalyst_impl, version));
@@ -194,7 +205,7 @@ static int test_catalyst_impl()
   {
     static_assert(
       std::is_same<decltype(catalyst_impl::version), int>::value, "the version must be an int");
-    abi_require(offsetof(catalyst_impl, version) == 0,
+    abi_require(offsetof(catalyst_impl, version) == offsets[0],
       "the offset of the catalyst_impl::version is not expected");
   }
 
@@ -203,8 +214,8 @@ static int test_catalyst_impl()
     static_assert(
       std::is_same<decltype(catalyst_impl::initialize), decltype(&catalyst_initialize)>::value,
       "the initialize member must be a compatible function pointer");
-    abi_require(offsetof(catalyst_impl, initialize) == 8,
-      "the offset of the catalyst_impl::initialize must be 8");
+    abi_require(offsetof(catalyst_impl, initialize) == offsets[1],
+      "the offset of the catalyst_impl::initialize is not expected");
   }
 
   // execute
@@ -212,8 +223,8 @@ static int test_catalyst_impl()
     static_assert(
       std::is_same<decltype(catalyst_impl::execute), decltype(&catalyst_execute)>::value,
       "the execute member must be a compatible function pointer");
-    abi_require(offsetof(catalyst_impl, execute) == 16,
-      "the offset of the catalyst_impl::execute must be 16");
+    abi_require(offsetof(catalyst_impl, execute) == offsets[2],
+      "the offset of the catalyst_impl::execute is not expected");
   }
 
   // finalize
@@ -221,16 +232,16 @@ static int test_catalyst_impl()
     static_assert(
       std::is_same<decltype(catalyst_impl::finalize), decltype(&catalyst_finalize)>::value,
       "the finalize member must be a compatible function pointer");
-    abi_require(offsetof(catalyst_impl, finalize) == 24,
-      "the offset of the catalyst_impl::finalize must be 24");
+    abi_require(offsetof(catalyst_impl, finalize) == offsets[3],
+      "the offset of the catalyst_impl::finalize is not expected");
   }
 
   // about
   {
     static_assert(std::is_same<decltype(catalyst_impl::about), decltype(&catalyst_about)>::value,
       "the about member must be a compatible function pointer");
-    abi_require(
-      offsetof(catalyst_impl, about) == 32, "the offset of the catalyst_impl::about must be 32");
+    abi_require(offsetof(catalyst_impl, about) == offsets[4],
+      "the offset of the catalyst_impl::about is not expected");
   }
 
   // results
@@ -238,8 +249,8 @@ static int test_catalyst_impl()
     static_assert(
       std::is_same<decltype(catalyst_impl::results), decltype(&catalyst_results)>::value,
       "the results member must be a compatible function pointer");
-    abi_require(offsetof(catalyst_impl, results) == 40,
-      "the offset of the catalyst_impl::results must be 40");
+    abi_require(offsetof(catalyst_impl, results) == offsets[5],
+      "the offset of the catalyst_impl::results is not expected");
   }
 
   return ret;
