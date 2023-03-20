@@ -37,6 +37,23 @@
     variables:
         CMAKE_CONFIGURATION: fedora36_mpi_replay
 
+.fedora36_tidy:
+    extends:
+        - .fedora36
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_tidy
+        CTEST_NO_WARNINGS_ALLOWED: 1
+
+.fedora36_mpi_replay_tidy:
+    extends:
+        - .fedora36
+        - .fedora_mpich_addon
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_mpi_replay_tidy
+        CTEST_NO_WARNINGS_ALLOWED: 1
+
 .fedora36_memcheck:
     extends: .fedora36
 
@@ -115,6 +132,17 @@
     - "$LAUNCHER .gitlab/ci/gtest.sh"
     # Load any modules that may be necessary.
     - '[ -n "$MODULES" ] && . /etc/profile.d/modules.sh && module load $MODULES'
+
+.cmake_build_linux:
+    stage: build-test
+
+    script:
+        - *before_script_linux
+        - "$LAUNCHER ctest -VV -S .gitlab/ci/ctest_configure.cmake"
+        - "$LAUNCHER ctest -VV -S .gitlab/ci/ctest_build.cmake"
+
+    interruptible: true
+    timeout: 5 minutes
 
 .cmake_build_test_linux:
     stage: build-test

@@ -16,6 +16,11 @@ endfunction ()
 configuration_flag(CATALYST_USE_MPI "mpi")
 configuration_flag(CATALYST_BUILD_REPLAY "replay")
 
+if ("$ENV{CMAKE_CONFIGURATION}" MATCHES "_tidy")
+  set(CMAKE_C_CLANG_TIDY "clang-tidy" "--header-filter=$ENV{CI_PROJECT_DIR}/(src|tests)" CACHE FILEPATH "")
+  set(CMAKE_CXX_CLANG_TIDY "clang-tidy" "--header-filter=$ENV{CI_PROJECT_DIR}/(src|tests)" CACHE FILEPATH "")
+endif ()
+
 if ("$ENV{CMAKE_CONFIGURATION}" MATCHES "_asan")
   set(CATALYST_SANITIZER "address" CACHE STRING "")
 elseif ("$ENV{CMAKE_CONFIGURATION}" MATCHES "_ubsan")

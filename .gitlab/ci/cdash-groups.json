@@ -28,7 +28,17 @@
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
+            "buildname": "[fedora36_mpi_replay_tidy]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
             "buildname": "[fedora36_mpi_replay_ubsan]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[fedora36_tidy]"
         },
         {
             "group": "catalyst-master",

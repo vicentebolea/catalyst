@@ -47,6 +47,8 @@ upload:source:
     needs:
         - build-test:source
         # Ensure all builds and tests pass.
+        - build:fedora36-tidy
+        - build:fedora36-mpi-replay-tidy
         - build-test:fedora36
         - build-test:fedora36-replay
         - build-test:fedora36-mpi-replay
@@ -99,6 +101,14 @@ build-test:fedora36-mpi-replay:
         - .linux_builder_tags
         - .run_automatically
 
+build:fedora36-tidy:
+    extends:
+        - .fedora36_tidy
+        - .cmake_build_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
 build-test:fedora36-asan:
     extends:
         - .fedora36_asan
@@ -121,6 +131,14 @@ build-test:fedora36-asan-mpi-replay:
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
         - .linux_sanitizer_tags
+        - .run_automatically
+
+build:fedora36-mpi-replay-tidy:
+    extends:
+        - .fedora36_mpi_replay_tidy
+        - .cmake_build_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
         - .run_automatically
 
 build-test:fedora36-mpi-replay-ubsan:
