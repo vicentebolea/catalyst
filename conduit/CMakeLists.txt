@@ -82,9 +82,11 @@ set(conduit_c_sources
 
 #-------------------------------------------------------------------------
 # an interface target to simply setup include paths.
-add_library(conduit_headers INTERFACE)
-add_library(catalyst::conduit_headers ALIAS conduit_headers)
-target_include_directories(conduit_headers
+add_library(catalyst_conduit_headers INTERFACE)
+set_property(TARGET catalyst_conduit_headers PROPERTY
+  EXPORT_NAME conduit_headers)
+add_library(catalyst::conduit_headers ALIAS catalyst_conduit_headers)
+target_include_directories(catalyst_conduit_headers
   INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -92,28 +94,28 @@ target_include_directories(conduit_headers
     $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>)
 c_install_headers(
   HEADERS ${conduit_c_headers})
-c_install_targets(conduit_headers)
 
 #-------------------------------------------------------------------------
 # build conduit library
-add_library(conduit OBJECT
+add_library(catalyst_conduit OBJECT
     ${conduit_sources}
     ${conduit_c_sources})
-target_include_directories(conduit
+target_include_directories(catalyst_conduit
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-target_link_libraries(conduit
+target_link_libraries(catalyst_conduit
   PUBLIC
     catalyst::conduit_headers
   PRIVATE
-    conduit_fmt
-    conduit_libyaml
-    conduit_b64
-    conduit_rapidjson)
+    catalyst::conduit_fmt
+    catalyst::conduit_libyaml
+    catalyst::conduit_b64
+    catalyst::conduit_rapidjson)
 if (BUILD_SHARED_LIBS)
-  target_compile_definitions(conduit
+  target_compile_definitions(catalyst_conduit
     PRIVATE
       conduit_c_EXPORTS)
 endif ()
-add_library(catalyst::conduit ALIAS conduit)
-c_install_targets(conduit)
+set_property(TARGET catalyst_conduit PROPERTY
+  EXPORT_NAME conduit)
+add_library(catalyst::conduit ALIAS catalyst_conduit)

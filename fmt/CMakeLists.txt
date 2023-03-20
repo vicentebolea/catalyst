@@ -14,11 +14,11 @@ set(fmt_headers
     conduit_fmt/ranges.h
     )
 
-add_library(conduit_fmt INTERFACE)
-  # XXX(cmake-3.19)
-  #${fmt_headers})
-target_include_directories(conduit_fmt
+add_library(catalyst_conduit_fmt INTERFACE
+  ${fmt_headers})
+target_include_directories(catalyst_conduit_fmt
   INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-
-c_install_targets(conduit_fmt)
+set_property(TARGET catalyst_conduit_fmt PROPERTY
+  EXPORT_NAME conduit_fmt)
+add_library(catalyst::conduit_fmt ALIAS catalyst_conduit_fmt)

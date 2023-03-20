@@ -65,37 +65,39 @@ set(blueprint_c_sources
     c/conduit_blueprint_table_c.cpp
     )
 
-add_library(blueprint_headers INTERFACE)
-add_library(catalyst::blueprint_headers ALIAS blueprint_headers)
-target_include_directories(blueprint_headers
+add_library(catalyst_blueprint_headers INTERFACE)
+set_property(TARGET catalyst_blueprint_headers PROPERTY
+  EXPORT_NAME blueprint_headers)
+add_library(catalyst::blueprint_headers ALIAS catalyst_blueprint_headers)
+target_include_directories(catalyst_blueprint_headers
   INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/c>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>)
 c_install_headers(
   HEADERS ${blueprint_c_headers})
-c_install_targets(blueprint_headers)
 
 #-------------------------------------------------------------------------
 # build blueprint library
-add_library(blueprint OBJECT
+add_library(catalyst_blueprint OBJECT
   ${blueprint_sources}
   ${blueprint_c_sources})
-target_include_directories(blueprint
+set_property(TARGET catalyst_blueprint PROPERTY
+  EXPORT_NAME blueprint)
+target_include_directories(catalyst_blueprint
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../conduit>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-target_link_libraries(blueprint
+target_link_libraries(catalyst_blueprint
   PUBLIC
     catalyst::blueprint_headers
     catalyst::conduit
   PRIVATE
-    conduit_fmt)
+    catalyst::conduit_fmt)
 if (BUILD_SHARED_LIBS)
-  target_compile_definitions(blueprint
+  target_compile_definitions(catalyst_blueprint
     PRIVATE
       conduit_c_EXPORTS
       conduit_blueprint_c_EXPORTS)
 endif ()
-add_library(catalyst::blueprint ALIAS blueprint)
-c_install_targets(blueprint)
+add_library(catalyst::blueprint ALIAS catalyst_blueprint)
