@@ -187,7 +187,6 @@ static int test_catalyst_impl()
     fprintf(stdout, "finalize: %zu\n", offsets[3]);
     fprintf(stdout, "about: %zu\n", offsets[4]);
     fprintf(stdout, "results: %zu\n", offsets[5]);
-    fprintf(stdout, "conduit_is_external: %zu\n", offsets[6]);
   }
   else
   {
