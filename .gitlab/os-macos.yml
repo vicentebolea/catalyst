@@ -64,7 +64,7 @@
     - ninja --version
     - .gitlab/ci/gtest.sh
 
-.cmake_build_macos:
+.cmake_build_test_macos:
     stage: build-test
 
     script:

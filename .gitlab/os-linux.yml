@@ -116,7 +116,7 @@
     # Load any modules that may be necessary.
     - '[ -n "$MODULES" ] && . /etc/profile.d/modules.sh && module load $MODULES'
 
-.cmake_build_linux:
+.cmake_build_test_linux:
     stage: build-test
 
     script:
