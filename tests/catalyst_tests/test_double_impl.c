@@ -68,6 +68,9 @@ int test_double_impl()
 
 int main(int argc, char* argv[])
 {
+  (void)argc;
+  (void)argv;
+
   int ret = EXIT_SUCCESS;
 
   int test_ret = test_double_impl();

@@ -82,6 +82,9 @@ int test_simple_catalyst_results_call()
 
 int main(int argc, char* argv[])
 {
+  (void)argc;
+  (void)argv;
+
   int ret = EXIT_SUCCESS;
 
   int test_ret = test_simple_catalyst_results_call();

@@ -309,7 +309,7 @@ void clean_data_dump_str(std::string& catalyst_data_dump_directory)
   }
 }
 
-void exit_gracefully_if_needed(int rank, int status)
+void exit_gracefully_if_needed(int /*rank*/, int status)
 {
 #ifdef CATALYST_USE_MPI
   MPI_Bcast(&status, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -325,6 +325,9 @@ int main(int argc, char** argv)
 
 #ifdef CATALYST_USE_MPI
   MPI_Init(&argc, &argv);
+#else
+  (void)argc;
+  (void)argv;
 #endif
 
   int num_ranks = 1;

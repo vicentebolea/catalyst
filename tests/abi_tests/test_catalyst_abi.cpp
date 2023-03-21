@@ -298,7 +298,7 @@ static int test_catalyst_stub()
   return ret;
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
   int ret = EXIT_SUCCESS;
 

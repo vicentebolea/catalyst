@@ -2044,7 +2044,7 @@ static int test_conduit_blueprint_abi()
   return ret;
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
   int ret = EXIT_SUCCESS;
 

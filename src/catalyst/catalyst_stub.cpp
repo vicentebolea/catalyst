@@ -50,7 +50,7 @@ enum catalyst_status catalyst_stub_about(conduit_node* params)
   return catalyst_status_ok;
 }
 
-enum catalyst_status catalyst_stub_results(conduit_node* params)
+enum catalyst_status catalyst_stub_results(conduit_node* /*params*/)
 {
   return catalyst_status_ok;
 }

@@ -108,7 +108,7 @@ int test_cpp_node_copy()
   return ret;
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
   int ret = EXIT_SUCCESS;
 
