@@ -7,9 +7,8 @@
 #include "catalyst_dump_node.hpp"
 #include "catalyst_version.h"
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 enum catalyst_status catalyst_stub_initialize(const conduit_node* params)
 {

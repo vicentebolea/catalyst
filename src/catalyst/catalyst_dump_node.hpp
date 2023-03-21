@@ -13,9 +13,9 @@
 #include <conduit_utils.hpp>
 
 #include <array>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #define PATH_SEP '\\'

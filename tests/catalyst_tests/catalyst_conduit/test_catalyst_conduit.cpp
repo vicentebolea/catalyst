@@ -5,8 +5,8 @@
 
 #include <catalyst_conduit.hpp>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 int test_cpp_node_wrapping_data()
 {
