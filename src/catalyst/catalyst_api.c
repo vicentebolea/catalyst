@@ -20,7 +20,6 @@ typedef HMODULE catalyst_handle_t;
 #define PATH_SEPARATOR ';'
 #else
 #include <dlfcn.h>
-#include <stdio.h>
 typedef void* catalyst_handle_t;
 #define PATH_SEPARATOR ':'
 #endif
