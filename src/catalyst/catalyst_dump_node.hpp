@@ -23,7 +23,7 @@
 #define PATH_SEP '/'
 #endif
 
-void get_mpi_info(int& rank, int& num_ranks)
+inline void get_mpi_info(int& rank, int& num_ranks)
 {
   rank = 0;
   num_ranks = 1;
@@ -40,7 +40,7 @@ void get_mpi_info(int& rank, int& num_ranks)
 
 // Constructs the absolute path of the file to write out.
 // Similar to python's os.path.join.
-char* construct_full_path(
+inline char* construct_full_path(
   const char* out_dir, const char* stage, unsigned long invocations, int use_invocations)
 {
   int num_ranks = 1;
@@ -98,7 +98,7 @@ char* construct_full_path(
   return full_path;
 }
 
-bool ensure_directory(const char* out_dir)
+inline bool ensure_directory(const char* out_dir)
 {
   int rank = 0;
   int num_ranks = 1;
@@ -121,7 +121,7 @@ bool ensure_directory(const char* out_dir)
 
 // Check if a data dump directory has been set. If it has,
 // write out the params argument to disk to load later.
-void dump_node(
+inline void dump_node(
   const conduit_node* params, const char* stage, unsigned long invocations, int use_invocations)
 {
   const char* out_dir = getenv("CATALYST_DATA_DUMP_DIRECTORY");
