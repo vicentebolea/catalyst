@@ -296,9 +296,9 @@ TEST(conduit_node, check_contiguous_with)
   // and contig
   EXPECT_TRUE(n1.is_contiguous());
 
-  // we don't expect things to be contig with NULL
-  EXPECT_FALSE(n1["a"].contiguous_with(NULL));
-  EXPECT_FALSE(n1["b"].contiguous_with(NULL));
+  // we don't expect things to be contig with nullptr
+  EXPECT_FALSE(n1["a"].contiguous_with(nullptr));
+  EXPECT_FALSE(n1["b"].contiguous_with(nullptr));
 
   // b should be contig with a
   EXPECT_TRUE(n1["b"].contiguous_with(n1["a"]));
@@ -315,7 +315,7 @@ TEST(conduit_node, check_contiguous_with)
 
   Node n2;
   n2["a"].set_external(u64av.data(), 5);
-  n2["b"].set_external_uint8_ptr(NULL);
+  n2["b"].set_external_uint8_ptr(nullptr);
   n2["c"].set_external(u64av.data(), 5, 5 * sizeof(uint64));
 
   // we expect c to be contig with a

@@ -62,14 +62,14 @@ inline char* construct_full_path(
   }
 
   size_t full_path_len = 0;
-  char* full_path = NULL;
+  char* full_path = nullptr;
 
   // If we want to include the invocation number in the filename,
   // use a different format for the filename
   if (use_invocations)
   {
     // Determine the length of the path
-    full_path_len = snprintf(NULL, 0, "%s%s%s_invc%lu_params.conduit_bin.%d.%d", out_dir,
+    full_path_len = snprintf(nullptr, 0, "%s%s%s_invc%lu_params.conduit_bin.%d.%d", out_dir,
       sep_or_no_sep.data(), stage, invocations, num_ranks, rank);
 
     // Format the string with the correct information
@@ -80,7 +80,7 @@ inline char* construct_full_path(
   else
   {
     // Determine the length of the path
-    full_path_len = snprintf(NULL, 0, "%s%s%s_params.conduit_bin.%d.%d", out_dir,
+    full_path_len = snprintf(nullptr, 0, "%s%s%s_params.conduit_bin.%d.%d", out_dir,
       sep_or_no_sep.data(), stage, num_ranks, rank);
 
     // Format the string with the correct information
