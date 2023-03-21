@@ -11,6 +11,8 @@
 #endif
 
 #include <conduit_utils.hpp>
+
+#include <array>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,8 +55,7 @@ char* construct_full_path(
   }
 
   // Add a separator to the end of the directory if needed.
-  char sep_or_no_sep[2];
-  memset(sep_or_no_sep, 0, 2);
+  std::array<char, 2> sep_or_no_sep = { 0, 0 };
   if (out_dir[out_dir_len - 1] != PATH_SEP)
   {
     sep_or_no_sep[0] = PATH_SEP;
@@ -69,23 +70,23 @@ char* construct_full_path(
   {
     // Determine the length of the path
     full_path_len = snprintf(NULL, 0, "%s%s%s_invc%lu_params.conduit_bin.%d.%d", out_dir,
-      sep_or_no_sep, stage, invocations, num_ranks, rank);
+      sep_or_no_sep.data(), stage, invocations, num_ranks, rank);
 
     // Format the string with the correct information
     full_path = (char*)calloc(full_path_len + 1, sizeof(char));
     snprintf(full_path, full_path_len + 1, "%s%s%s_invc%lu_params.conduit_bin.%d.%d", out_dir,
-      sep_or_no_sep, stage, invocations, num_ranks, rank);
+      sep_or_no_sep.data(), stage, invocations, num_ranks, rank);
   }
   else
   {
     // Determine the length of the path
-    full_path_len = snprintf(
-      NULL, 0, "%s%s%s_params.conduit_bin.%d.%d", out_dir, sep_or_no_sep, stage, num_ranks, rank);
+    full_path_len = snprintf(NULL, 0, "%s%s%s_params.conduit_bin.%d.%d", out_dir,
+      sep_or_no_sep.data(), stage, num_ranks, rank);
 
     // Format the string with the correct information
     full_path = (char*)calloc(full_path_len + 1, sizeof(char));
     snprintf(full_path, full_path_len + 1, "%s%s%s_params.conduit_bin.%d.%d", out_dir,
-      sep_or_no_sep, stage, num_ranks, rank);
+      sep_or_no_sep.data(), stage, num_ranks, rank);
   }
 
   if (!(full_path_len && full_path))
