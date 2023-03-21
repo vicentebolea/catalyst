@@ -47,7 +47,7 @@ inline char* construct_full_path(
   int rank = 0;
   get_mpi_info(rank, num_ranks);
 
-  size_t out_dir_len = strlen(out_dir);
+  const size_t out_dir_len = strlen(out_dir);
   if (!out_dir_len)
   {
     fprintf(stderr, "Empty data_dump_directory detected.\n");
