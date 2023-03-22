@@ -112,7 +112,17 @@ int main(int argc, char* argv[])
 {
   int ret = EXIT_SUCCESS;
 
-  int test_ret = test_cpp_node_wrapping_data();
+  int test_ret = EXIT_SUCCESS;
+
+  try
+  {
+    test_ret = test_cpp_node_wrapping_data();
+  }
+  catch (conduit_cpp::Error const& err)
+  {
+    fprintf(stderr, "Caught exception from `test_cpp_node_wrapping_data`: %s\n", err.what());
+    test_ret = EXIT_FAILURE;
+  }
   if (test_ret != EXIT_SUCCESS)
   {
     ret = test_ret;
@@ -120,7 +130,16 @@ int main(int argc, char* argv[])
 
   if (ret == EXIT_SUCCESS)
   {
-    test_ret = test_cpp_node_wrapping_on_child_node();
+    try
+    {
+      test_ret = test_cpp_node_wrapping_on_child_node();
+    }
+    catch (conduit_cpp::Error const& err)
+    {
+      fprintf(
+        stderr, "Caught exception from `test_cpp_node_wrapping_on_child_node`: %s\n", err.what());
+      test_ret = EXIT_FAILURE;
+    }
     if (test_ret != EXIT_SUCCESS)
     {
       ret = test_ret;
