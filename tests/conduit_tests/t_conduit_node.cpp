@@ -116,7 +116,9 @@ TEST(conduit_node, vector)
 
   std::vector<uint32> vec;
   for (int i = 0; i < 100; i++)
+  {
     vec.push_back(i);
+  }
 
   Node n;
   n["a"] = vec;
@@ -129,7 +131,9 @@ TEST(conduit_node, list)
 
   std::vector<uint32> vec;
   for (int i = 0; i < 100; i++)
+  {
     vec.push_back(i);
+  }
 
   Node n;
   Node list = n["mylist"];

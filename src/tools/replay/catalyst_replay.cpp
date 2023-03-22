@@ -138,19 +138,27 @@ int parse_fname(const std::regex& fname_patterns, const std::string& fname, int 
     std::stringstream(matches[3]) >> execute_invc_num;
 
     if (execute_invc_num + 1 > num_execute_invoc_per_rank)
+    {
       num_execute_invoc_per_rank = execute_invc_num + 1;
+    }
   }
 
   std::string stage = matches[1];
 
   if (stage == "initialize")
+  {
     num_initialize++;
+  }
 
   else if (stage == "execute")
+  {
     num_execute++;
+  }
 
   else if (stage == "finalize")
+  {
     num_finalize++;
+  }
 
   return 0;
 }
@@ -246,7 +254,9 @@ int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_
     num_initialize, num_execute, num_finalize, num_execute_invoc_per_rank);
 
   if (status != 0)
+  {
     return 1;
+  }
 
   // Check that none are 0
   if (!(num_initialize && num_execute && num_finalize))
@@ -314,10 +324,14 @@ void exit_gracefully_if_needed(int /*rank*/, int status)
 #ifdef CATALYST_USE_MPI
   MPI_Bcast(&status, 1, MPI_INT, 0, MPI_COMM_WORLD);
   if (status != 0)
+  {
     MPI_Finalize();
+  }
 #endif
   if (status != 0)
+  {
     exit(status);
+  }
 }
 
 int main(int argc, char** argv)

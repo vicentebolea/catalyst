@@ -1664,8 +1664,10 @@ private:
     {
       Deser res;
       std::stringstream ss(as_char8_str());
-      if (ss >> res)
+      if ((ss >> res))
+      {
         return static_cast<T>(res);
+      }
     }
     return 0;
   }
