@@ -53,6 +53,7 @@
 
 #include "gtest/gtest.h"
 #include <algorithm>
+#include <array>
 #include <cstring>
 #include <iostream>
 #include <string>
@@ -87,7 +88,7 @@ bool compatible_diff_nodes(const Node& lnode, const Node& rnode, Node& info)
 using NodeDiffFun = bool (*)(const Node&, const Node&, Node&);
 using CheckDatatypeFun = int (*)(const conduit_datatype* cdatatype);
 
-const NodeDiffFun NODE_DIFF_FUNS[2] = { diff_nodes, compatible_diff_nodes };
+const std::array<const NodeDiffFun, 2> NODE_DIFF_FUNS = { diff_nodes, compatible_diff_nodes };
 
 /// Testing Functions ///
 
@@ -117,9 +118,9 @@ TEST(conduit_node_compare, compare_basic)
       Node o;
       Node info;
 
-      int data[3] = { 1, 2, 3 };
-      n.set(data, 2);
-      o.set(data, 3);
+      std::array<int, 3> data = { 1, 2, 3 };
+      n.set(data.data(), data.size() - 1);
+      o.set(data.data(), data.size());
 
       if (diff_nodes == compatible_diff_nodes)
       {
@@ -274,7 +275,7 @@ TEST(conduit_node_compare, compare_leaf_numeric)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_string)
 {
-  const std::string compare_strs[4] = { "I", "me", "You", "tHeM" };
+  const std::array<std::string, 4> compare_strs = { "I", "me", "You", "tHeM" };
   size_t leaf_buff_size = 10;
   char compare_buffs[5][leaf_buff_size];
 
