@@ -697,7 +697,7 @@ TEST(conduit_node, check_as_native_and_native_ptr)
   unsigned int uiv = 3;
   unsigned long ulv = 4;
 
-  float fv = 1.2f;
+  float fv = 1.2F;
   double dv = 2.4;
 
   const char* char_strv = "str1";
@@ -824,7 +824,7 @@ TEST(conduit_node, check_as_native_ptr_const)
   unsigned int uiv = 3;
   unsigned long ulv = 4;
 
-  float fv = 1.2f;
+  float fv = 1.2F;
   double dv = 2.4;
 
   const char* char_strv = "str1";
@@ -908,7 +908,7 @@ TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr)
   uint32 ui32v = 3;
   uint64 ui64v = 4;
 
-  float32 f32v = 1.2f;
+  float32 f32v = 1.2F;
   float64 f64v = 2.4;
 
   n["i8v"] = i8v;
@@ -994,7 +994,7 @@ TEST(conduit_node, check_as_bitwidth_ptr_const)
   uint32 ui32v = 3;
   uint64 ui64v = 4;
 
-  float32 f32v = 1.2f;
+  float32 f32v = 1.2F;
   float64 f64v = 2.4;
 
   n["i8v"] = i8v;
@@ -1298,7 +1298,7 @@ TEST(conduit_node_set, check_assignment_from_bitwidth_vec)
 
   std::vector<float32> f32_vec(1);
   std::vector<float64> f64_vec(1);
-  f32_vec[0] = 2.71828f;
+  f32_vec[0] = 2.71828F;
   f64_vec[0] = 3.1415;
 
   // set
@@ -1381,7 +1381,7 @@ TEST(conduit_node_set, check_assignment_from_cstyle_vec)
 
   std::vector<float> f_vec(1);
   std::vector<double> d_vec(1);
-  f_vec[0] = 2.71828f;
+  f_vec[0] = 2.71828F;
   d_vec[0] = 3.1415;
 
   // set

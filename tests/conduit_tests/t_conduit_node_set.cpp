@@ -409,7 +409,7 @@ TEST(conduit_node_set, set_external_bitwidth_int_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_bitwidth_float_scalar)
 {
-  float32 f32v = -3.2f;
+  float32 f32v = -3.2F;
   float64 f64v = -6.4;
 
   Node n;
@@ -438,7 +438,7 @@ TEST(conduit_node_set, set_bitwidth_float_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_bitwidth_float_scalar)
 {
-  float32 f32v = -3.2f;
+  float32 f32v = -3.2F;
   float64 f64v = -6.4;
 
   // float32
@@ -472,7 +472,7 @@ TEST(conduit_node_set, set_path_bitwidth_float_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_external_bitwidth_float_scalar)
 {
-  float32 f32v = -3.2f;
+  float32 f32v = -3.2F;
   float64 f64v = -6.4;
 
   Node n;
@@ -1009,7 +1009,7 @@ TEST(conduit_node_set, set_path_external_bitwidth_int_ptr)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_bitwidth_float_ptr)
 {
-  float32 f32av[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float32 f32av[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   float64 f64av[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node n;
@@ -1039,7 +1039,7 @@ TEST(conduit_node_set, set_bitwidth_float_ptr)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_bitwidth_float_ptr)
 {
-  float32 f32av[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float32 f32av[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   float64 f64av[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node n;
@@ -1073,7 +1073,7 @@ TEST(conduit_node_set, set_path_bitwidth_float_ptr)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_external_bitwidth_float_ptr)
 {
-  float32 f32av[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float32 f32av[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   float64 f64av[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node n;
@@ -1087,7 +1087,7 @@ TEST(conduit_node_set, set_external_bitwidth_float_ptr)
     EXPECT_EQ(&f32av_ptr[i], &f32av[i]);
   }
   EXPECT_NEAR(f32av_ptr[3], -6.4, 0.001);
-  f32av_ptr[1] = -110.1f;
+  f32av_ptr[1] = -110.1F;
   EXPECT_NEAR(f32av[1], -110.1, 0.001);
   n.print();
 
@@ -1109,7 +1109,7 @@ TEST(conduit_node_set, set_external_bitwidth_float_ptr)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_external_bitwidth_float_ptr)
 {
-  float32 f32av[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float32 f32av[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   float64 f64av[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node n;
@@ -1125,7 +1125,7 @@ TEST(conduit_node_set, set_path_external_bitwidth_float_ptr)
     EXPECT_EQ(&f32av_ptr[i], &f32av[i]);
   }
   EXPECT_NEAR(f32av_ptr[3], -6.4, 0.001);
-  f32av_ptr[1] = -110.1f;
+  f32av_ptr[1] = -110.1F;
   EXPECT_NEAR(f32av[1], -110.1, 0.001);
   n.print();
 
@@ -2046,7 +2046,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_float)
 {
-  float fv = -0.8f;
+  float fv = -0.8F;
   double dv = -1.6;
 
   Node n;
@@ -2074,7 +2074,7 @@ TEST(conduit_node_set, set_cstyle_float)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_float_ptr)
 {
-  float fav[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float fav[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   double dav[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node n;
@@ -2166,7 +2166,7 @@ TEST(conduit_node_set, set_cstyle_float_ptr)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_float_vec)
 {
-  float fav[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float fav[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   double dav[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   std::vector<float> fav_v(fav, fav + 4);
@@ -3161,7 +3161,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_cstyle_float)
 {
-  float fv = -0.8f;
+  float fv = -0.8F;
   double dv = -1.6;
 
   Node n;
@@ -3195,7 +3195,7 @@ TEST(conduit_node_set, set_path_cstyle_float)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_cstyle_float_ptr)
 {
-  float fav[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float fav[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   double dav[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node n;
@@ -3261,10 +3261,10 @@ TEST(conduit_node_set, set_path_cstyle_float_ptr)
 TEST(conduit_node_set, set_path_cstyle_float_vec)
 {
   std::vector<float> fav;
-  fav.push_back(-0.8f);
-  fav.push_back(-1.6f);
-  fav.push_back(-3.2f);
-  fav.push_back(-6.4f);
+  fav.push_back(-0.8F);
+  fav.push_back(-1.6F);
+  fav.push_back(-3.2F);
+  fav.push_back(-6.4F);
 
   std::vector<double> dav;
   dav.push_back(-0.8);
@@ -3333,7 +3333,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_node)
 {
-  float32 f32av[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float32 f32av[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   float64 f64av[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node nsrc;
@@ -3355,7 +3355,7 @@ TEST(conduit_node_set, set_node)
   }
   EXPECT_NEAR(f32av_ptr[3], -6.4, 0.001);
   // Changing one shouldn't affect the other.
-  f32av_ptr[1] = -110.1f;
+  f32av_ptr[1] = -110.1F;
   EXPECT_NEAR(f32av_ptr[1], -110.1, 0.001);
   EXPECT_NEAR(f32av[1], -1.6, 0.001);
   n.print();
@@ -3386,7 +3386,7 @@ TEST(conduit_node_set, set_node)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_external_node)
 {
-  float32 f32av[4] = { -0.8f, -1.6f, -3.2f, -6.4f };
+  float32 f32av[4] = { -0.8F, -1.6F, -3.2F, -6.4F };
   float64 f64av[4] = { -0.8, -1.6, -3.2, -6.4 };
 
   Node nsrc;
@@ -3407,7 +3407,7 @@ TEST(conduit_node_set, set_external_node)
     EXPECT_EQ(&f32av_ptr[i], &f32av[i]);
   }
   EXPECT_NEAR(f32av_ptr[3], -6.4, 0.001);
-  f32av_ptr[1] = -110.1f;
+  f32av_ptr[1] = -110.1F;
   EXPECT_NEAR(f32av[1], -110.1, 0.001);
   n.print();
 
@@ -3557,7 +3557,7 @@ TEST(conduit_node_set, set_vector)
 
   std::vector<float32> f32_vec(1);
   std::vector<float64> f64_vec(1);
-  f32_vec[0] = 2.71828f;
+  f32_vec[0] = 2.71828F;
   f64_vec[0] = 3.1415;
 
   // set
@@ -3629,7 +3629,7 @@ TEST(conduit_node_set, set_path_vector)
 
   std::vector<float32> f32_vec(1);
   std::vector<float64> f64_vec(1);
-  f32_vec[0] = 2.71828f;
+  f32_vec[0] = 2.71828F;
   f64_vec[0] = 3.1415;
 
   Node n;
@@ -3735,7 +3735,7 @@ TEST(conduit_node_set, set_vector_external)
   ui32_vec[0] = 32;
   ui64_vec[0] = 64;
 
-  f32_vec[0] = 2.71828f;
+  f32_vec[0] = 2.71828F;
   f64_vec[0] = 3.1415;
 
   n1.print();
