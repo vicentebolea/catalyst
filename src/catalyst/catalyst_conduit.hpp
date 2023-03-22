@@ -985,6 +985,11 @@ public:
   //-----------------------------------------------------------------------------
   Node& operator=(const Node& other)
   {
+    // Self-assignment is a no-op.
+    if (this == &other)
+    {
+      return *this;
+    }
     set(other);
     return *this;
   }
