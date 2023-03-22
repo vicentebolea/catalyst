@@ -3747,26 +3747,26 @@ TEST(conduit_node_set, set_vector_external)
   int32* i32_ptr = n1["i32"].as_int32_ptr();
   int64* i64_ptr = n1["i64"].as_int64_ptr();
 
-  EXPECT_EQ(i8_ptr, &i8_vec[0]);
-  EXPECT_EQ(i16_ptr, &i16_vec[0]);
-  EXPECT_EQ(i32_ptr, &i32_vec[0]);
-  EXPECT_EQ(i64_ptr, &i64_vec[0]);
+  EXPECT_EQ(i8_ptr, i8_vec.data());
+  EXPECT_EQ(i16_ptr, i16_vec.data());
+  EXPECT_EQ(i32_ptr, i32_vec.data());
+  EXPECT_EQ(i64_ptr, i64_vec.data());
 
   uint8* ui8_ptr = n1["ui8"].as_uint8_ptr();
   uint16* ui16_ptr = n1["ui16"].as_uint16_ptr();
   uint32* ui32_ptr = n1["ui32"].as_uint32_ptr();
   uint64* ui64_ptr = n1["ui64"].as_uint64_ptr();
 
-  EXPECT_EQ(ui8_ptr, &ui8_vec[0]);
-  EXPECT_EQ(ui16_ptr, &ui16_vec[0]);
-  EXPECT_EQ(ui32_ptr, &ui32_vec[0]);
-  EXPECT_EQ(ui64_ptr, &ui64_vec[0]);
+  EXPECT_EQ(ui8_ptr, ui8_vec.data());
+  EXPECT_EQ(ui16_ptr, ui16_vec.data());
+  EXPECT_EQ(ui32_ptr, ui32_vec.data());
+  EXPECT_EQ(ui64_ptr, ui64_vec.data());
 
   float32* f32_ptr = n1["f32"].as_float32_ptr();
   float64* f64_ptr = n1["f64"].as_float64_ptr();
 
-  EXPECT_EQ(f32_ptr, &f32_vec[0]);
-  EXPECT_EQ(f64_ptr, &f64_vec[0]);
+  EXPECT_EQ(f32_ptr, f32_vec.data());
+  EXPECT_EQ(f64_ptr, f64_vec.data());
 }
 
 //-----------------------------------------------------------------------------
