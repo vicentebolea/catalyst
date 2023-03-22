@@ -1363,7 +1363,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // char
   n.set(char_v);
   char* char_ptr = n.as_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < char_v.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1375,7 +1375,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // short
   n.set(short_v);
   short* short_ptr = n.as_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < short_v.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1387,7 +1387,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // int
   n.set(int_v);
   int* int_ptr = n.as_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < int_v.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1399,7 +1399,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // long
   n.set(long_v);
   long* long_ptr = n.as_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < long_v.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1415,7 +1415,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // char
   n.set_external(char_v);
   char_ptr = n.as_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < char_v.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1427,7 +1427,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // short
   n.set_external(short_v);
   short_ptr = n.as_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < short_v.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1439,7 +1439,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // int
   n.set_external(int_v);
   int_ptr = n.as_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < int_v.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1451,7 +1451,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
   // long
   n.set_external(long_v);
   long_ptr = n.as_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < long_v.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1652,7 +1652,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned char
   n.set(uchar_v);
   unsigned char* uchar_ptr = n.as_unsigned_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uchar_v.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1664,7 +1664,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned short
   n.set(ushort_v);
   unsigned short* ushort_ptr = n.as_unsigned_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ushort_v.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1676,7 +1676,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned int
   n.set(uint_v);
   unsigned int* uint_ptr = n.as_unsigned_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uint_v.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1688,7 +1688,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned long
   n.set(ulong_v);
   unsigned long* ulong_ptr = n.as_unsigned_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ulong_v.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1704,7 +1704,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned char
   n.set_external(uchar_v);
   uchar_ptr = n.as_unsigned_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uchar_v.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1716,7 +1716,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned short
   n.set_external(ushort_v);
   ushort_ptr = n.as_unsigned_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ushort_v.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1728,7 +1728,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned int
   n.set_external(uint_v);
   uint_ptr = n.as_unsigned_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uint_v.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1740,7 +1740,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
   // unsigned long
   n.set_external(ulong_v);
   ulong_ptr = n.as_unsigned_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ulong_v.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -1941,7 +1941,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // char
   n.set(schar_v);
   signed char* schar_ptr = n.as_signed_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < schar_v.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1953,7 +1953,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // short
   n.set(sshort_v);
   short* sshort_ptr = n.as_signed_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sshort_v.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1965,7 +1965,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // int
   n.set(sint_v);
   int* sint_ptr = n.as_signed_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sint_v.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1977,7 +1977,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // long
   n.set(slong_v);
   long* slong_ptr = n.as_signed_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < slong_v.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -1993,7 +1993,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // char
   n.set_external(schar_v);
   schar_ptr = n.as_signed_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < schar_v.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2005,7 +2005,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // short
   n.set_external(sshort_v);
   sshort_ptr = n.as_signed_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sshort_v.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2017,7 +2017,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // int
   n.set_external(sint_v);
   sint_ptr = n.as_signed_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sint_v.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2029,7 +2029,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
   // long
   n.set_external(slong_v);
   slong_ptr = n.as_signed_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < slong_v.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2181,7 +2181,7 @@ TEST(conduit_node_set, set_cstyle_float_vec)
   // float
   n.set(fav_v);
   float* f_ptr = n.as_float_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < fav_v.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav_v[i], 0.001);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2192,7 +2192,7 @@ TEST(conduit_node_set, set_cstyle_float_vec)
   // double
   n.set(dav_v);
   double* d_ptr = n.as_double_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < dav_v.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav_v[i], 0.001);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2207,7 +2207,7 @@ TEST(conduit_node_set, set_cstyle_float_vec)
   // float
   n.set_external(fav_v);
   f_ptr = n.as_float_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < fav_v.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav_v[i], 0.001);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2218,7 +2218,7 @@ TEST(conduit_node_set, set_cstyle_float_vec)
   // double
   n.set_external(dav_v);
   d_ptr = n.as_double_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < dav_v.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav_v[i], 0.001);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2454,7 +2454,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   // char
   n.set_path("c", char_v);
   char* char_ptr = n["c"].as_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < char_v.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2466,7 +2466,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   // short
   n.set_path("s", short_v);
   short* short_ptr = n["s"].as_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < short_v.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2478,7 +2478,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   // int
   n.set_path("i", int_v);
   int* int_ptr = n["i"].as_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < int_v.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2490,7 +2490,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   // long
   n.set_path("l", long_v);
   long* long_ptr = n["l"].as_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < long_v.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2506,7 +2506,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   // char
   n.set_path_external("c", char_v);
   char_ptr = n["c"].as_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < char_v.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2516,9 +2516,9 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   EXPECT_EQ(char_ptr[5], 64);
 
   // short
-  n.set_path_external("s", short_v);
+  n.set_path_external("s", short_v.data());
   short_ptr = n["s"].as_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < short_v.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2528,9 +2528,9 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   EXPECT_EQ(short_ptr[5], 64);
 
   // int
-  n.set_path_external("i", int_v);
+  n.set_path_external("i", int_v.data());
   int_ptr = n["i"].as_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < int_v.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2540,9 +2540,9 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
   EXPECT_EQ(int_ptr[5], 64);
 
   // long
-  n.set_path_external("l", long_v);
+  n.set_path_external("l", long_v.data());
   long_ptr = n["l"].as_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < long_v.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2755,7 +2755,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned char
   n.set_path("uc", uchar_v);
   unsigned char* uchar_ptr = n["uc"].as_unsigned_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uchar_v.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2767,7 +2767,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned short
   n.set_path("us", ushort_v);
   unsigned short* ushort_ptr = n["us"].as_unsigned_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ushort_v.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2779,7 +2779,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned int
   n.set_path("ui", uint_v);
   unsigned int* uint_ptr = n["ui"].as_unsigned_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uint_v.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2791,7 +2791,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned long
   n.set_path("ul", ulong_v);
   unsigned long* ulong_ptr = n["ul"].as_unsigned_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ulong_v.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -2807,7 +2807,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned char
   n.set_path_external("uc", uchar_v);
   uchar_ptr = n["uc"].as_unsigned_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uchar_v.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2819,7 +2819,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned short
   n.set_path_external("us", ushort_v);
   ushort_ptr = n["us"].as_unsigned_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ushort_v.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2831,7 +2831,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned int
   n.set_path_external("ui", uint_v);
   uint_ptr = n["ui"].as_unsigned_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < uint_v.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -2843,7 +2843,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
   // unsigned long
   n.set_path_external("ul", ulong_v);
   ulong_ptr = n["ul"].as_unsigned_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < ulong_v.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -3056,7 +3056,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // char
   n.set_path("c", schar_v);
   signed char* schar_ptr = n["c"].as_signed_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < schar_v.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -3068,7 +3068,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // short
   n.set_path("s", sshort_v);
   signed short* sshort_ptr = n["s"].as_signed_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sshort_v.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -3080,7 +3080,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // int
   n.set_path("i", sint_v);
   signed int* sint_ptr = n["i"].as_signed_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sint_v.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -3092,7 +3092,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // long
   n.set_path("l", slong_v);
   signed long* slong_ptr = n["l"].as_signed_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < slong_v.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_v[i]);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -3108,7 +3108,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // char
   n.set_path_external("c", schar_v);
   schar_ptr = n["c"].as_signed_char_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < schar_v.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -3120,7 +3120,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // short
   n.set_path_external("s", sshort_v);
   sshort_ptr = n["s"].as_short_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sshort_v.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -3132,7 +3132,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // int
   n.set_path_external("i", sint_v);
   sint_ptr = n["i"].as_int_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < sint_v.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -3144,7 +3144,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
   // long
   n.set_path_external("l", slong_v);
   slong_ptr = n["l"].as_long_ptr();
-  for (index_t i = 0; i < 6; i++)
+  for (index_t i = 0; i < slong_v.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_v[i]);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -3280,7 +3280,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
   // float
   n.set_path("f", fav);
   float* f_ptr = n["f"].as_float_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < fav.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav[i], 0.001);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -3291,7 +3291,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
   // double
   n.set_path("d", dav);
   double* d_ptr = n["d"].as_double_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < dav.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav[i], 0.001);
     // set(...) semantics imply a copy -- mem addys should differ
@@ -3306,7 +3306,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
   // float
   n.set_path_external("f", fav);
   f_ptr = n["f"].as_float_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < fav.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav[i], 0.001);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
@@ -3317,7 +3317,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
   // double
   n.set_path_external("d", dav);
   d_ptr = n["d"].as_double_ptr();
-  for (index_t i = 0; i < 4; i++)
+  for (index_t i = 0; i < dav.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav[i], 0.001);
     // set_external(...) semantics implies zero-copy -- mem addys should equal
