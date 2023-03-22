@@ -3467,11 +3467,11 @@ TEST(conduit_node_set, set_string)
   // set external
   ////////////////////////////
   Node n2;
-  char ext_char_strv[5];
+  std::array<char, 5> ext_char_strv;
   // Copy in str2
-  strcpy(ext_char_strv, char_strv);
-  n.set_external_char8_str(ext_char_strv);
-  EXPECT_EQ(std::string(n.as_char8_str()), std::string(ext_char_strv));
+  std::copy(char_strv, char_strv + strlen(char_strv) + 1, ext_char_strv.data());
+  n.set_external_char8_str(ext_char_strv.data());
+  EXPECT_EQ(std::string(n.as_char8_str()), std::string(ext_char_strv.data()));
   EXPECT_EQ(conduit_datatype_is_number(n.c_dtype()), false);
   EXPECT_EQ(conduit_datatype_is_integer(n.c_dtype()), false);
   EXPECT_EQ(conduit_datatype_is_signed_integer(n.c_dtype()), false);
@@ -3821,7 +3821,7 @@ TEST(conduit_node, node_set_existing_obj)
 TEST(conduit_node, node_set_overload_ambig)
 {
   Node n;
-  char buff[] = "foo";
+  std::array<char, 4> buff = { 'f', 'o', 'o', '\0' };
 
   // There was a previous issue where the below
   // set call would be ambiguous between set(const std::string&) and
@@ -3830,6 +3830,6 @@ TEST(conduit_node, node_set_overload_ambig)
   // is a typedef around void*. Compiler was attempting to construct a Node
   // from the char* passed in. Making the above constructor explicit resolved
   // the issue.
-  n["some_path"].set(buff);
+  n["some_path"].set(buff.data());
   EXPECT_EQ(n["some_path"].as_string(), "foo");
 }
