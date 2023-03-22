@@ -1347,6 +1347,7 @@ public:
     CATALYST_CONDUIT_WRAP_EXCEP(return Node(conduit_node_child(this->c_node, idx)));
   }
 
+  // NOLINTNEXTLINE(readability-const-return-type)
   const Node child(conduit_index_t idx) const
   {
     CATALYST_CONDUIT_WRAP_EXCEP(return Node(conduit_node_child(this->c_node, idx)));
@@ -1359,6 +1360,7 @@ public:
   }
 
   // Don't modify underlying structure if path doesn't exist
+  // NOLINTNEXTLINE(readability-const-return-type)
   const Node operator[](const std::string& path) const
   {
     if (this->has_path(path))
@@ -1370,6 +1372,7 @@ public:
 
   /// access child node via index (equivalent to fetch via index)
   Node operator[](conduit_index_t idx) { return child(idx); }
+  // NOLINTNEXTLINE(readability-const-return-type)
   const Node operator[](conduit_index_t idx) const { return child(idx); }
 
   /// returns the number of children (list and object interfaces)
