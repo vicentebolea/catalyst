@@ -107,7 +107,7 @@ int parse_fname(const std::regex& fname_patterns, const std::string& fname, int 
   unsigned long& num_execute_invoc_per_rank)
 {
   std::smatch matches;
-  std::string d_name_str(fname);
+  std::string const& d_name_str(fname);
   std::regex_search(d_name_str, matches, fname_patterns);
 
   if (matches.size() != 5)
