@@ -97,20 +97,25 @@ TEST(conduit_node_compare, compare_basic)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Self-Similarity Test //
-      Node n, info;
+      Node n;
+      Node info;
       n.set("");
       EXPECT_FALSE(diff_nodes(n, n, info));
     }
 
     { // Basic Difference Test //
-      Node n, o, info;
+      Node n;
+      Node o;
+      Node info;
       n.set(1);
       o.set(2);
       EXPECT_TRUE(diff_nodes(n, o, info));
     }
 
     { // Complex Difference Test //
-      Node n, o, info;
+      Node n;
+      Node o;
+      Node info;
 
       int data[3] = { 1, 2, 3 };
       n.set(data, 2);
@@ -151,7 +156,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
 {
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    Node n, o;
+    Node n;
+    Node o;
 
     // int8
     n.set(std::vector<int8>(5, 0));
@@ -293,7 +299,8 @@ TEST(conduit_node_compare, compare_leaf_string)
       n.set_external_char_ptr(leaf_buff, leaf_str.length() + 1, 10 - leaf_str.length() - 1);
 
       { // String Similarity Test //
-        Node o, info;
+        Node o;
+        Node info;
         o.set_external(n);
         EXPECT_FALSE(diff_nodes(n, o, info));
       }
@@ -303,7 +310,8 @@ TEST(conduit_node_compare, compare_leaf_string)
         memcpy(diff_buff, leaf_buff, leaf_buff_size);
         diff_buff[8] += 1;
 
-        Node o, info;
+        Node o;
+        Node info;
         o.set_external_char_ptr(diff_buff, leaf_str.length() + 1, 10 - leaf_str.length() - 1);
         EXPECT_TRUE(diff_nodes(n, o, info));
       }
@@ -316,7 +324,9 @@ TEST(conduit_node_compare, compare_leaf_mismatch)
 {
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    Node n, o, info;
+    Node n;
+    Node o;
+    Node info;
 
     n = (int32)1;
     o = (int64)1;
@@ -355,7 +365,8 @@ TEST(conduit_node_compare, compare_object_item_diff)
 {
   const index_t n_num_children = 5;
 
-  Node n_ref, o_ref;
+  Node n_ref;
+  Node o_ref;
   for (index_t ci = 0; ci < n_num_children; ci++)
   {
     std::string cs = to_string(ci);
@@ -365,7 +376,8 @@ TEST(conduit_node_compare, compare_object_item_diff)
 
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    const Node n(n_ref), o(o_ref);
+    const Node n(n_ref);
+    const Node o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
 
@@ -393,7 +405,9 @@ TEST(conduit_node_compare, compare_object_size_diff)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Full vs. Empty Node Test //
-      Node n(n_ref), o, info;
+      Node n(n_ref);
+      Node o;
+      Node info;
       // Add a node then immediately remove to make an
       // empty node with type object
       // TODO: Add dtypes to initialize directly from object?
@@ -411,7 +425,9 @@ TEST(conduit_node_compare, compare_object_size_diff)
     }
 
     { // Equal Node Test //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
       EXPECT_EQ(info["valid"].as_string(), "true");
@@ -430,7 +446,9 @@ TEST(conduit_node_compare, compare_object_size_diff)
     }
 
     { // Half-Full Node Check //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       for (index_t ci = 0; ci < n_num_children; ci++)
       {
         if (ci % 2 == 1)
@@ -466,7 +484,9 @@ TEST(conduit_node_compare, compare_list_item_diff)
 {
   const index_t n_num_children = 5;
 
-  Node n_ref, o_ref, info;
+  Node n_ref;
+  Node o_ref;
+  Node info;
   for (index_t ci = 0; ci < n_num_children; ci++)
   {
     n_ref.append().set(ci);
@@ -475,7 +495,8 @@ TEST(conduit_node_compare, compare_list_item_diff)
 
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    const Node n(n_ref), o(o_ref);
+    const Node n(n_ref);
+    const Node o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
 
@@ -501,7 +522,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Full vs. Empty Node Check //
-      Node n(n_ref), o, info;
+      Node n(n_ref);
+      Node o;
+      Node info;
       // Add a node then immediately remove to make an
       // empty node with type list
       // TODO: Add dtypes to initialize directly from list?
@@ -519,7 +542,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
     }
 
     { // Equal Node Check //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
       EXPECT_EQ(info["valid"].as_string(), "true");
@@ -532,7 +557,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
     }
 
     { // Half-Full Node Check //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       for (index_t ci = n_num_children - 1; ci >= n_num_children / 2; ci--)
       {
         o.remove(ci);
@@ -559,7 +586,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compatible_nodes)
 {
-  Node n1, n2, n3;
+  Node n1;
+  Node n2;
+  Node n3;
   n1["a"].set(std::vector<int64>(10, 0));
   n1["b"].set(std::vector<float64>(20, 0));
 
@@ -601,7 +630,9 @@ TEST(conduit_node_compare, compatible_nodes_with_lists)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compatible_nodes_dtype)
 {
-  Node obj, list, leaf;
+  Node obj;
+  Node list;
+  Node leaf;
   obj["a"].set_int32(10);
   list.append().set_int32(10);
   leaf.set_int32(10);

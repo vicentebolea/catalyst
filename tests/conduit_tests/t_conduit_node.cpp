@@ -1049,7 +1049,8 @@ TEST(conduit_node, check_as_bitwidth_ptr_const)
 // -----------------------------------------------------------------------------
 TEST(conduit_node, check_as_native_and_native_ptr_throw)
 {
-  Node n_int, n_float;
+  Node n_int;
+  Node n_float;
   n_int = (int)3;
   n_float = (float)3.14;
 
@@ -1098,7 +1099,8 @@ TEST(conduit_node, check_as_native_and_native_ptr_throw)
 // -----------------------------------------------------------------------------
 TEST(conduit_node, check_as_native_ptr_const_throw)
 {
-  Node n_int, n_float;
+  Node n_int;
+  Node n_float;
   n_int = (int)3;
   n_float = (float)3.14;
 
@@ -1128,7 +1130,8 @@ TEST(conduit_node, check_as_native_ptr_const_throw)
 // -----------------------------------------------------------------------------
 TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr_throw)
 {
-  Node n_int32, n_float32;
+  Node n_int32;
+  Node n_float32;
   n_int32 = (int32)3;
   n_float32 = (float32)3.14;
 
@@ -1164,7 +1167,8 @@ TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr_throw)
 //-----------------------------------------------------------------------------
 TEST(conduit_node, check_as_bitwidth_ptr_const_throw)
 {
-  Node n_int32, n_float32;
+  Node n_int32;
+  Node n_float32;
   n_int32 = (int32)3;
   n_float32 = (float32)3.14;
 
