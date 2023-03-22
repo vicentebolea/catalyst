@@ -103,6 +103,7 @@ int test_cpp_node_copy()
 
   conduit_cpp::Node n;
   conduit_cpp::Node clone = n;
+  (void)clone;
 
   return ret;
 }
