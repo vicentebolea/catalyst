@@ -249,7 +249,7 @@ int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_
   unsigned num_execute = 0;
   unsigned num_finalize = 0;
   const std::regex fname_patterns(
-    "^(initialize|execute|finalize)(_invc([0-9]+)*)?_params\\.conduit_bin\\.([0-9]+)\\.[0-9]+$");
+    R"(^(initialize|execute|finalize)(_invc([0-9]+)*)?_params\.conduit_bin\.([0-9]+)\.[0-9]+$)");
 
   int status = parse_directory(catalyst_data_dump_directory, fname_patterns, num_ranks,
     num_initialize, num_execute, num_finalize, num_execute_invoc_per_rank);
