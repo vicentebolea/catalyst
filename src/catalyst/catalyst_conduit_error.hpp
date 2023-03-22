@@ -46,6 +46,7 @@
 
 #include <exception>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include <conduit.h>
