@@ -70,9 +70,9 @@ public:
     m_what = message();
   }
 
-  Error(const std::string& msg, const std::string& file, conduit_index_t line)
-    : m_msg(msg)
-    , m_file(file)
+  Error(std::string msg, std::string file, conduit_index_t line)
+    : m_msg(std::move(msg))
+    , m_file(std::move(file))
     , m_line(line)
   {
     m_what = message();
