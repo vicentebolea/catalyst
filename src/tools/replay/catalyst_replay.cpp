@@ -21,6 +21,7 @@
 
 // NOLINTNEXTLINE(misc-no-recursion)
 void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int depth = 0)
+try
 {
   if (params.has_path("mpi_comm"))
   {
@@ -39,6 +40,11 @@ void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int
       replace_mpi_comm(child, communicator, depth + 1);
     }
   }
+}
+catch (conduit_cpp::Error const& e)
+{
+  fprintf(stderr, "conduit error: %s\n", e.what());
+  abort();
 }
 
 void replay_catalyst_initialize(
@@ -248,11 +254,20 @@ int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_
   unsigned num_initialize = 0;
   unsigned num_execute = 0;
   unsigned num_finalize = 0;
-  const std::regex fname_patterns(
-    R"(^(initialize|execute|finalize)(_invc([0-9]+)*)?_params\.conduit_bin\.([0-9]+)\.[0-9]+$)");
+  int status = 0;
 
-  int status = parse_directory(catalyst_data_dump_directory, fname_patterns, num_ranks,
-    num_initialize, num_execute, num_finalize, num_execute_invoc_per_rank);
+  try
+  {
+    const std::regex fname_patterns(
+      R"(^(initialize|execute|finalize)(_invc([0-9]+)*)?_params\.conduit_bin\.([0-9]+)\.[0-9]+$)");
+    status = parse_directory(catalyst_data_dump_directory, fname_patterns, num_ranks,
+      num_initialize, num_execute, num_finalize, num_execute_invoc_per_rank);
+  }
+  catch (std::regex_error const& e)
+  {
+    fprintf(stderr, "failed to construct `std::regex`: %s\n", e.what());
+    status = 1;
+  }
 
   if (status != 0)
   {
