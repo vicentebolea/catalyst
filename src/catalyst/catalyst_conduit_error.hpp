@@ -57,10 +57,7 @@ class Error : public std::exception
 {
 public:
   Error()
-    : m_msg("")
-    , m_file("")
-    , m_line(0)
-    , m_what("")
+    : m_line(0)
   {
     m_what = message();
   }
@@ -69,7 +66,6 @@ public:
     : m_msg(err.m_msg)
     , m_file(err.m_file)
     , m_line(err.m_line)
-    , m_what("")
   {
     m_what = message();
   }
@@ -78,7 +74,6 @@ public:
     : m_msg(msg)
     , m_file(file)
     , m_line(line)
-    , m_what("")
   {
     m_what = message();
   }
