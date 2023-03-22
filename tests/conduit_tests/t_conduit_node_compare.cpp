@@ -84,8 +84,8 @@ bool compatible_diff_nodes(const Node& lnode, const Node& rnode, Node& info)
   return lnode.diff_compatible(rnode, info, 0.0);
 }
 
-typedef bool (*NodeDiffFun)(const Node&, const Node&, Node&);
-typedef int (*CheckDatatypeFun)(const conduit_datatype* cdatatype);
+using NodeDiffFun = bool (*)(const Node&, const Node&, Node&);
+using CheckDatatypeFun = int (*)(const conduit_datatype* cdatatype);
 
 const NodeDiffFun NODE_DIFF_FUNS[2] = { diff_nodes, compatible_diff_nodes };
 

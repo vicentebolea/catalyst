@@ -67,25 +67,25 @@ Additional BSD Notice
 #include <conduit.h>
 
 /// unsigned integer typedefs
-typedef conduit_uint8 uint8;
-typedef conduit_uint16 uint16;
-typedef conduit_uint32 uint32;
-typedef conduit_uint64 uint64;
+using uint8 = conduit_uint8;
+using uint16 = conduit_uint16;
+using uint32 = conduit_uint32;
+using uint64 = conduit_uint64;
 
 /// signed integer typedefs
-typedef conduit_int8 int8;
-typedef conduit_int16 int16;
-typedef conduit_int32 int32;
-typedef conduit_int64 int64;
+using int8 = conduit_int8;
+using int16 = conduit_int16;
+using int32 = conduit_int32;
+using int64 = conduit_int64;
 
 // floating point typedefs
-typedef conduit_float32 float32;
-typedef conduit_float64 float64;
+using float32 = conduit_float32;
+using float64 = conduit_float64;
 
 /// index typedefs
-typedef conduit_index32_t index32_t;
-typedef conduit_index64_t index64_t;
+using index32_t = conduit_index32_t;
+using index64_t = conduit_index64_t;
 
 // conduit_index_t is defined in Bitwidth_Style_Types.h
 // it will be index64_t, unless CONDUIT_INDEX_32 is defined
-typedef conduit_index_t index_t;
+using index_t = conduit_index_t;
