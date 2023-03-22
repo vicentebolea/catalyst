@@ -19,6 +19,7 @@
 
 #include <cstdlib>
 
+// NOLINTNEXTLINE(misc-no-recursion)
 void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int depth = 0)
 {
   if (params.has_path("mpi_comm"))
