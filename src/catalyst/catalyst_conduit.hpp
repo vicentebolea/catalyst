@@ -1227,7 +1227,7 @@ public:
   ///  These methods provide general info about the node.
   //-----------------------------------------------------------------------------
 
-  DataType dtype() const { return DataType(this->c_dtype()); }
+  DataType dtype() const { return { this->c_dtype() }; }
   const conduit_datatype* c_dtype() const { return conduit_node_dtype(this->c_node); }
 
   //-------------------------------------------------------------------------
