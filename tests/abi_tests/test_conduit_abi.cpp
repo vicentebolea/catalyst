@@ -296,6 +296,7 @@ static int test_conduit_datatype_abi()
   return ret;
 }
 
+// NOLINTNEXTLINE(readability-function-size)
 static int test_conduit_node_abi()
 {
   int ret = EXIT_SUCCESS;
