@@ -78,10 +78,7 @@ public:
     m_what = message();
   }
 
-  ~Error() noexcept override
-  {
-    // empty
-  }
+  ~Error() noexcept override = default;
 
   void print() const { std::cout << message() << std::endl; }
 
