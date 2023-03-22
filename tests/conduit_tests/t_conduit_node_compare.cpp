@@ -94,10 +94,8 @@ const NodeDiffFun NODE_DIFF_FUNS[2] = { diff_nodes, compatible_diff_nodes };
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_basic)
 {
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     { // Self-Similarity Test //
       Node n, info;
       n.set("");
@@ -151,10 +149,8 @@ void compare_leaf_numeric(
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_numeric)
 {
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     Node n, o;
 
     // int8
@@ -276,10 +272,8 @@ TEST(conduit_node_compare, compare_leaf_string)
   size_t leaf_buff_size = 10;
   char compare_buffs[5][leaf_buff_size];
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     for (index_t ci = 0; ci < 4; ci++)
     {
       std::string leaf_str = compare_strs[ci];
@@ -320,10 +314,8 @@ TEST(conduit_node_compare, compare_leaf_string)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_mismatch)
 {
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     Node n, o, info;
 
     n = (int32)1;
@@ -371,10 +363,8 @@ TEST(conduit_node_compare, compare_object_item_diff)
     o_ref[cs].set(ci + (ci % 2));
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     const Node n(n_ref), o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
@@ -400,10 +390,8 @@ TEST(conduit_node_compare, compare_object_size_diff)
     n_ref[to_string(ci)].set(ci);
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     { // Full vs. Empty Node Test //
       Node n(n_ref), o, info;
       // Add a node then immediately remove to make an
@@ -485,10 +473,8 @@ TEST(conduit_node_compare, compare_list_item_diff)
     o_ref.append().set(ci + (ci % 2));
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     const Node n(n_ref), o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
@@ -512,10 +498,8 @@ TEST(conduit_node_compare, compare_list_size_diff)
     n_ref.append().set(ci);
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     { // Full vs. Empty Node Check //
       Node n(n_ref), o, info;
       // Add a node then immediately remove to make an
