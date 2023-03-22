@@ -275,15 +275,15 @@ TEST(conduit_node_compare, compare_leaf_numeric)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_string)
 {
-  const std::array<std::string, 4> compare_strs = { "I", "me", "You", "tHeM" };
-  size_t leaf_buff_size = 10;
-  char compare_buffs[5][leaf_buff_size];
+  const std::array<const std::string, 4> compare_strs = { "I", "me", "You", "tHeM" };
+  std::vector<std::array<char, 10>> compare_buffs;
+  compare_buffs.resize(compare_strs.size() + 1); // See `diff_buff` below for the `+1` reason.
 
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    for (index_t ci = 0; ci < 4; ci++)
+    for (index_t ci = 0; ci < compare_strs.size(); ci++)
     {
-      std::string leaf_str = compare_strs[ci];
+      std::string const& leaf_str = compare_strs[ci];
       // NOTE(JRC): This test applies a buffer offset to the data being
       // tested to push the data to the end of the buffer. For an
       // example test phrase "me", this buffer looks like the following:
@@ -291,14 +291,16 @@ TEST(conduit_node_compare, compare_leaf_string)
       //   [ _ _ _ _ _ _ _ m e / ]
       //     0 1 2 3 4 5 6 7 8 9
 
-      char* leaf_buff = (char*)&compare_buffs[ci];
-      char* leaf_cstr = (char*)&compare_buffs[ci + 1] - leaf_str.length() - 1;
-      memset(leaf_buff, 0, leaf_buff_size);
-      snprintf(leaf_cstr, leaf_buff_size, "%s", leaf_str.c_str());
+      auto& compare_buff = compare_buffs[ci];
+      char* leaf_buff = compare_buff.data();
+      memset(leaf_buff, 0, compare_buff.size());
+      size_t offset = compare_buff.size() - leaf_str.length() - 1;
+      char* leaf_cstr = compare_buff.data() + offset;
+      snprintf(leaf_cstr, compare_buff.size() - offset, "%s", leaf_str.c_str());
 
       Node n;
       n.set_external_char_ptr(leaf_buff, static_cast<conduit_index_t>(leaf_str.length() + 1),
-        static_cast<conduit_index_t>(10 - leaf_str.length() - 1));
+        static_cast<conduit_index_t>(offset));
 
       { // String Similarity Test //
         Node o;
@@ -308,14 +310,15 @@ TEST(conduit_node_compare, compare_leaf_string)
       }
 
       { // String Difference Test //
-        char* diff_buff = (char*)&compare_buffs[4];
-        memcpy(diff_buff, leaf_buff, leaf_buff_size);
+        auto& last_buff = compare_buffs[4];
+        char* diff_buff = last_buff.data();
+        memcpy(diff_buff, leaf_buff, last_buff.size());
         diff_buff[8] += 1;
 
         Node o;
         Node info;
         o.set_external_char_ptr(diff_buff, static_cast<conduit_index_t>(leaf_str.length() + 1),
-          static_cast<conduit_index_t>(10 - leaf_str.length() - 1));
+          static_cast<conduit_index_t>(offset));
         EXPECT_TRUE(diff_nodes(n, o, info));
       }
     }
