@@ -213,7 +213,7 @@ static int test_conduit_datatype_abi()
   do                                                                                               \
   {                                                                                                \
     using func_types = funcinfo<decltype(func)>;                                                   \
-    abi_require(&func, #func " must be defined");                                                  \
+    abi_require(&(func), #func " must be defined");                                                \
     static_assert(                                                                                 \
       std::is_same<func_types::return_t, rettype>::value, #func " must return " #rettype);         \
     abi_require(                                                                                   \
@@ -1293,6 +1293,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
         "conduit_node_set_" #stem "_ptr must take a conduit_node*");                               \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_" #stem "_ptr must take a " #ty);                                        \
       static_assert(                                                                               \
@@ -1312,6 +1313,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_node*");                      \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_" #stem "_ptr_detailed must take a " #ty "*");                           \
       static_assert(                                                                               \
@@ -1365,6 +1367,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
         "conduit_node_set_path_" #stem "_ptr must take a const char*");                            \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_path_" #stem "_ptr must take a " #ty "*");                               \
       static_assert(                                                                               \
@@ -1387,6 +1390,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a const char*");                   \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a " #ty "*");                      \
       static_assert(                                                                               \
@@ -1418,6 +1422,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
         "conduit_node_set_external_" #stem "_ptr must take a conduit_node*");                      \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_external_" #stem "_ptr must take a " #ty);                               \
       static_assert(                                                                               \
@@ -1437,6 +1442,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_node*");             \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a " #ty "*");                  \
       static_assert(                                                                               \
@@ -1471,6 +1477,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
         "conduit_node_set_path_external_" #stem "_ptr must take a const char*");                   \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_path_external_" #stem "_ptr must take a " #ty "*");                      \
       static_assert(                                                                               \
@@ -1493,6 +1500,7 @@ static int test_conduit_node_abi()
       static_assert(                                                                               \
         std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a const char*");          \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a " #ty "*");             \
       static_assert(                                                                               \
@@ -1529,6 +1537,7 @@ static int test_conduit_node_abi()
     {                                                                                              \
       using func_types = funcinfo<decltype(conduit_node_as_##stem##_ptr)>;                         \
       abi_require(&conduit_node_as_##stem##_ptr, "conduit_node_as_" #stem "_ptr must be defined"); \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<func_types::return_t, ty*>::value,                                \
         "conduit_node_as_" #stem "_ptr must return " #ty "*");                                     \
       abi_require(std::tuple_size<func_types::argument_t>::value == 1,                             \
@@ -1560,6 +1569,7 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_fetch_path_as_##stem##_ptr)>;              \
       abi_require(&conduit_node_fetch_path_as_##stem##_ptr,                                        \
         "conduit_node_fetch_path_as_" #stem "_ptr must be defined");                               \
+      /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
       static_assert(std::is_same<func_types::return_t, ty*>::value,                                \
         "conduit_node_fetch_path_as_" #stem "_ptr must return " #ty "*");                          \
       abi_require(std::tuple_size<func_types::argument_t>::value == 2,                             \

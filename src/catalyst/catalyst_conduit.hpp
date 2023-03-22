@@ -368,6 +368,7 @@ public:
 #define catalyst_conduit_c_setter_vector(cname, joined)                                            \
   void set(const std::vector<cname>& data)                                                         \
   {                                                                                                \
+    /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                               \
     conduit_node_set_##joined##_ptr(this->c_node, const_cast<cname*>(data.data()), data.size());   \
   }
 
@@ -432,6 +433,7 @@ public:
     conduit_index_t stride = sizeof(cname), conduit_index_t element_bytes = sizeof(cname),         \
     conduit_index_t endianness = 0)                                                                \
   {                                                                                                \
+    /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                               \
     conduit_node_set_##joined##_ptr_detailed(this->c_node, const_cast<cname*>(data), num_elements, \
       offset, stride, element_bytes, endianness);                                                  \
   }
@@ -577,7 +579,7 @@ public:
 #define catalyst_conduit_c_path_setter_vector(cname, joined)                                       \
   void set_path(const std::string& path, const std::vector<cname>& data)                           \
   {                                                                                                \
-    conduit_node_set_path_##joined##_ptr(                                                          \
+    conduit_node_set_path_##joined##_ptr(/* NOLINTNEXTLINE(bugprone-macro-parentheses) */          \
       this->c_node, path.c_str(), const_cast<cname*>(data.data()), data.size());                   \
   }
 
@@ -646,7 +648,8 @@ public:
     conduit_index_t offset = 0, conduit_index_t stride = sizeof(cname),                            \
     conduit_index_t element_bytes = sizeof(cname), conduit_index_t endianness = 0)                 \
   {                                                                                                \
-    conduit_node_set_path_##joined##_ptr_detailed(this->c_node, path.c_str(),                      \
+    conduit_node_set_path_##joined##_ptr_detailed(this->c_node,                                    \
+      path.c_str(), /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                               \
       const_cast<cname*>(data), num_elements, offset, stride, element_bytes, endianness);          \
   }
 
@@ -721,7 +724,7 @@ public:
 #define catalyst_conduit_c_external_setter_vector(cname, joined)                                   \
   void set_external(const std::vector<cname>& data)                                                \
   {                                                                                                \
-    conduit_node_set_external_##joined##_ptr(                                                      \
+    conduit_node_set_external_##joined##_ptr(/* NOLINTNEXTLINE(bugprone-macro-parentheses) */      \
       this->c_node, const_cast<cname*>(data.data()), data.size());                                 \
   }
 
@@ -784,6 +787,7 @@ public:
 #undef catalyst_conduit_external_setter_ptr
 
 #define catalyst_conduit_c_external_setter_ptr(cname, joined)                                      \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   void set_external(cname* data, conduit_index_t num_elements = 1, conduit_index_t offset = 0,     \
     conduit_index_t stride = sizeof(cname), conduit_index_t element_bytes = sizeof(cname),         \
     conduit_index_t endianness = 0)                                                                \
@@ -867,6 +871,7 @@ public:
 #undef catalyst_conduit_path_external_setter_vector
 
 #define catalyst_conduit_c_path_external_setter_vector(cname, joined)                              \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   void set_path_external(const std::string& path, std::vector<cname>& data)                        \
   {                                                                                                \
     conduit_node_set_path_external_##joined##_ptr(                                                 \
@@ -933,6 +938,7 @@ public:
 #undef catalyst_conduit_path_external_setter_ptr
 
 #define catalyst_conduit_c_path_external_setter_ptr(cname, joined)                                 \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   void set_path_external(const std::string& path, cname* data, conduit_index_t num_elements = 1,   \
     conduit_index_t offset = 0, conduit_index_t stride = sizeof(cname),                            \
     conduit_index_t element_bytes = sizeof(cname), conduit_index_t endianness = 0)                 \
@@ -996,6 +1002,7 @@ public:
   //-----------------------------------------------------------------------------
 
 #define catalyst_conduit_assign(dtype)                                                             \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   Node& operator=(dtype data)                                                                      \
   {                                                                                                \
     set(data);                                                                                     \
