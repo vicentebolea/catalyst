@@ -115,6 +115,7 @@ TEST(conduit_node, vector)
 {
 
   std::vector<uint32> vec;
+  vec.reserve(100);
   for (int i = 0; i < 100; i++)
   {
     vec.push_back(i);
@@ -130,6 +131,7 @@ TEST(conduit_node, list)
 {
 
   std::vector<uint32> vec;
+  vec.reserve(100);
   for (int i = 0; i < 100; i++)
   {
     vec.push_back(i);
