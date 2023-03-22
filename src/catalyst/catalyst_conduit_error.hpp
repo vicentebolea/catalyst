@@ -78,7 +78,7 @@ public:
     m_what = message();
   }
 
-  ~Error() noexcept
+  ~Error() noexcept override
   {
     // empty
   }
@@ -100,7 +100,7 @@ public:
     oss << "line: " << m_line << std::endl;
   }
 
-  const char* what() const noexcept { return m_what.c_str(); }
+  const char* what() const noexcept override { return m_what.c_str(); }
 
 private:
   std::string m_msg;
