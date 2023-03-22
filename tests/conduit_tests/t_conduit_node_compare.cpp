@@ -296,7 +296,8 @@ TEST(conduit_node_compare, compare_leaf_string)
       snprintf(leaf_cstr, leaf_buff_size, "%s", leaf_str.c_str());
 
       Node n;
-      n.set_external_char_ptr(leaf_buff, leaf_str.length() + 1, 10 - leaf_str.length() - 1);
+      n.set_external_char_ptr(leaf_buff, static_cast<conduit_index_t>(leaf_str.length() + 1),
+        static_cast<conduit_index_t>(10 - leaf_str.length() - 1));
 
       { // String Similarity Test //
         Node o;
@@ -312,7 +313,8 @@ TEST(conduit_node_compare, compare_leaf_string)
 
         Node o;
         Node info;
-        o.set_external_char_ptr(diff_buff, leaf_str.length() + 1, 10 - leaf_str.length() - 1);
+        o.set_external_char_ptr(diff_buff, static_cast<conduit_index_t>(leaf_str.length() + 1),
+          static_cast<conduit_index_t>(10 - leaf_str.length() - 1));
         EXPECT_TRUE(diff_nodes(n, o, info));
       }
     }

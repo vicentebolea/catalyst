@@ -641,7 +641,7 @@ TEST(conduit_node, rename_child)
   float32* c_vals = n["c"].as_float32_ptr();
   for (index_t i = 0; i < 10; i++)
   {
-    c_vals[i] = i;
+    c_vals[i] = (float32)i;
   }
 
   n.print();
