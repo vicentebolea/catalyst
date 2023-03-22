@@ -3,6 +3,7 @@
  * accompanying License.txt
  */
 
+// NOLINTNEXTLINE(bugprone-reserved-identifier)
 #define _GNU_SOURCE
 
 #include "catalyst_api.h"
