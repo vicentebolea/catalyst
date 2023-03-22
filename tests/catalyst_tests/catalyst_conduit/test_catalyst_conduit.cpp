@@ -80,7 +80,7 @@ int test_cpp_node_wrapping_destructor()
 {
   int ret = EXIT_SUCCESS;
 
-  conduit_cpp::Node* first_node = new conduit_cpp::Node();
+  auto* first_node = new conduit_cpp::Node();
   conduit_node* first_node_c_node = conduit_cpp::c_node(first_node);
   conduit_cpp::Node second_node = conduit_cpp::cpp_node(first_node_c_node);
   second_node["test"] = 2;

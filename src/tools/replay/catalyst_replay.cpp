@@ -354,7 +354,7 @@ int main(int argc, char** argv)
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num_ranks);
 
-  std::uint64_t communicator = static_cast<std::uint64_t>(MPI_Comm_c2f(MPI_COMM_WORLD));
+  auto communicator = static_cast<std::uint64_t>(MPI_Comm_c2f(MPI_COMM_WORLD));
 #else
   const std::uint64_t communicator = 0;
 #endif
