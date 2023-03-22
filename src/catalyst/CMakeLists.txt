@@ -70,6 +70,10 @@ if (BUILD_SHARED_LIBS)
       conduit_blueprint_c_EXPORTS)
 endif ()
 
+target_compile_features(catalyst
+  PUBLIC
+    cxx_std_11)
+
 add_library(catalyst::catalyst ALIAS catalyst)
 
 if (CATALYST_USE_MPI)
