@@ -1365,6 +1365,10 @@ public:
   {
     return conduit_node_number_of_children(this->c_node);
   }
+  conduit_index_t number_of_elements() const
+  {
+    return conduit_node_number_of_elements(this->c_node);
+  }
 
   // conduit_node_name uses strdup, which allocates memory
   // on the heap. Must free the result here after copying.
