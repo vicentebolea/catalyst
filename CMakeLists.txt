@@ -16,6 +16,10 @@ option(CATALYST_WRAP_PYTHON "Build Python FFI bindings to libcatalyst" OFF)
 if (CATALYST_WRAP_PYTHON)
   find_package(Python3 COMPONENTS Development NumPy REQUIRED)
 endif ()
+option(CATALYST_WRAP_FORTRAN "Build Fortran FFI bindings to libcatalyst" OFF)
+if (CATALYST_WRAP_FORTRAN)
+  enable_language(Fortran)
+endif ()
 
 #------------------------------------------------------------------------------
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

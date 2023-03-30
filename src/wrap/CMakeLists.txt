@@ -1,3 +1,6 @@
 if (CATALYST_WRAP_PYTHON)
   add_subdirectory(python)
 endif()
+if (CATALYST_WRAP_FORTRAN)
+  add_subdirectory(fortran)
+endif()
