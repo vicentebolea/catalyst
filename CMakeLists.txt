@@ -12,6 +12,10 @@ option(CATALYST_BUILD_SHARED_LIBS "Enable shared libs" ON)
 option(CATALYST_BUILD_TESTING "Enable testing" ON)
 option(CATALYST_BUILD_TOOLS "Build the catalyst tools" ON)
 option(CATALYST_USE_MPI "Enable MPI related features" OFF)
+option(CATALYST_WRAP_PYTHON "Build Python FFI bindings to libcatalyst" OFF)
+if (CATALYST_WRAP_PYTHON)
+  find_package(Python3 COMPONENTS Development NumPy REQUIRED)
+endif ()
 
 #------------------------------------------------------------------------------
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
