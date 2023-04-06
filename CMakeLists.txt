@@ -25,6 +25,9 @@ include(catalyst-sanitize)
 include(cCompilerChecks)
 include(cInitializeBuildType)
 include(cDirectories)
+if (CATALYST_WRAP_PYTHON)
+  include(catalyst-python-macros)
+endif ()
 
 # Currently, we require shared builds.
 set(BUILD_SHARED_LIBS ${CATALYST_BUILD_SHARED_LIBS})
