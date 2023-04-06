@@ -29,4 +29,7 @@ if(CATALYST_WRAP_PYTHON)
 
   catalyst_add_python_test(SCRIPT test_catalyst_import.py
                            NAME test_catalyst_import_python)
+
+  catalyst_add_python_test(SCRIPT test_double_impl.py
+                           NAME test_double_impl_python)
 endif()
