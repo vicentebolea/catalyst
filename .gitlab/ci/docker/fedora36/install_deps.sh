@@ -16,4 +16,8 @@ dnf install -y --setopt=install_weak_deps=False \
     gcc gcc-c++ \
     ninja-build
 
+# Python dependencies
+dnf install -y --setopt=install_weak_deps=False \
+  python-devel python-numpy
+
 dnf clean all
