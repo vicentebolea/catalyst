@@ -189,3 +189,47 @@ function (catalyst_module_add_python_package name)
     DEPENDS
       ${_catalyst_add_python_package_file_outputs})
 endfunction ()
+
+
+#[==[
+@brief Add a python test
+
+~~~
+catalyst_add_python_test(
+  [SCRIPT <path to script>
+  [NAME <test_name>]
+)
+~~~
+  * `SCRIPT`: (Required) path to the test script
+  * `NAME`: (Optional) name for this test. If none is provide `<test>` will be used.
+
+Creates a cmake test with the PYTHONPATH environmental variable set  so that
+python can find our modules
+#]==]
+function (catalyst_add_python_test)
+  cmake_parse_arguments(PARSE_ARGV 0 _catalyst_add_python_test
+    ""
+    "SCRIPT;NAME"
+    "")
+
+  if (_catalyst_add_python_test_UNPARSED_ARGUMENTS)
+    message(FATAL_ERROR
+      "Unparsed arguments for catalyst_add_test: "
+      "${_catalyst_add_python_test_UNPARSED_ARGUMENTS}")
+  endif ()
+
+  if (NOT _catalyst_add_python_test_SCRIPT)
+    message(FATAL_ERROR
+      "The SCRIPT argument is required")
+  endif ()
+
+  if (NOT _catalyst_add_python_test_NAME)
+     set(_catalyst_add_python_test_NAME ${_catalyst_add_python_test_SCRIPT})
+  endif ()
+
+  add_test(NAME ${_catalyst_add_python_test_NAME}
+      COMMAND ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages
+          ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${_catalyst_add_python_test_SCRIPT}
+  )
+  set_tests_properties(${_catalyst_add_python_test_NAME} PROPERTIES LABELS "Python")
+endfunction()
