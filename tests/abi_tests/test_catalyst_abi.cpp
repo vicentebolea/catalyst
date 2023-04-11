@@ -9,6 +9,7 @@
 #include <catalyst_impl.h>
 #include <catalyst_stub.h>
 
+#include <array>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
@@ -138,43 +139,43 @@ static int test_catalyst_impl()
   // Only add assertions to this list; removal or modification of any
   // checks constitutes an ABI break.
 
-  constexpr size_t offsets_32bit[] = { 0, 4, 8, 12, 16, 20 };
-  constexpr size_t offsets_64bit[] = { 0, 8, 16, 24, 32, 40 };
-  constexpr size_t offsets_64bit_packed[] = { 0, 4, 12, 20, 28, 36 };
-  constexpr size_t offsets_128bit[] = { 0, 16, 32, 40, 56, 72 };
-  constexpr size_t offsets_128bit_half_packed[] = { 0, 8, 24, 32, 40, 56 };
-  constexpr size_t offsets_128bit_packed[] = { 0, 4, 20, 28, 36, 52 };
+  constexpr std::array<size_t, 6> offsets_32bit = { 0, 4, 8, 12, 16, 20 };
+  constexpr std::array<size_t, 6> offsets_64bit = { 0, 8, 16, 24, 32, 40 };
+  constexpr std::array<size_t, 6> offsets_64bit_packed = { 0, 4, 12, 20, 28, 36 };
+  constexpr std::array<size_t, 6> offsets_128bit = { 0, 16, 32, 40, 56, 72 };
+  constexpr std::array<size_t, 6> offsets_128bit_half_packed = { 0, 8, 24, 32, 40, 56 };
+  constexpr std::array<size_t, 6> offsets_128bit_packed = { 0, 4, 20, 28, 36, 52 };
 
   const size_t* offsets = nullptr;
 
   if (sizeof(void*) == 4)
   {
-    offsets = offsets_32bit;
+    offsets = offsets_32bit.data();
   }
   else if (sizeof(void*) == 8)
   {
     if (alignof(void*) == 8)
     {
-      offsets = offsets_64bit;
+      offsets = offsets_64bit.data();
     }
     else
     {
-      offsets = offsets_64bit_packed;
+      offsets = offsets_64bit_packed.data();
     }
   }
   else if (sizeof(void*) == 16)
   {
     if (alignof(void*) == 16)
     {
-      offsets = offsets_128bit;
+      offsets = offsets_128bit.data();
     }
     else if (alignof(void*) == 8)
     {
-      offsets = offsets_128bit_half_packed;
+      offsets = offsets_128bit_half_packed.data();
     }
     else
     {
-      offsets = offsets_128bit_packed;
+      offsets = offsets_128bit_packed.data();
     }
   }
 
@@ -187,7 +188,6 @@ static int test_catalyst_impl()
     fprintf(stdout, "finalize: %zu\n", offsets[3]);
     fprintf(stdout, "about: %zu\n", offsets[4]);
     fprintf(stdout, "results: %zu\n", offsets[5]);
-    fprintf(stdout, "conduit_is_external: %zu\n", offsets[6]);
   }
   else
   {
@@ -298,7 +298,7 @@ static int test_catalyst_stub()
   return ret;
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
   int ret = EXIT_SUCCESS;
 

@@ -53,8 +53,9 @@
 
 #include "gtest/gtest.h"
 #include <algorithm>
+#include <array>
+#include <cstring>
 #include <iostream>
-#include <string.h>
 #include <string>
 #include <vector>
 
@@ -84,39 +85,42 @@ bool compatible_diff_nodes(const Node& lnode, const Node& rnode, Node& info)
   return lnode.diff_compatible(rnode, info, 0.0);
 }
 
-typedef bool (*NodeDiffFun)(const Node&, const Node&, Node&);
-typedef int (*CheckDatatypeFun)(const conduit_datatype* cdatatype);
+using NodeDiffFun = bool (*)(const Node&, const Node&, Node&);
+using CheckDatatypeFun = int (*)(const conduit_datatype* cdatatype);
 
-const NodeDiffFun NODE_DIFF_FUNS[2] = { diff_nodes, compatible_diff_nodes };
+const std::array<const NodeDiffFun, 2> NODE_DIFF_FUNS = { diff_nodes, compatible_diff_nodes };
 
 /// Testing Functions ///
 
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_basic)
 {
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     { // Self-Similarity Test //
-      Node n, info;
+      Node n;
+      Node info;
       n.set("");
       EXPECT_FALSE(diff_nodes(n, n, info));
     }
 
     { // Basic Difference Test //
-      Node n, o, info;
+      Node n;
+      Node o;
+      Node info;
       n.set(1);
       o.set(2);
       EXPECT_TRUE(diff_nodes(n, o, info));
     }
 
     { // Complex Difference Test //
-      Node n, o, info;
+      Node n;
+      Node o;
+      Node info;
 
-      int data[3] = { 1, 2, 3 };
-      n.set(data, 2);
-      o.set(data, 3);
+      std::array<int, 3> data = { 1, 2, 3 };
+      n.set(data.data(), data.size() - 1);
+      o.set(data.data(), data.size());
 
       if (diff_nodes == compatible_diff_nodes)
       {
@@ -151,11 +155,10 @@ void compare_leaf_numeric(
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_numeric)
 {
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
-    Node n, o;
+    Node n;
+    Node o;
 
     // int8
     n.set(std::vector<int8>(5, 0));
@@ -272,17 +275,15 @@ TEST(conduit_node_compare, compare_leaf_numeric)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_string)
 {
-  const std::string compare_strs[4] = { "I", "me", "You", "tHeM" };
-  size_t leaf_buff_size = 10;
-  char compare_buffs[5][leaf_buff_size];
+  const std::array<const std::string, 4> compare_strs = { "I", "me", "You", "tHeM" };
+  std::vector<std::array<char, 10>> compare_buffs;
+  compare_buffs.resize(compare_strs.size() + 1); // See `diff_buff` below for the `+1` reason.
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
-    for (index_t ci = 0; ci < 4; ci++)
+    for (index_t ci = 0; ci < compare_strs.size(); ci++)
     {
-      std::string leaf_str = compare_strs[ci];
+      std::string const& leaf_str = compare_strs[ci];
       // NOTE(JRC): This test applies a buffer offset to the data being
       // tested to push the data to the end of the buffer. For an
       // example test phrase "me", this buffer looks like the following:
@@ -290,27 +291,34 @@ TEST(conduit_node_compare, compare_leaf_string)
       //   [ _ _ _ _ _ _ _ m e / ]
       //     0 1 2 3 4 5 6 7 8 9
 
-      char* leaf_buff = (char*)&compare_buffs[ci];
-      char* leaf_cstr = (char*)&compare_buffs[ci + 1] - leaf_str.length() - 1;
-      memset(leaf_buff, 0, leaf_buff_size);
-      snprintf(leaf_cstr, leaf_buff_size, "%s", leaf_str.c_str());
+      auto& compare_buff = compare_buffs[ci];
+      char* leaf_buff = compare_buff.data();
+      memset(leaf_buff, 0, compare_buff.size());
+      size_t offset = compare_buff.size() - leaf_str.length() - 1;
+      char* leaf_cstr = compare_buff.data() + offset;
+      snprintf(leaf_cstr, compare_buff.size() - offset, "%s", leaf_str.c_str());
 
       Node n;
-      n.set_external_char_ptr(leaf_buff, leaf_str.length() + 1, 10 - leaf_str.length() - 1);
+      n.set_external_char_ptr(leaf_buff, static_cast<conduit_index_t>(leaf_str.length() + 1),
+        static_cast<conduit_index_t>(offset));
 
       { // String Similarity Test //
-        Node o, info;
+        Node o;
+        Node info;
         o.set_external(n);
         EXPECT_FALSE(diff_nodes(n, o, info));
       }
 
       { // String Difference Test //
-        char* diff_buff = (char*)&compare_buffs[4];
-        memcpy(diff_buff, leaf_buff, leaf_buff_size);
+        auto& last_buff = compare_buffs[4];
+        char* diff_buff = last_buff.data();
+        memcpy(diff_buff, leaf_buff, last_buff.size());
         diff_buff[8] += 1;
 
-        Node o, info;
-        o.set_external_char_ptr(diff_buff, leaf_str.length() + 1, 10 - leaf_str.length() - 1);
+        Node o;
+        Node info;
+        o.set_external_char_ptr(diff_buff, static_cast<conduit_index_t>(leaf_str.length() + 1),
+          static_cast<conduit_index_t>(offset));
         EXPECT_TRUE(diff_nodes(n, o, info));
       }
     }
@@ -320,11 +328,11 @@ TEST(conduit_node_compare, compare_leaf_string)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compare_leaf_mismatch)
 {
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
-    Node n, o, info;
+    Node n;
+    Node o;
+    Node info;
 
     n = (int32)1;
     o = (int64)1;
@@ -363,7 +371,8 @@ TEST(conduit_node_compare, compare_object_item_diff)
 {
   const index_t n_num_children = 5;
 
-  Node n_ref, o_ref;
+  Node n_ref;
+  Node o_ref;
   for (index_t ci = 0; ci < n_num_children; ci++)
   {
     std::string cs = to_string(ci);
@@ -371,11 +380,10 @@ TEST(conduit_node_compare, compare_object_item_diff)
     o_ref[cs].set(ci + (ci % 2));
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
-    const Node n(n_ref), o(o_ref);
+    const Node n(n_ref);
+    const Node o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
 
@@ -400,12 +408,12 @@ TEST(conduit_node_compare, compare_object_size_diff)
     n_ref[to_string(ci)].set(ci);
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     { // Full vs. Empty Node Test //
-      Node n(n_ref), o, info;
+      Node n(n_ref);
+      Node o;
+      Node info;
       // Add a node then immediately remove to make an
       // empty node with type object
       // TODO: Add dtypes to initialize directly from object?
@@ -423,7 +431,9 @@ TEST(conduit_node_compare, compare_object_size_diff)
     }
 
     { // Equal Node Test //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
       EXPECT_EQ(info["valid"].as_string(), "true");
@@ -442,7 +452,9 @@ TEST(conduit_node_compare, compare_object_size_diff)
     }
 
     { // Half-Full Node Check //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       for (index_t ci = 0; ci < n_num_children; ci++)
       {
         if (ci % 2 == 1)
@@ -478,18 +490,19 @@ TEST(conduit_node_compare, compare_list_item_diff)
 {
   const index_t n_num_children = 5;
 
-  Node n_ref, o_ref, info;
+  Node n_ref;
+  Node o_ref;
+  Node info;
   for (index_t ci = 0; ci < n_num_children; ci++)
   {
     n_ref.append().set(ci);
     o_ref.append().set(ci + (ci % 2));
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
-    const Node n(n_ref), o(o_ref);
+    const Node n(n_ref);
+    const Node o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
 
@@ -512,12 +525,12 @@ TEST(conduit_node_compare, compare_list_size_diff)
     n_ref.append().set(ci);
   }
 
-  for (index_t fi = 0; fi < 2; fi++)
+  for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    NodeDiffFun diff_nodes = NODE_DIFF_FUNS[fi];
-
     { // Full vs. Empty Node Check //
-      Node n(n_ref), o, info;
+      Node n(n_ref);
+      Node o;
+      Node info;
       // Add a node then immediately remove to make an
       // empty node with type list
       // TODO: Add dtypes to initialize directly from list?
@@ -535,7 +548,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
     }
 
     { // Equal Node Check //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
       EXPECT_EQ(info["valid"].as_string(), "true");
@@ -548,7 +563,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
     }
 
     { // Half-Full Node Check //
-      Node n(n_ref), o(n_ref), info;
+      Node n(n_ref);
+      Node o(n_ref);
+      Node info;
       for (index_t ci = n_num_children - 1; ci >= n_num_children / 2; ci--)
       {
         o.remove(ci);
@@ -575,7 +592,9 @@ TEST(conduit_node_compare, compare_list_size_diff)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compatible_nodes)
 {
-  Node n1, n2, n3;
+  Node n1;
+  Node n2;
+  Node n3;
   n1["a"].set(std::vector<int64>(10, 0));
   n1["b"].set(std::vector<float64>(20, 0));
 
@@ -617,7 +636,9 @@ TEST(conduit_node_compare, compatible_nodes_with_lists)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_compare, compatible_nodes_dtype)
 {
-  Node obj, list, leaf;
+  Node obj;
+  Node list;
+  Node leaf;
   obj["a"].set_int32(10);
   list.append().set_int32(10);
   leaf.set_int32(10);

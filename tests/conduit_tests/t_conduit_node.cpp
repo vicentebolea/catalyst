@@ -52,6 +52,7 @@
 #include "catalyst_conduit.hpp"
 
 #include "gtest/gtest.h"
+#include <array>
 #include <iostream>
 
 using namespace conduit_cpp;
@@ -114,8 +115,11 @@ TEST(conduit_node, vector)
 {
 
   std::vector<uint32> vec;
+  vec.reserve(100);
   for (int i = 0; i < 100; i++)
+  {
     vec.push_back(i);
+  }
 
   Node n;
   n["a"] = vec;
@@ -127,8 +131,11 @@ TEST(conduit_node, list)
 {
 
   std::vector<uint32> vec;
+  vec.reserve(100);
   for (int i = 0; i < 100; i++)
+  {
     vec.push_back(i);
+  }
 
   Node n;
   Node list = n["mylist"];
@@ -245,33 +252,33 @@ TEST(conduit_node, remove_by_name_throw)
 //-----------------------------------------------------------------------------
 TEST(conduit_node, check_contiguous)
 {
-  uint8 u8av[6] = { 2, 4, 8, 16, 32, 64 };
-  uint16 u16av[6] = { 2, 4, 8, 16, 32, 64 };
-  uint32 u32av[6] = { 2, 4, 8, 16, 32, 64 };
-  uint64 u64av[6] = { 2, 4, 8, 16, 32, 64 };
+  std::array<uint8, 6> u8av = { 2, 4, 8, 16, 32, 64 };
+  std::array<uint16, 6> u16av = { 2, 4, 8, 16, 32, 64 };
+  std::array<uint32, 6> u32av = { 2, 4, 8, 16, 32, 64 };
+  std::array<uint64, 6> u64av = { 2, 4, 8, 16, 32, 64 };
 
   Node n;
-  n["a"].set_external(u8av);
-  n["b"].set_external(u16av);
-  n["c"].set_external(u32av);
-  n["d"].set_external(u64av);
+  n["a"].set_external(u8av.data());
+  n["b"].set_external(u16av.data());
+  n["c"].set_external(u32av.data());
+  n["d"].set_external(u64av.data());
 
   // not contig
   EXPECT_FALSE(n.is_contiguous());
 
   // contig external
   Node n2;
-  n2["a"].set_external(u64av, 2);
-  n2["b"].set_external(u64av, 4, sizeof(uint64) * 2);
+  n2["a"].set_external(u64av.data(), 2);
+  n2["b"].set_external(u64av.data(), 4, sizeof(uint64) * 2);
   EXPECT_TRUE(n2.is_contiguous());
 
   // make non contig
-  n2["c"].set_external(u64av, 3, sizeof(uint64) * 3);
+  n2["c"].set_external(u64av.data(), 3, sizeof(uint64) * 3);
   EXPECT_FALSE(n2.is_contiguous());
 
   Node n3;
-  n3["a"].set_external(u64av, 2);
-  n3["b"].set_external(u64av, 2, sizeof(uint64) * 2, sizeof(uint64) * 2);
+  n3["a"].set_external(u64av.data(), 2);
+  n3["b"].set_external(u64av.data(), 2, sizeof(uint64) * 2, sizeof(uint64) * 2);
   EXPECT_TRUE(n3.is_contiguous());
 
   // nested contig
@@ -284,20 +291,20 @@ TEST(conduit_node, check_contiguous)
 //-----------------------------------------------------------------------------
 TEST(conduit_node, check_contiguous_with)
 {
-  uint64 u64av[10] = { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+  std::array<uint64, 10> u64av = { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
 
   Node n1;
-  n1["a"].set_external(u64av, 5);
-  n1["b"].set_external(u64av, 5, 5 * sizeof(uint64));
+  n1["a"].set_external(u64av.data(), 5);
+  n1["b"].set_external(u64av.data(), 5, 5 * sizeof(uint64));
 
   n1.print();
 
   // and contig
   EXPECT_TRUE(n1.is_contiguous());
 
-  // we don't expect things to be contig with NULL
-  EXPECT_FALSE(n1["a"].contiguous_with(NULL));
-  EXPECT_FALSE(n1["b"].contiguous_with(NULL));
+  // we don't expect things to be contig with nullptr
+  EXPECT_FALSE(n1["a"].contiguous_with(nullptr));
+  EXPECT_FALSE(n1["b"].contiguous_with(nullptr));
 
   // b should be contig with a
   EXPECT_TRUE(n1["b"].contiguous_with(n1["a"]));
@@ -313,9 +320,9 @@ TEST(conduit_node, check_contiguous_with)
   EXPECT_TRUE(n1["b"].contiguous_with(n1["a"].element_ptr(5)));
 
   Node n2;
-  n2["a"].set_external(u64av, 5);
-  n2["b"].set_external_uint8_ptr(NULL);
-  n2["c"].set_external(u64av, 5, 5 * sizeof(uint64));
+  n2["a"].set_external(u64av.data(), 5);
+  n2["b"].set_external_uint8_ptr(nullptr);
+  n2["c"].set_external(u64av.data(), 5, 5 * sizeof(uint64));
 
   // we expect c to be contig with a
   EXPECT_TRUE(n2["c"].contiguous_with(n2["a"]));
@@ -328,9 +335,9 @@ TEST(conduit_node, check_contiguous_with)
   EXPECT_TRUE(n2.is_contiguous());
 
   // but an empy leaf type in middle shouldn't break contig
-  n2["a"].set_external(u64av, 5);
+  n2["a"].set_external(u64av.data(), 5);
   n2["b"] = Node();
-  n2["c"].set_external(u64av, 5, 5 * sizeof(uint64));
+  n2["c"].set_external(u64av.data(), 5, 5 * sizeof(uint64));
 
   EXPECT_TRUE(n2.is_contiguous());
 }
@@ -474,9 +481,9 @@ TEST(conduit_node, index_operator_with_index_no_copy)
 TEST(conduit_node, check_const_access_path)
 {
   Node n;
-  int64 arr[2] = { 1, 2 };
+  std::array<int64, 2> arr = { 1, 2 };
   n["a/b"].set_int32(10);
-  n["a/c"].set_int64_ptr(arr, 2);
+  n["a/c"].set_int64_ptr(arr.data(), arr.size());
 
   const Node n_a = n["a"];
   const int64* c_vals_const = n_a["c"].as_int64_ptr();
@@ -502,10 +509,10 @@ TEST(conduit_node, check_const_access_path)
 TEST(conduit_node, check_const_access_index)
 {
   Node n;
-  int64 arr[2] = { 1, 2 };
+  std::array<int64, 2> arr = { 1, 2 };
   n.append();
   n[0].append().set_int32(10);
-  n[0].append().set_int64_ptr(arr, 2);
+  n[0].append().set_int64_ptr(arr.data(), arr.size());
 
   const Node n_0 = n[0];
   const int64* ptr_vals_const = n_0[1].as_int64_ptr();
@@ -582,8 +589,8 @@ TEST(conduit_node, node_more_set_cases)
   Node n;
 
   // create complex tree
-  int64 val[2];
-  n["a/b/c/d"].append().set_external(val, 2);
+  std::array<int64, 2> val;
+  n["a/b/c/d"].append().set_external(val.data(), val.size());
 
   int64* cvals = n["a/b/c/d"][0].as_int64_ptr();
   cvals[0] = 1;
@@ -607,11 +614,11 @@ TEST(conduit_node, node_more_set_cases)
   n2.print();
   n3.print();
 
-  float64 fval[1] = { 3.1415 };
+  std::array<float64, 1> fval = { 3.1415 };
 
   Node n4;
-  n4["a"].set(fval);
-  n4.set_path("b", fval);
+  n4["a"].set(fval.data());
+  n4.set_path("b", fval.data());
 
   EXPECT_EQ(n4["a"].as_float64(), fval[0]);
   EXPECT_EQ(n4["b"].as_float64(), fval[0]);
@@ -634,7 +641,7 @@ TEST(conduit_node, rename_child)
   float32* c_vals = n["c"].as_float32_ptr();
   for (index_t i = 0; i < 10; i++)
   {
-    c_vals[i] = i;
+    c_vals[i] = (float32)i;
   }
 
   n.print();
@@ -697,7 +704,7 @@ TEST(conduit_node, check_as_native_and_native_ptr)
   unsigned int uiv = 3;
   unsigned long ulv = 4;
 
-  float fv = 1.2f;
+  float fv = 1.2F;
   double dv = 2.4;
 
   const char* char_strv = "str1";
@@ -824,7 +831,7 @@ TEST(conduit_node, check_as_native_ptr_const)
   unsigned int uiv = 3;
   unsigned long ulv = 4;
 
-  float fv = 1.2f;
+  float fv = 1.2F;
   double dv = 2.4;
 
   const char* char_strv = "str1";
@@ -908,7 +915,7 @@ TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr)
   uint32 ui32v = 3;
   uint64 ui64v = 4;
 
-  float32 f32v = 1.2f;
+  float32 f32v = 1.2F;
   float64 f64v = 2.4;
 
   n["i8v"] = i8v;
@@ -994,7 +1001,7 @@ TEST(conduit_node, check_as_bitwidth_ptr_const)
   uint32 ui32v = 3;
   uint64 ui64v = 4;
 
-  float32 f32v = 1.2f;
+  float32 f32v = 1.2F;
   float64 f64v = 2.4;
 
   n["i8v"] = i8v;
@@ -1044,7 +1051,8 @@ TEST(conduit_node, check_as_bitwidth_ptr_const)
 // -----------------------------------------------------------------------------
 TEST(conduit_node, check_as_native_and_native_ptr_throw)
 {
-  Node n_int, n_float;
+  Node n_int;
+  Node n_float;
   n_int = (int)3;
   n_float = (float)3.14;
 
@@ -1093,7 +1101,8 @@ TEST(conduit_node, check_as_native_and_native_ptr_throw)
 // -----------------------------------------------------------------------------
 TEST(conduit_node, check_as_native_ptr_const_throw)
 {
-  Node n_int, n_float;
+  Node n_int;
+  Node n_float;
   n_int = (int)3;
   n_float = (float)3.14;
 
@@ -1123,7 +1132,8 @@ TEST(conduit_node, check_as_native_ptr_const_throw)
 // -----------------------------------------------------------------------------
 TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr_throw)
 {
-  Node n_int32, n_float32;
+  Node n_int32;
+  Node n_float32;
   n_int32 = (int32)3;
   n_float32 = (float32)3.14;
 
@@ -1159,7 +1169,8 @@ TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr_throw)
 //-----------------------------------------------------------------------------
 TEST(conduit_node, check_as_bitwidth_ptr_const_throw)
 {
-  Node n_int32, n_float32;
+  Node n_int32;
+  Node n_float32;
   n_int32 = (int32)3;
   n_float32 = (float32)3.14;
 
@@ -1298,7 +1309,7 @@ TEST(conduit_node_set, check_assignment_from_bitwidth_vec)
 
   std::vector<float32> f32_vec(1);
   std::vector<float64> f64_vec(1);
-  f32_vec[0] = 2.71828f;
+  f32_vec[0] = 2.71828F;
   f64_vec[0] = 3.1415;
 
   // set
@@ -1381,7 +1392,7 @@ TEST(conduit_node_set, check_assignment_from_cstyle_vec)
 
   std::vector<float> f_vec(1);
   std::vector<double> d_vec(1);
-  f_vec[0] = 2.71828f;
+  f_vec[0] = 2.71828F;
   d_vec[0] = 3.1415;
 
   // set

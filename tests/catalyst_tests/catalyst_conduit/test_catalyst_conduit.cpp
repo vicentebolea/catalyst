@@ -5,8 +5,8 @@
 
 #include <catalyst_conduit.hpp>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 int test_cpp_node_wrapping_data()
 {
@@ -80,7 +80,7 @@ int test_cpp_node_wrapping_destructor()
 {
   int ret = EXIT_SUCCESS;
 
-  conduit_cpp::Node* first_node = new conduit_cpp::Node();
+  auto* first_node = new conduit_cpp::Node();
   conduit_node* first_node_c_node = conduit_cpp::c_node(first_node);
   conduit_cpp::Node second_node = conduit_cpp::cpp_node(first_node_c_node);
   second_node["test"] = 2;
@@ -103,15 +103,26 @@ int test_cpp_node_copy()
 
   conduit_cpp::Node n;
   conduit_cpp::Node clone = n;
+  (void)clone;
 
   return ret;
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
   int ret = EXIT_SUCCESS;
 
-  int test_ret = test_cpp_node_wrapping_data();
+  int test_ret = EXIT_SUCCESS;
+
+  try
+  {
+    test_ret = test_cpp_node_wrapping_data();
+  }
+  catch (conduit_cpp::Error const& err)
+  {
+    fprintf(stderr, "Caught exception from `test_cpp_node_wrapping_data`: %s\n", err.what());
+    test_ret = EXIT_FAILURE;
+  }
   if (test_ret != EXIT_SUCCESS)
   {
     ret = test_ret;
@@ -119,7 +130,16 @@ int main(int argc, char* argv[])
 
   if (ret == EXIT_SUCCESS)
   {
-    test_ret = test_cpp_node_wrapping_on_child_node();
+    try
+    {
+      test_ret = test_cpp_node_wrapping_on_child_node();
+    }
+    catch (conduit_cpp::Error const& err)
+    {
+      fprintf(
+        stderr, "Caught exception from `test_cpp_node_wrapping_on_child_node`: %s\n", err.what());
+      test_ret = EXIT_FAILURE;
+    }
     if (test_ret != EXIT_SUCCESS)
     {
       ret = test_ret;

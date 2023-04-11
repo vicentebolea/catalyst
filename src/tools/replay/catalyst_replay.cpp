@@ -19,7 +19,9 @@
 
 #include <cstdlib>
 
+// NOLINTNEXTLINE(misc-no-recursion)
 void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int depth = 0)
+try
 {
   if (params.has_path("mpi_comm"))
   {
@@ -38,6 +40,11 @@ void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int
       replace_mpi_comm(child, communicator, depth + 1);
     }
   }
+}
+catch (conduit_cpp::Error const& e)
+{
+  fprintf(stderr, "conduit error: %s\n", e.what());
+  abort();
 }
 
 void replay_catalyst_initialize(
@@ -107,7 +114,7 @@ int parse_fname(const std::regex& fname_patterns, const std::string& fname, int 
   unsigned long& num_execute_invoc_per_rank)
 {
   std::smatch matches;
-  std::string d_name_str(fname);
+  std::string const& d_name_str(fname);
   std::regex_search(d_name_str, matches, fname_patterns);
 
   if (matches.size() != 5)
@@ -138,19 +145,27 @@ int parse_fname(const std::regex& fname_patterns, const std::string& fname, int 
     std::stringstream(matches[3]) >> execute_invc_num;
 
     if (execute_invc_num + 1 > num_execute_invoc_per_rank)
+    {
       num_execute_invoc_per_rank = execute_invc_num + 1;
+    }
   }
 
   std::string stage = matches[1];
 
   if (stage == "initialize")
+  {
     num_initialize++;
+  }
 
   else if (stage == "execute")
+  {
     num_execute++;
+  }
 
   else if (stage == "finalize")
+  {
     num_finalize++;
+  }
 
   return 0;
 }
@@ -239,14 +254,25 @@ int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_
   unsigned num_initialize = 0;
   unsigned num_execute = 0;
   unsigned num_finalize = 0;
-  const std::regex fname_patterns(
-    "^(initialize|execute|finalize)(_invc([0-9]+)*)?_params\\.conduit_bin\\.([0-9]+)\\.[0-9]+$");
+  int status = 0;
 
-  int status = parse_directory(catalyst_data_dump_directory, fname_patterns, num_ranks,
-    num_initialize, num_execute, num_finalize, num_execute_invoc_per_rank);
+  try
+  {
+    const std::regex fname_patterns(
+      R"(^(initialize|execute|finalize)(_invc([0-9]+)*)?_params\.conduit_bin\.([0-9]+)\.[0-9]+$)");
+    status = parse_directory(catalyst_data_dump_directory, fname_patterns, num_ranks,
+      num_initialize, num_execute, num_finalize, num_execute_invoc_per_rank);
+  }
+  catch (std::regex_error const& e)
+  {
+    fprintf(stderr, "failed to construct `std::regex`: %s\n", e.what());
+    status = 1;
+  }
 
   if (status != 0)
+  {
     return 1;
+  }
 
   // Check that none are 0
   if (!(num_initialize && num_execute && num_finalize))
@@ -309,15 +335,19 @@ void clean_data_dump_str(std::string& catalyst_data_dump_directory)
   }
 }
 
-void exit_gracefully_if_needed(int rank, int status)
+void exit_gracefully_if_needed(int /*rank*/, int status)
 {
 #ifdef CATALYST_USE_MPI
   MPI_Bcast(&status, 1, MPI_INT, 0, MPI_COMM_WORLD);
   if (status != 0)
+  {
     MPI_Finalize();
+  }
 #endif
   if (status != 0)
+  {
     exit(status);
+  }
 }
 
 int main(int argc, char** argv)
@@ -325,6 +355,9 @@ int main(int argc, char** argv)
 
 #ifdef CATALYST_USE_MPI
   MPI_Init(&argc, &argv);
+#else
+  (void)argc;
+  (void)argv;
 #endif
 
   int num_ranks = 1;
@@ -337,7 +370,7 @@ int main(int argc, char** argv)
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num_ranks);
 
-  std::uint64_t communicator = static_cast<std::uint64_t>(MPI_Comm_c2f(MPI_COMM_WORLD));
+  auto communicator = static_cast<std::uint64_t>(MPI_Comm_c2f(MPI_COMM_WORLD));
 #else
   const std::uint64_t communicator = 0;
 #endif

@@ -3,6 +3,7 @@
  * accompanying License.txt
  */
 
+// NOLINTNEXTLINE(bugprone-reserved-identifier)
 #define _GNU_SOURCE
 
 #include "catalyst_api.h"
@@ -20,7 +21,6 @@ typedef HMODULE catalyst_handle_t;
 #define PATH_SEPARATOR ';'
 #else
 #include <dlfcn.h>
-#include <stdio.h>
 typedef void* catalyst_handle_t;
 #define PATH_SEPARATOR ':'
 #endif

@@ -71,7 +71,7 @@
     - Invoke-Expression -Command .gitlab/ci/gtest.ps1
     - Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\gtest\bin;$env:PATH"
 
-.cmake_build_windows:
+.cmake_build_test_windows:
     stage: build-test
 
     script:

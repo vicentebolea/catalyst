@@ -13,7 +13,7 @@ static double data = 0.;
 //-----------------------------------------------------------------------------
 enum catalyst_status catalyst_initialize_double(const conduit_node* params)
 {
-  conduit_node* p = (conduit_node*)params;
+  auto* p = (conduit_node*)params;
   conduit_node* d = conduit_node_fetch(p, "data");
   if (d)
   {
@@ -30,7 +30,7 @@ enum catalyst_status catalyst_initialize_double(const conduit_node* params)
 //-----------------------------------------------------------------------------
 enum catalyst_status catalyst_execute_double(const conduit_node* params)
 {
-  conduit_node* p = (conduit_node*)params;
+  auto* p = (conduit_node*)params;
   conduit_node* d = conduit_node_fetch(p, "data");
   if (d)
   {
@@ -47,7 +47,7 @@ enum catalyst_status catalyst_execute_double(const conduit_node* params)
 //-----------------------------------------------------------------------------
 enum catalyst_status catalyst_finalize_double(const conduit_node* params)
 {
-  conduit_node* p = (conduit_node*)params;
+  auto* p = (conduit_node*)params;
   conduit_node_set_path_double(p, "data", data);
 
   data = 0.;

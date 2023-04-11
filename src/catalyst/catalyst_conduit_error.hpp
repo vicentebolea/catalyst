@@ -46,6 +46,8 @@
 
 #include <exception>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include <conduit.h>
 
@@ -55,10 +57,7 @@ class Error : public std::exception
 {
 public:
   Error()
-    : m_msg("")
-    , m_file("")
-    , m_line(0)
-    , m_what("")
+    : m_line(0)
   {
     m_what = message();
   }
@@ -67,24 +66,19 @@ public:
     : m_msg(err.m_msg)
     , m_file(err.m_file)
     , m_line(err.m_line)
-    , m_what("")
   {
     m_what = message();
   }
 
-  Error(const std::string& msg, const std::string& file, conduit_index_t line)
-    : m_msg(msg)
-    , m_file(file)
+  Error(std::string msg, std::string file, conduit_index_t line)
+    : m_msg(std::move(msg))
+    , m_file(std::move(file))
     , m_line(line)
-    , m_what("")
   {
     m_what = message();
   }
 
-  ~Error() throw()
-  {
-    // empty
-  }
+  ~Error() noexcept override = default;
 
   void print() const { std::cout << message() << std::endl; }
 
@@ -103,7 +97,7 @@ public:
     oss << "line: " << m_line << std::endl;
   }
 
-  const char* what() const throw() { return m_what.c_str(); }
+  const char* what() const noexcept override { return m_what.c_str(); }
 
 private:
   std::string m_msg;

@@ -263,7 +263,7 @@ public:
     this->c_node = conduit_node_create();
     this->set(other);
   }
-  Node(Node&& other)
+  Node(Node&& other) noexcept
     : c_node(other.c_node)
     , own_c_node(other.own_c_node)
   {
@@ -368,6 +368,7 @@ public:
 #define catalyst_conduit_c_setter_vector(cname, joined)                                            \
   void set(const std::vector<cname>& data)                                                         \
   {                                                                                                \
+    /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                               \
     conduit_node_set_##joined##_ptr(this->c_node, const_cast<cname*>(data.data()), data.size());   \
   }
 
@@ -432,6 +433,7 @@ public:
     conduit_index_t stride = sizeof(cname), conduit_index_t element_bytes = sizeof(cname),         \
     conduit_index_t endianness = 0)                                                                \
   {                                                                                                \
+    /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                               \
     conduit_node_set_##joined##_ptr_detailed(this->c_node, const_cast<cname*>(data), num_elements, \
       offset, stride, element_bytes, endianness);                                                  \
   }
@@ -577,7 +579,7 @@ public:
 #define catalyst_conduit_c_path_setter_vector(cname, joined)                                       \
   void set_path(const std::string& path, const std::vector<cname>& data)                           \
   {                                                                                                \
-    conduit_node_set_path_##joined##_ptr(                                                          \
+    conduit_node_set_path_##joined##_ptr(/* NOLINTNEXTLINE(bugprone-macro-parentheses) */          \
       this->c_node, path.c_str(), const_cast<cname*>(data.data()), data.size());                   \
   }
 
@@ -646,7 +648,8 @@ public:
     conduit_index_t offset = 0, conduit_index_t stride = sizeof(cname),                            \
     conduit_index_t element_bytes = sizeof(cname), conduit_index_t endianness = 0)                 \
   {                                                                                                \
-    conduit_node_set_path_##joined##_ptr_detailed(this->c_node, path.c_str(),                      \
+    conduit_node_set_path_##joined##_ptr_detailed(this->c_node,                                    \
+      path.c_str(), /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                               \
       const_cast<cname*>(data), num_elements, offset, stride, element_bytes, endianness);          \
   }
 
@@ -721,7 +724,7 @@ public:
 #define catalyst_conduit_c_external_setter_vector(cname, joined)                                   \
   void set_external(const std::vector<cname>& data)                                                \
   {                                                                                                \
-    conduit_node_set_external_##joined##_ptr(                                                      \
+    conduit_node_set_external_##joined##_ptr(/* NOLINTNEXTLINE(bugprone-macro-parentheses) */      \
       this->c_node, const_cast<cname*>(data.data()), data.size());                                 \
   }
 
@@ -784,6 +787,7 @@ public:
 #undef catalyst_conduit_external_setter_ptr
 
 #define catalyst_conduit_c_external_setter_ptr(cname, joined)                                      \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   void set_external(cname* data, conduit_index_t num_elements = 1, conduit_index_t offset = 0,     \
     conduit_index_t stride = sizeof(cname), conduit_index_t element_bytes = sizeof(cname),         \
     conduit_index_t endianness = 0)                                                                \
@@ -867,6 +871,7 @@ public:
 #undef catalyst_conduit_path_external_setter_vector
 
 #define catalyst_conduit_c_path_external_setter_vector(cname, joined)                              \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   void set_path_external(const std::string& path, std::vector<cname>& data)                        \
   {                                                                                                \
     conduit_node_set_path_external_##joined##_ptr(                                                 \
@@ -933,6 +938,7 @@ public:
 #undef catalyst_conduit_path_external_setter_ptr
 
 #define catalyst_conduit_c_path_external_setter_ptr(cname, joined)                                 \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   void set_path_external(const std::string& path, cname* data, conduit_index_t num_elements = 1,   \
     conduit_index_t offset = 0, conduit_index_t stride = sizeof(cname),                            \
     conduit_index_t element_bytes = sizeof(cname), conduit_index_t endianness = 0)                 \
@@ -979,11 +985,16 @@ public:
   //-----------------------------------------------------------------------------
   Node& operator=(const Node& other)
   {
+    // Self-assignment is a no-op.
+    if (this == &other)
+    {
+      return *this;
+    }
     set(other);
     return *this;
   }
 
-  Node& operator=(Node&& other)
+  Node& operator=(Node&& other) noexcept
   {
     this->c_node = other.c_node;
     this->own_c_node = other.own_c_node;
@@ -996,6 +1007,7 @@ public:
   //-----------------------------------------------------------------------------
 
 #define catalyst_conduit_assign(dtype)                                                             \
+  /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                                 \
   Node& operator=(dtype data)                                                                      \
   {                                                                                                \
     set(data);                                                                                     \
@@ -1215,7 +1227,7 @@ public:
   ///  These methods provide general info about the node.
   //-----------------------------------------------------------------------------
 
-  DataType dtype() const { return DataType(this->c_dtype()); }
+  DataType dtype() const { return { this->c_dtype() }; }
   const conduit_datatype* c_dtype() const { return conduit_node_dtype(this->c_node); }
 
   //-------------------------------------------------------------------------
@@ -1335,6 +1347,7 @@ public:
     CATALYST_CONDUIT_WRAP_EXCEP(return Node(conduit_node_child(this->c_node, idx)));
   }
 
+  // NOLINTNEXTLINE(readability-const-return-type)
   const Node child(conduit_index_t idx) const
   {
     CATALYST_CONDUIT_WRAP_EXCEP(return Node(conduit_node_child(this->c_node, idx)));
@@ -1347,6 +1360,7 @@ public:
   }
 
   // Don't modify underlying structure if path doesn't exist
+  // NOLINTNEXTLINE(readability-const-return-type)
   const Node operator[](const std::string& path) const
   {
     if (this->has_path(path))
@@ -1358,6 +1372,7 @@ public:
 
   /// access child node via index (equivalent to fetch via index)
   Node operator[](conduit_index_t idx) { return child(idx); }
+  // NOLINTNEXTLINE(readability-const-return-type)
   const Node operator[](conduit_index_t idx) const { return child(idx); }
 
   /// returns the number of children (list and object interfaces)
@@ -1661,8 +1676,10 @@ private:
     {
       Deser res;
       std::stringstream ss(as_char8_str());
-      if (ss >> res)
+      if ((ss >> res))
+      {
         return static_cast<T>(res);
+      }
     }
     return 0;
   }
