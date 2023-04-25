@@ -33,6 +33,8 @@ extern "C" {
 struct conduit_datatype_impl;
 typedef struct conduit_datatype_impl  conduit_datatype;
 
+CONDUIT_C_API int conduit_datatype_sizeof_index_t();
+
 CONDUIT_C_API conduit_index_t conduit_datatype_id(const conduit_datatype *cdatatype);
 CONDUIT_C_API char* conduit_datatype_name(const conduit_datatype *cdatatype);
 CONDUIT_C_API void conduit_datatype_name_destroy(char *name);
