@@ -20,15 +20,20 @@ set(conduit_headers
     conduit.hpp
     conduit_core.hpp
     conduit_endianness.hpp
+    conduit_execution.hpp
+    conduit_execution_omp.hpp
+    conduit_execution_serial.hpp
     conduit_data_array.hpp
     conduit_data_type.hpp
     conduit_node.hpp
     conduit_generator.hpp
     conduit_error.hpp
     conduit_node_iterator.hpp
+    conduit_range_vector.hpp
     conduit_schema.hpp
     conduit_log.hpp
     conduit_utils.hpp
+    conduit_vector_view.hpp
     conduit_config.hpp
     )
 
