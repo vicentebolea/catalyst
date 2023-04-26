@@ -8,7 +8,12 @@
 #include <conduit.h>
 #include <conduit_blueprint.h>
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
+// The `type` argument cannot be parenthesized in the macros because `(int)*`
+// is not a valid type. Ignore it for this entire file.
+
 // Also bring in compatibility symbols.
+// NOLINTNEXTLINE(bugprone-suspicious-include)
 #include "catalyst_conduit_abi_internal.c"
 
 #define f(rettype, name, args, arglist)                                                            \
@@ -270,3 +275,5 @@ f(void, conduit_blueprint_mesh_flatten, (const conduit_node* mesh, const conduit
 // conduit_blueprint_table.h
 f(int, conduit_blueprint_table_verify, (const conduit_node* node, conduit_node* info), (node, info))
 f(int, conduit_blueprint_table_verify_sub_protocol, (const char* protocol, const conduit_node* node, conduit_node* info), (protocol, node, info))
+
+// NOLINTEND(bugprone-macro-parentheses)
