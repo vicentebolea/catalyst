@@ -49,9 +49,12 @@ upload:source:
         # Ensure all builds and tests pass.
         - build:fedora36-tidy
         - build:fedora36-mpi-replay-tidy
+        - build:fedora36-extdeps-mpi-replay-tidy
         - build-test:fedora36
         - build-test:fedora36-replay
         - build-test:fedora36-mpi-replay
+        - build-test:fedora36-extdeps-replay
+        - build-test:fedora36-extdeps-mpi-replay
         - build-test:fedora36-asan
         - build-test:fedora36-ubsan
         - build-test:fedora36-asan-mpi-replay
@@ -93,9 +96,25 @@ build-test:fedora36-replay:
         - .linux_builder_tags
         - .run_automatically
 
+build-test:fedora36-extdeps-replay:
+    extends:
+        - .fedora36_extdeps_replay
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
 build-test:fedora36-mpi-replay:
     extends:
         - .fedora36_mpi_replay
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-extdeps-mpi-replay:
+    extends:
+        - .fedora36_extdeps_mpi_replay
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_builder_tags
@@ -136,6 +155,14 @@ build-test:fedora36-asan-mpi-replay:
 build:fedora36-mpi-replay-tidy:
     extends:
         - .fedora36_mpi_replay_tidy
+        - .cmake_build_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build:fedora36-extdeps-mpi-replay-tidy:
+    extends:
+        - .fedora36_extdeps_mpi_replay_tidy
         - .cmake_build_linux
         - .cmake_build_artifacts
         - .linux_builder_tags
