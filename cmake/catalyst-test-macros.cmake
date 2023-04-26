@@ -4,6 +4,11 @@ function(_add_example2 example_or_test dir mode root)
     set(replay_argument
       "-Dcatalyst_replay_command:PATH=$<TARGET_FILE:catalyst_replay>")
   endif ()
+  set(conduit_argument)
+  if (CATALYST_WITH_EXTERNAL_CONDUIT AND mode STREQUAL "install")
+    set(conduit_argument
+      "-DConduit_DIR=${Conduit_DIR}")
+  endif ()
 
   add_test(
     NAME    "${example_or_test}-${mode}-${dir}-prepare"
@@ -17,6 +22,7 @@ function(_add_example2 example_or_test dir mode root)
             "-DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
             "-DCATALYST_INSTALL_PACKAGE_DIR=${CATALYST_INSTALL_PACKAGE_DIR}"
             ${replay_argument}
+            ${conduit_argument}
             "-Dsrc=${CMAKE_CURRENT_SOURCE_DIR}"
             "-Droot=${root}"
             "-Ddir=${dir}"

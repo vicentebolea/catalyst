@@ -1,0 +1,2 @@
+# Skip formatting this file. Nothing ends up better here.
+catalyst_conduit_abi_external.c    -format.clang-format

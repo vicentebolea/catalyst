@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13...3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 project(CATALYST VERSION 2.0 LANGUAGES C CXX)
 
 include(CMakeDependentOption)
@@ -28,7 +28,7 @@ set(BUILD_SHARED_LIBS ${CATALYST_BUILD_SHARED_LIBS})
 # `CATALYST_ABI_VERSION` is the version of the ABI. This should
 # only be the major version number since minor version number changes
 # should not affect ABI at all.
-set(CATALYST_ABI_VERSION "${CATALYST_VERSION_MAJOR}" CACHE INTERNAL "")
+set(CATALYST_ABI_VERSION "${CATALYST_VERSION_MAJOR}")
 
 # `CATALYST_CUSTOM_LIBRARY_SUFFIX` can be used to override the suffix used
 # for static libraries built by this project. Note this does not affect the
@@ -48,7 +48,11 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_subdirectory(src)
 
-add_subdirectory(thirdparty/conduit)
+option(CATALYST_WITH_EXTERNAL_CONDUIT "Build Catalyst with an external Conduit library" OFF)
+mark_as_advanced(CATALYST_WITH_EXTERNAL_CONDUIT)
+if (NOT CATALYST_WITH_EXTERNAL_CONDUIT)
+  add_subdirectory(thirdparty/conduit)
+endif ()
 
 # include install/package rules.
 include(cInstallCMakePackage)

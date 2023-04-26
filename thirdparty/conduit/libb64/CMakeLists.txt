@@ -10,10 +10,11 @@ set(libb64_headers
     include/b64/encode.h
     include/b64/catalyst_b64_mangle.h)
 
-add_library(conduit_b64 OBJECT
+add_library(catalyst_conduit_b64 OBJECT
   ${libb64_sources})
-target_include_directories(conduit_b64
+target_include_directories(catalyst_conduit_b64
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-
-c_install_targets(conduit_b64)
+set_property(TARGET catalyst_conduit_b64 PROPERTY
+  EXPORT_NAME conduit_b64)
+add_library(catalyst::conduit_b64 ALIAS catalyst_conduit_b64)

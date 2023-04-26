@@ -77,6 +77,16 @@ Important `CMake`_ options that affect how Catalyst is built are:
 * ``CMAKE_INSTALL_PREFIX``: path where to install the libraries and headers when
   requested.
 
+* ``CATALYST_WITH_EXTERNAL_CONDUIT`` (default: ``OFF``): Build Catalyst
+  against an external Conduit library. Note that this option affects
+  implementation compatibility (i.e., an implementation built against a
+  Catalyst with external Conduit will refuse to initialize from a Catalyst
+  with the internal Conduit and vice versa).
+
+* ``CATALYST_RELOCATABLE_INSTALL`` (default: ``ON``): If unset, and to any
+  external dependencies will be embedded into the install tree rendering it
+  unable to be relocated to other machines without similar setup.
+
 
 .. _`Git`: https://git-scm.com/
 .. _`CMake`: https://cmake.org

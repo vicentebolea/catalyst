@@ -61,6 +61,21 @@ function (catalyst_implementation)
       "The catalyst target `${catalyst_impl_CATALYST_TARGET}` is not "
       "available.")
   endif ()
+  get_property(catalyst_impl_is_alias
+    TARGET    "${catalyst_impl_CATALYST_TARGET}"
+    PROPERTY  ALIASED_TARGET)
+  if (catalyst_impl_is_alias)
+    set(catalyst_impl_catalyst_target_req "${catalyst_impl_is_alias}")
+  else ()
+    set(catalyst_impl_catalyst_target_req "${catalyst_impl_CATALYST_TARGET}")
+  endif ()
+  get_property(catalyst_conduit_property_is_external
+    TARGET    "${catalyst_impl_catalyst_target_req}"
+    PROPERTY  CATALYST_WITH_EXTERNAL_CONDUIT)
+  set(catalyst_impl_conduit_is_external 0)
+  if (catalyst_conduit_property_is_external)
+    set(catalyst_impl_conduit_is_external 1)
+  endif ()
 
   if (NOT catalyst_impl_LIBRARY_DESTINATION)
     if (WIN32)

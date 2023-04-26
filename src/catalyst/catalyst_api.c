@@ -213,7 +213,7 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
     return catalyst_status_error_not_catalyst;
   }
 
-  if (impl->version != 1)
+  if (impl->version != 1 && impl->version != 2)
   {
     return catalyst_status_error_unsupported_version;
   }
@@ -223,6 +223,15 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
   {
     impl = NULL;
     return catalyst_status_error_incomplete;
+  }
+
+  // Check that the conduit is a potential match.
+  conduit_uint64 conduit_is_external = impl->version >= 2
+    ? impl->conduit_is_external
+    : 0; // version < 2 never supported an external conduit
+  if (conduit_is_external != CATALYST_WITH_EXTERNAL_CONDUIT)
+  {
+    return catalyst_status_error_conduit_mismatch;
   }
 
   return catalyst_status_ok;

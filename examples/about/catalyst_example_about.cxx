@@ -34,13 +34,16 @@ int main(int argc, char* argv[])
   auto node = conduit_node_create();
   conduit_node_set_path_char8_str(node, "catalyst_load/implementation", "stub");
   conduit_node_set_path_char8_str(node, "catalyst/paraview/scripts/sample", "/tmp/sample.py");
-  if (catalyst_initialize(node) != catalyst_status_ok)
+  auto init_ret = catalyst_initialize(node);
+  if (init_ret != catalyst_status_ok)
   {
+    std::cerr << "Failed to initialize catalyst: " << init_ret << std::endl;
     conduit_node_destroy(node);
     return EXIT_FAILURE;
   }
   if (catalyst_about(node) != catalyst_status_ok)
   {
+    std::cerr << "Failed to query `about` the implementation" << std::endl;
     conduit_node_destroy(node);
     return EXIT_FAILURE;
   }

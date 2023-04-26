@@ -9,6 +9,12 @@ if (catalyst_replay_command)
     "-Dcatalyst_replay_command=${catalyst_replay_command}")
 endif ()
 
+set(conduit_argument)
+if (Conduit_DIR)
+  set(conduit_argument
+    "-DConduit_DIR=${Conduit_DIR}")
+endif ()
+
 execute_process(
   COMMAND "${CMAKE_CTEST_COMMAND}"
           --build-generator
@@ -22,6 +28,7 @@ execute_process(
             "-DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}"
             "-Dcatalyst_DIR:PATH=${root}/${CATALYST_INSTALL_PACKAGE_DIR}"
             ${replay_argument}
+            ${conduit_argument}
           --test-command
             "${CMAKE_CTEST_COMMAND}"
               -C $<CONFIGURATION>

@@ -14,10 +14,12 @@
 
 EXPORT_SYMBOL
 struct catalyst_impl catalyst_api_impl = {
-    1, // Structure version.
+    2, // Structure version.
     catalyst_initialize_@catalyst_impl_NAME@,
     catalyst_execute_@catalyst_impl_NAME@,
     catalyst_finalize_@catalyst_impl_NAME@,
     catalyst_about_@catalyst_impl_NAME@,
-    catalyst_results_@catalyst_impl_NAME@
+    catalyst_results_@catalyst_impl_NAME@,
+    // Version 2 fields
+    @catalyst_impl_conduit_is_external@, // conduit_is_external
 };
