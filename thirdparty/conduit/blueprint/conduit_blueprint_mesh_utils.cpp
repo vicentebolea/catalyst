@@ -30,7 +30,7 @@
 #include "conduit_blueprint_mesh_utils.hpp"
 
 // access one-to-many index types
-namespace O2MIndex = conduit::blueprint::o2mrelation;
+namespace o2mrelation = conduit::blueprint::o2mrelation;
 
 //-----------------------------------------------------------------------------
 // -- begin conduit --
@@ -213,494 +213,6 @@ ShapeCascade::init(const ShapeType &base_type)
     {
         dim_types[di] = ShapeType(dim_types[di + 1].embed_id);
     }
-}
-
-//---------------------------------------------------------------------------//
-TopologyMetadata::TopologyMetadata(const conduit::Node &topology, const conduit::Node &coordset) :
-    topo(&topology), cset(&coordset),
-    int_dtype(find_widest_dtype(link_nodes(topology, coordset), DEFAULT_INT_DTYPES)),
-    float_dtype(find_widest_dtype(link_nodes(topology, coordset), DEFAULT_FLOAT_DTYPE)),
-    topo_cascade(topology), topo_shape(topology)
-{
-    // NOTE(JRC): This type current only works at forming associations within
-    // an unstructured topology's hierarchy.
-    Node topo_offsets, topo_suboffsets;
-    bool is_polyhedral = topo->has_child("subelements");
-
-    if(is_polyhedral)
-    {
-        topology::unstructured::generate_offsets(*topo,
-                                                 topo_offsets,
-                                                 topo_suboffsets);
-    }
-    else
-    {
-        topology::unstructured::generate_offsets(*topo, topo_offsets);
-    }
-
-    const index_t topo_num_elems = topo_offsets.dtype().number_of_elements();
-    const index_t topo_num_coords = coordset::length(coordset);
-
-    // Allocate Data Templates for Outputs //
-
-    dim_topos.resize(topo_shape.dim + 1);
-    dim_geid_maps.resize(topo_shape.dim + 1);
-    dim_geassocs_maps.resize(topo_shape.dim + 1);
-    dim_leassocs_maps.resize(topo_shape.dim + 1);
-    dim_le2ge_maps.resize(topo_shape.dim + 1);
-
-    for(index_t di = 0; di < topo_shape.dim; di++)
-    {
-        Node &dim_topo = dim_topos[di];
-        dim_topo.reset();
-        dim_topo["type"].set("unstructured");
-        dim_topo["coordset"].set(topology["coordset"].as_string());
-        dim_topo["elements/shape"].set(topo_cascade.get_shape(di).type);
-    }
-    // NOTE: This is done so that the index values for the top-level entities
-    // can be extracted by the 'get_entity_data' function before DFS
-    // processing below.
-    dim_topos[topo_shape.dim].set_external(topology);
-    dim_topos[topo_shape.dim]["elements/offsets"].set(topo_offsets);
-    if(is_polyhedral)
-    {
-        dim_topos[topo_shape.dim]["subelements/offsets"].set(topo_suboffsets);
-    }
-    std::vector< std::vector<int64> > dim_buffers(topo_shape.dim + 1);
-
-    // Prepare Initial Values for Processing //
-
-    // Temporary nodes to manage pointers to important information (temp) and
-    // associated conversations (data).
-    Node temp, data;
-
-    // NOTE(JRC): A 'deque' is used so that queue behavior (FIFO)
-    // is responsible for ordering the identifiers in the cascade of entities,
-    // which more closely follows the average intuition.
-    const index_t bag_num_elems = topo_num_coords + topo_num_elems;
-    std::deque< std::vector<int64> > entity_index_bag(bag_num_elems);
-    std::deque< index_t > entity_dim_bag(bag_num_elems, -1);
-    std::deque< std::vector< std::pair<int64, int64> > > entity_parent_bag(bag_num_elems);
-
-    // NOTE(JRC): We start with processing the points of the topology followed
-    // by the top-level elements in order to ensure that order is preserved
-    // relative to the original topology for these entities.
-    for(index_t pi = 0; pi < topo_num_coords; pi++)
-    {
-        index_t bi = pi;
-        entity_index_bag[bi].push_back(bi);
-        entity_dim_bag[bi] = 0;
-    }
-    for(index_t ei = 0; ei < topo_num_elems; ei++)
-    {
-        index_t bi = topo_num_coords + ei;
-
-        temp.reset();
-        get_entity_data(TopologyMetadata::GLOBAL, ei, topo_shape.dim, temp);
-
-        std::vector<int64> &elem_indices = entity_index_bag[bi];
-        elem_indices.resize(temp.dtype().number_of_elements());
-        data.set_external(DataType::int64(elem_indices.size()), &elem_indices[0]);
-        temp.to_int64_array(data);
-
-        entity_dim_bag[bi] = topo_shape.dim;
-    }
-
-    while(!entity_index_bag.empty())
-    {
-        std::vector<int64> entity_indices = entity_index_bag.front();
-        entity_index_bag.pop_front();
-        index_t entity_dim = entity_dim_bag.front();
-        entity_dim_bag.pop_front();
-        std::vector< std::pair<int64, int64> > entity_parents = entity_parent_bag.front();
-        entity_parent_bag.pop_front();
-
-        std::vector<int64> &dim_buffer = dim_buffers[entity_dim];
-        std::map< std::set<index_t>, index_t > &dim_geid_map = dim_geid_maps[entity_dim];
-        auto &dim_geassocs = dim_geassocs_maps[entity_dim];
-        auto &dim_leassocs = dim_leassocs_maps[entity_dim];
-        std::vector<index_t> &dim_le2ge_map = dim_le2ge_maps[entity_dim];
-        ShapeType dim_shape = topo_cascade.get_shape(entity_dim);
-
-        // Add Element to Topology //
-
-        // NOTE: This code assumes that all entities can be uniquely
-        // identified by the list of coordinate indices of which they
-        // are comprised. This is certainly true of all implicit topologies
-        // and of 2D polygonal topologies, but it may not be always the
-        // case for 3D polygonal topologies.
-        std::set<int64> vert_ids;
-        if(!dim_shape.is_polyhedral())
-        {
-            vert_ids = std::set<int64>(entity_indices.begin(), entity_indices.end());
-        }
-        else // if(dim_shape.is_polyhedral())
-        {
-            const index_t elem_outer_count = entity_indices.size();
-            index_t_accessor elem_inner_sizes   = topo->fetch_existing("subelements/sizes").value();
-            index_t_accessor elem_inner_offsets = topo_suboffsets.value();
-            index_t_accessor elem_inner_conn    = topo->fetch_existing("subelements/connectivity").value();
-            
-            for(index_t oi = 0; oi < elem_outer_count; oi++)
-            {
-                const index_t elem_inner_size   = elem_inner_sizes[entity_indices[oi]];
-                const index_t elem_inner_offset = elem_inner_offsets[entity_indices[oi]];
-
-                for(index_t ii = 0; ii < elem_inner_size; ii++)
-                {
-                    const index_t vi = elem_inner_conn[elem_inner_offset + ii];
-                    vert_ids.insert(vi);
-                }
-            }
-        }
-
-        const index_t local_id = dim_leassocs.size();
-        if(dim_geid_map.find(vert_ids) == dim_geid_map.end())
-        {
-            const index_t global_id = dim_geassocs.size();
-            dim_buffer.insert(dim_buffer.end(), entity_indices.begin(), entity_indices.end());
-            dim_geid_map[vert_ids] = global_id;
-        }
-        const index_t global_id = dim_geid_map.find(vert_ids)->second;
-
-        { // create_entity(global_id, local_id, entity_dim)
-            if((index_t)dim_geassocs.size() <= global_id)
-            {
-                dim_geassocs.resize(global_id + 1);
-            }
-            if((index_t)dim_leassocs.size() <= local_id)
-            {
-                dim_leassocs.resize(local_id + 1);
-            }
-            if((index_t)dim_le2ge_map.size() <= local_id)
-            {
-                dim_le2ge_map.resize(local_id + 1);
-            }
-            dim_le2ge_map[local_id] = global_id;
-        }
-
-        // Add Element to Associations //
-
-        add_entity_assoc(IndexType::GLOBAL, global_id, entity_dim, global_id, entity_dim);
-        add_entity_assoc(IndexType::LOCAL, local_id, entity_dim, local_id, entity_dim);
-        for(index_t pi = 0; pi < (index_t)entity_parents.size(); pi++)
-        {
-            index_t plevel = entity_parents.size() - pi - 1;
-            const index_t parent_global_id = entity_parents[plevel].first;
-            const index_t parent_local_id = entity_parents[plevel].second;
-            const index_t parent_dim = entity_dim + pi + 1;
-            add_entity_assoc(IndexType::GLOBAL, global_id, entity_dim, parent_global_id, parent_dim);
-            add_entity_assoc(IndexType::LOCAL, local_id, entity_dim, parent_local_id, parent_dim);
-        }
-
-        // Add Embedded Elements for Further Processing //
-
-        if(entity_dim > 0)
-        {
-            std::vector< std::pair<int64, int64> > embed_parents = entity_parents;
-            embed_parents.push_back(std::make_pair(global_id, local_id));
-            ShapeType embed_shape = topo_cascade.get_shape(entity_dim - 1);
-
-            index_t elem_outer_count = dim_shape.is_poly() ?
-                entity_indices.size() : dim_shape.embed_count;
-
-            // NOTE(JRC): This is horribly complicated for the poly case and needs
-            // to be refactored so that it's legible. There's a lot of overlap in
-            // used variables where it feels unnecessary (e.g. 'poly' being
-            // shoehorned into using 'implicit' variables), for example.
-            
-            
-            //
-            // NOTE(CYRUSH): Refactored to use accessors, however we still have
-            // inner loop accessor fetches, which is less than ideal
-            //
-            for(index_t oi = 0, ooff = 0; oi < elem_outer_count; oi++)
-            {
-                index_t elem_inner_count = embed_shape.indices;
-
-                if (dim_shape.is_polyhedral())
-                {
-                    index_t_accessor subelem_sizes   = topo->fetch_existing("subelements/sizes").value();
-                    index_t_accessor subelem_offsets = topo_suboffsets.value();
-                    elem_inner_count = subelem_sizes[entity_indices[oi]];
-                    ooff = subelem_offsets[entity_indices[oi]];
-                }
-
-                std::vector<int64> embed_indices;
-                for(index_t ii = 0; ii < elem_inner_count; ii++)
-                {
-                    index_t ioff = ooff + (dim_shape.is_poly() ?
-                        ii : dim_shape.embedding[oi * elem_inner_count + ii]);
-
-                    if (dim_shape.is_polyhedral())
-                    {
-                        index_t_accessor subele_conn = topo->fetch_existing("subelements/connectivity").value();
-                        embed_indices.push_back(subele_conn[ioff]);
-                    }
-                    else
-                    {
-                        embed_indices.push_back(entity_indices[ioff % entity_indices.size()]);
-                    }
-                }
-
-                ooff += dim_shape.is_polygonal() ? 1 : 0;
-
-                entity_index_bag.push_back(embed_indices);
-                entity_dim_bag.push_back(embed_shape.dim);
-                entity_parent_bag.push_back(embed_parents);
-            }
-        }
-    }
-
-    // Move Topological Data into Per-Dim Nodes //
-
-    for(index_t di = 0; di <= topo_shape.dim; di++)
-    {
-        Node &dim_conn = dim_topos[di]["elements/connectivity"];
-        dim_conn.set(DataType(int_dtype.id(), dim_buffers[di].size()));
-
-        data.reset();
-        data.set_external(DataType::int64(dim_buffers[di].size()),
-            &(dim_buffers[di][0]));
-        data.to_data_type(int_dtype.id(), dim_conn);
-
-        // Initialize element sizes for 2D polygonal mesh generating
-        // from 3D polyhedral mesh
-        if(di == 2 && topo_shape.is_polyhedral())
-        {
-            Node &poly_sizes = dim_topos[di]["elements/sizes"];
-            poly_sizes.set(DataType(int_dtype.id(), dim_geid_maps[di].size()));
-
-            temp.reset();
-            data.reset();
-
-            for(const auto &poly_pair : dim_geid_maps[di])
-            {
-                const std::set<index_t> &poly_verts = poly_pair.first;
-                const index_t &poly_geid = poly_pair.second;
-
-                temp.set_external(DataType(int_dtype.id(), 1),
-                    poly_sizes.element_ptr(poly_geid));
-                data.set((index_t)poly_verts.size());
-                data.to_data_type(int_dtype.id(), temp);
-            }
-        }
-
-        topology::unstructured::generate_offsets_inline(dim_topos[di]);
-    }
-}
-
-//---------------------------------------------------------------------------//
-void
-TopologyMetadata::add_entity_assoc(IndexType type, index_t e0_id, index_t e0_dim, index_t e1_id, index_t e1_dim)
-{
-    auto &assoc_maps = (type == IndexType::LOCAL) ? dim_leassocs_maps : dim_geassocs_maps;
-    std::vector< std::pair< std::vector<index_t>, std::set<index_t> > > *entity_assocs[2] = {
-        &assoc_maps[e0_dim][e0_id],
-        &assoc_maps[e1_dim][e1_id]
-    };
-
-    for(index_t ai = 0; ai < 2; ai++)
-    {
-        auto &curr_assocs = *entity_assocs[ai];
-        curr_assocs.resize(topo_shape.dim + 1);
-
-        const index_t cross_id = (ai == 0) ? e1_id : e0_id;
-        const index_t cross_dim = (ai == 0) ? e1_dim : e0_dim;
-        auto &cross_assocs = curr_assocs[cross_dim];
-        if(cross_assocs.second.find(cross_id) == cross_assocs.second.end())
-        {
-            cross_assocs.first.push_back(cross_id);
-            cross_assocs.second.insert(cross_id);
-        }
-    }
-}
-
-
-//---------------------------------------------------------------------------//
-const std::vector<index_t>&
-TopologyMetadata::get_entity_assocs(IndexType type, index_t entity_id, index_t entity_dim, index_t assoc_dim) const
-{
-    auto &dim_assocs = (type == IndexType::LOCAL) ? dim_leassocs_maps : dim_geassocs_maps;
-    return dim_assocs[entity_dim][entity_id][assoc_dim].first;
-}
-
-
-//---------------------------------------------------------------------------//
-void
-TopologyMetadata::get_dim_map(IndexType type, index_t src_dim, index_t dst_dim, Node &map_node) const
-{
-    auto &dim_assocs = (type == IndexType::LOCAL) ? dim_leassocs_maps : dim_geassocs_maps;
-
-    std::vector<index_t> values, sizes, offsets;
-    for(index_t sdi = 0, so = 0; sdi < (index_t)dim_assocs[src_dim].size(); sdi++, so += sizes.back())
-    {
-        const std::vector<index_t> &src_assocs = get_entity_assocs(type, sdi, src_dim, dst_dim);
-        values.insert(values.end(), src_assocs.begin(), src_assocs.end());
-        sizes.push_back((index_t)src_assocs.size());
-        offsets.push_back(so);
-    }
-
-    std::vector<index_t>* path_data[] = { &values, &sizes, &offsets };
-    std::string path_names[] = { "values", "sizes", "offsets" };
-    const index_t path_count = sizeof(path_data) / sizeof(path_data[0]);
-    for(index_t pi = 0; pi < path_count; pi++)
-    {
-        Node data;
-        data.set(*path_data[pi]);
-        data.to_data_type(int_dtype.id(), map_node[path_names[pi]]);
-    }
-}
-
-
-//---------------------------------------------------------------------------//
-void
-TopologyMetadata::get_entity_data(IndexType type, index_t entity_id, index_t entity_dim, Node &data) const
-{
-    Node temp;
-
-    // NOTE(JRC): This is done in order to get around 'const' casting for
-    // data pointers that won't be changed by the function anyway.
-    Node dim_conn; dim_conn.set_external(dim_topos[entity_dim]["elements/connectivity"]);
-    Node dim_off; dim_off.set_external(dim_topos[entity_dim]["elements/offsets"]);
-
-    const DataType conn_dtype(dim_conn.dtype().id(), 1);
-    const DataType off_dtype(dim_off.dtype().id(), 1);
-    const DataType data_dtype = data.dtype().is_number() ? data.dtype() : DataType::int64(1);
-
-    // FIXME(JRC): This code assumes that the per-element index data is packed
-    // in memory, which isn't guaranteed to be the case (could be stride between
-    // values, etc.).
-
-    const index_t entity_gid = (type == IndexType::LOCAL) ?
-        dim_le2ge_maps[entity_dim][entity_id] : entity_id;
-    temp.set_external(off_dtype, dim_off.element_ptr(entity_gid));
-    index_t entity_start_index = temp.to_int64();
-    temp.set_external(off_dtype, dim_off.element_ptr(entity_gid + 1));
-    index_t entity_end_index = (entity_gid < get_length(entity_dim) - 1) ?
-        temp.to_int64() : dim_conn.dtype().number_of_elements();
-
-    index_t entity_size = entity_end_index - entity_start_index;
-    temp.set_external(DataType(conn_dtype.id(), entity_size),
-        dim_conn.element_ptr(entity_start_index));
-    temp.to_data_type(data_dtype.id(), data);
-}
-
-
-//---------------------------------------------------------------------------//
-void
-TopologyMetadata::get_point_data(IndexType type, index_t point_id, Node &data) const
-{
-    const index_t point_gid = (type == IndexType::LOCAL) ?
-        dim_le2ge_maps[0][point_id] : point_id;
-
-    if(data.dtype().is_empty())
-    {
-        data.set(DataType::float64(3));
-    }
-    const DataType data_dtype(data.dtype().id(), 1);
-
-    Node temp1, temp2;
-    const std::vector<std::string> csys_axes = coordset::axes(*cset);
-    for(index_t di = 0; di < topo_shape.dim; di++)
-    {
-        temp1.set_external(float_dtype,
-            (void*)(*cset)["values"][csys_axes[di]].element_ptr(point_gid));
-        temp2.set_external(data_dtype, data.element_ptr(di));
-        temp1.to_data_type(data_dtype.id(), temp2);
-    }
-}
-
-
-//---------------------------------------------------------------------------//
-index_t
-TopologyMetadata::get_length(index_t dim) const
-{
-    // NOTE: The default version of 'get_length' gets the total length of all
-    // unique entities in the topology. The parameterized version fetches the
-    // length for just that parameter's dimension.
-
-    index_t start_dim = (dim >= 0) ? dim : 0;
-    index_t end_dim = (dim >= 0) ? dim : topo_shape.dim;
-
-    index_t topo_length = 0;
-    for(index_t di = start_dim; di <= end_dim; di++)
-    {
-        topo_length += topology::length(dim_topos[di]);
-    }
-
-    return topo_length;
-}
-
-
-//---------------------------------------------------------------------------//
-index_t
-TopologyMetadata::get_embed_length(index_t entity_dim, index_t embed_dim) const
-{
-    // NOTE: The default version of 'get_embed_length' gets the total number of
-    // embeddings for each entity at the top level to the embedding level. The
-    // parameterized version just fetches the number of embeddings for one
-    // specific entity at the top level.
-
-    std::vector<index_t> entity_index_bag;
-    std::vector<index_t> entity_dim_bag;
-    for(index_t ei = 0; ei < this->get_length(entity_dim); ei++)
-    {
-        entity_index_bag.push_back(ei);
-        entity_dim_bag.push_back(entity_dim);
-    }
-
-    std::set<index_t> embed_set;
-    index_t embed_length = 0;
-    while(!entity_index_bag.empty())
-    {
-        index_t entity_index = entity_index_bag.back();
-        entity_index_bag.pop_back();
-        index_t entity_dim_back = entity_dim_bag.back();
-        entity_dim_bag.pop_back();
-
-        if(entity_dim_back == embed_dim)
-        {
-            if(embed_set.find(entity_index) == embed_set.end())
-            {
-                embed_length++;
-            }
-            embed_set.insert(entity_index);
-        }
-        else
-        {
-            const std::vector<index_t> &embed_ids = get_entity_assocs(
-                TopologyMetadata::LOCAL, entity_index, entity_dim_back, entity_dim_back - 1);
-            for(index_t ei = 0; ei < (index_t)embed_ids.size(); ei++)
-            {
-                entity_index_bag.push_back(embed_ids[ei]);
-                entity_dim_bag.push_back(entity_dim_back - 1);
-            }
-        }
-    }
-
-    return embed_length;
-}
-
-
-//---------------------------------------------------------------------------//
-std::string
-TopologyMetadata::to_json() const
-{
-    Node mesh;
-
-    Node &mesh_coords = mesh["coordsets"][(*topo)["coordset"].as_string()];
-    mesh_coords.set_external(*cset);
-
-    Node &mesh_topos = mesh["topologies"];
-    for(index_t di = 0; di <= topo_shape.dim; di++)
-    {
-        std::ostringstream oss;
-        oss << "d" << di;
-        mesh_topos[oss.str()].set_external(dim_topos[di]);
-    }
-
-    return mesh.to_json();
 }
 
 //-----------------------------------------------------------------------------
@@ -1920,9 +1432,6 @@ topology::unstructured::generate_offsets(const Node &topo,
                                          Node &dest_ele_offsets,
                                          Node &dest_subele_offsets)
 {
-    dest_ele_offsets.reset();
-    dest_subele_offsets.reset();
-
     const ShapeType topo_shape(topo);
     const DataType int_dtype = find_widest_dtype(topo, DEFAULT_INT_DTYPES);
     std::string key("elements/connectivity"), stream_key("elements/stream");
@@ -1934,17 +1443,18 @@ topology::unstructured::generate_offsets(const Node &topo,
     const DataType topo_dtype(topo_conn.dtype().id(), 1, 0, 0,
         topo_conn.dtype().element_bytes(), topo_conn.dtype().endianness());
 
+    bool elem_offsets_exist = topo["elements"].has_child("offsets") &&
+                              !topo["elements/offsets"].dtype().is_empty();
+    bool subelem_offsets_exist = false;
+
     // if these have already been generate, use set external to copy out results
     if(topo_shape.type == "polyhedral")
     {
-    
-        if( (topo["elements"].has_child("offsets") &&
-             !topo["elements/offsets"].dtype().is_empty())  &&
-             (topo["subelements"].has_child("offsets") &&
-             !topo["subelements/offsets"].dtype().is_empty())
-          )
+        subelem_offsets_exist = topo["subelements"].has_child("offsets") &&
+                                !topo["subelements/offsets"].dtype().is_empty();
+        if(elem_offsets_exist && subelem_offsets_exist)
         {
-            // they are already here, set external and return
+            // they are both already here, set external and return
             if(&dest_ele_offsets != &topo["elements/offsets"])
             {
                 dest_ele_offsets.set_external(topo["elements/offsets"]);
@@ -1959,9 +1469,7 @@ topology::unstructured::generate_offsets(const Node &topo,
     }
     else // non polyhedral
     {
-        if( topo["elements"].has_child("offsets") &&
-            !topo["elements/offsets"].dtype().is_empty()
-          )
+        if(elem_offsets_exist)
         {
             // they are already here, set external and return
             if(&dest_ele_offsets != &topo["elements/offsets"])
@@ -1971,6 +1479,13 @@ topology::unstructured::generate_offsets(const Node &topo,
             return;
         }
     }
+
+    // Selectively reset now that early returns have happened. We do the
+    // checks for the polyhedral case since some offsets might exist.
+    if(!elem_offsets_exist)
+        dest_ele_offsets.reset();
+    if(!subelem_offsets_exist)
+        dest_subele_offsets.reset();
 
     ///
     /// Generate Cases
@@ -2099,31 +1614,36 @@ topology::unstructured::generate_offsets(const Node &topo,
     }
     else if(topo_shape.type == "polyhedral")
     {
-        index_t_accessor topo_elem_size = topo["elements/sizes"].value();
-        index_t_accessor topo_subelem_size = topo["subelements/sizes"].value();
-
-        index_t es_count = topo_elem_size.number_of_elements();
-
-        dest_ele_offsets.set(DataType::index_t(es_count));
-        index_t_array shape_array = dest_ele_offsets.value();
-
-        index_t es = 0;
-        for (index_t ei = 0; ei < es_count; ++ei)
+        // Construct any offsets that do not exist.
+        if(!elem_offsets_exist)
         {
-            shape_array[ei] = es;
-            es += topo_elem_size[ei];
+            index_t_accessor topo_elem_size = topo["elements/sizes"].value();
+            index_t es_count = topo_elem_size.number_of_elements();
+
+            dest_ele_offsets.set(DataType::index_t(es_count));
+            index_t_array shape_array = dest_ele_offsets.value();
+
+            index_t es = 0;
+            for (index_t ei = 0; ei < es_count; ++ei)
+            {
+                shape_array[ei] = es;
+                es += topo_elem_size[ei];
+            }
         }
-
-        int ses_count = topo_subelem_size.number_of_elements();
-
-        dest_subele_offsets.set(DataType::index_t(ses_count));
-        index_t_array subshape_array = dest_subele_offsets.value();
-
-        index_t ses = 0;
-        for (index_t ei = 0; ei < ses_count; ++ei)
+        if(!subelem_offsets_exist)
         {
-            subshape_array[ei] = ses;
-            ses += topo_subelem_size[ei];
+            index_t_accessor topo_subelem_size = topo["subelements/sizes"].value();
+            index_t ses_count = topo_subelem_size.number_of_elements();
+
+            dest_subele_offsets.set(DataType::index_t(ses_count));
+            index_t_array subshape_array = dest_subele_offsets.value();
+
+            index_t ses = 0;
+            for (index_t ei = 0; ei < ses_count; ++ei)
+            {
+                subshape_array[ei] = ses;
+                ses += topo_subelem_size[ei];
+            }
         }
     }
 }
@@ -2169,26 +1689,26 @@ topology::unstructured::points(const Node &n,
 
             index_t_accessor eidxs_vals = ntemp["elements/connectivity"].value();
             o2mrelation::O2MIterator eiter(ntemp["elements"]);
-            eiter.to(ei, O2MIndex::ONE);
-            eiter.to_front(O2MIndex::MANY);
-            while(eiter.has_next(O2MIndex::MANY))
+            eiter.to(ei, o2mrelation::ONE);
+            eiter.to_front(o2mrelation::MANY);
+            while(eiter.has_next(o2mrelation::MANY))
             {
-                eiter.next(O2MIndex::MANY);
-                const index_t tmp = eidxs_vals[eiter.index(O2MIndex::DATA)];
+                eiter.next(o2mrelation::MANY);
+                const index_t tmp = eidxs_vals[eiter.index(o2mrelation::DATA)];
                 eidxs.insert(tmp);
             }
         }
 
+        index_t_accessor pidxs_vals = enode["connectivity"].value();
+        o2mrelation::O2MIterator piter(enode);
         for(const index_t eidx : eidxs)
         {
-            index_t_accessor pidxs_vals = enode["connectivity"].value();
-            o2mrelation::O2MIterator piter(enode);
-            piter.to(eidx, O2MIndex::ONE);
-            piter.to_front(O2MIndex::MANY);
-            while(piter.has_next(O2MIndex::MANY))
+            piter.to(eidx, o2mrelation::ONE);
+            piter.to_front(o2mrelation::MANY);
+            while(piter.has_next(o2mrelation::MANY))
             {
-                piter.next(O2MIndex::MANY);
-                const index_t tmp = pidxs_vals[piter.index(O2MIndex::DATA)];
+                piter.next(o2mrelation::MANY);
+                const index_t tmp = pidxs_vals[piter.index(o2mrelation::DATA)];
                 pidxs.insert(tmp);
             }
         }

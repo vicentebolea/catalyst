@@ -13,9 +13,12 @@ configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/conduit_blueprint_exports.h.in"
 set(blueprint_cpp_headers
     conduit_blueprint.hpp
     conduit_blueprint_mesh.hpp
+    conduit_blueprint_mesh_topology_metadata.hpp
     conduit_blueprint_mesh_utils.hpp
     conduit_blueprint_mcarray.hpp
+    conduit_blueprint_ndarray_index.hpp
     conduit_blueprint_o2mrelation.hpp
+    conduit_blueprint_o2mrelation_index.hpp
     conduit_blueprint_o2mrelation_utils.hpp
     conduit_blueprint_o2mrelation_iterator.hpp
     conduit_blueprint_table.hpp
@@ -45,10 +48,13 @@ set(blueprint_sources
     conduit_blueprint_mesh.cpp
     conduit_blueprint_mesh_flatten.cpp
     conduit_blueprint_mesh_partition.cpp
+    conduit_blueprint_mesh_topology_metadata.cpp
     conduit_blueprint_mesh_utils.cpp
     conduit_blueprint_mesh_matset_xforms.cpp
     conduit_blueprint_mcarray.cpp
+    conduit_blueprint_ndarray_index.cpp
     conduit_blueprint_o2mrelation.cpp
+    conduit_blueprint_o2mrelation_index.cpp
     conduit_blueprint_o2mrelation_utils.cpp
     conduit_blueprint_o2mrelation_iterator.cpp
     conduit_blueprint_table.cpp
