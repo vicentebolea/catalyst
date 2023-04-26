@@ -66,9 +66,9 @@ static const std::vector<std::string> ASSOCIATIONS = {"vertex", "element"};
 static const std::vector<std::string> BOOLEANS = {"true", "false"};
 static const std::vector<std::string> NESTSET_TYPES = {"parent", "child"};
 
-static const std::vector<std::string> COORDINATE_AXES = {"x", "y", "z", "r", "z", "theta", "phi"};
+static const std::vector<std::string> COORDINATE_AXES = {"x", "y", "z", "r", "theta", "phi"};
 static const std::vector<std::string> CARTESIAN_AXES = {"x", "y", "z"};
-static const std::vector<std::string> CYLINDRICAL_AXES = {"r", "z"};
+static const std::vector<std::string> CYLINDRICAL_AXES = {"z", "r"};
 static const std::vector<std::string> SPHERICAL_AXES = {"r", "theta", "phi"};
 static const std::vector<std::string> LOGICAL_AXES = {"i", "j", "k"};
 
@@ -146,7 +146,7 @@ static const index_t TOPO_WEDGE_EMBEDDING[8][3] = {
     {0, 1, 2}, {0, 1, 3}, {1, 3, 4}, {1, 2, 4},
     {2, 4, 5}, {2, 0, 5}, {0, 5, 3}, {3, 4, 5}};
 static const index_t TOPO_PYRAMID_EMBEDDING[6][3] = {
-    {0, 1, 2}, {1, 2, 3}, {0, 1, 4}, 
+    {0, 1, 2}, {3, 2, 0}, {0, 1, 4},
     {1, 2, 4}, {2, 3, 4}, {3, 0, 4}};
 static const std::vector<const index_t*> TOPO_SHAPE_EMBEDDINGS = {
     &TOPO_POINT_EMBEDDING[0][0], &TOPO_LINE_EMBEDDING[0][0],
@@ -198,86 +198,6 @@ private:
     void init(const ShapeType &shape_type);
 };
 
-//---------------------------------------------------------------------------//
-struct CONDUIT_BLUEPRINT_API TopologyMetadata
-{
-    // The 'IndexType' indicates the index space to be used when referring to
-    // entities within this topological cascade. The types have the following
-    // meanings:
-    //
-    // - GLOBAL: The unique index for the entity relative to the entire topology.
-    //   Though a point may be shared by many lines/faces/cells, it will only
-    //   have one global index. This is most commonly used for entity identification.
-    // - LOCAL: The index of the entity relative to a cascade context. A point
-    //   will have one local index for each line/face/cell that it participates
-    //   in along the cascade. This is most commonly used to determine entity orientation.
-    //
-    // To clarify, consider the following example, with the following local and
-    // global identifiers:
-    //
-    // - GLOBAL Scheme: Each entity has 1 unique identifier depending on FIFO
-    //   cascade iteration:
-    //
-    //   p3               p4              p5
-    //   +----------------+----------------+
-    //   |       l2       |       l6       |
-    //   |                |                |
-    //   |                |                |
-    //   |l3     f0       |l1     f1     l5|
-    //   |                |                |
-    //   |                |                |
-    //   |       l0       |       l4       |
-    //   +----------------+----------------+
-    //   p0               p1              p2
-    //
-    // - LOCAL Scheme: Each entity has an identifier for each occurence within
-    //   the cascade:
-    //
-    //    p5            p4 p13          p12
-    //   +----------------+----------------+
-    //   |p6     l2     p3|p14    l6    p11|
-    //   |                |                |
-    //   |                |                |
-    //   |l3     f0     l1|l7     f1     l5|
-    //   |                |                |
-    //   |                |                |
-    //   |p7     l0     p2|p15    l4    p10|
-    //   +----------------+----------------+
-    //    p0            p1 p8            p9
-    //
-    enum IndexType { GLOBAL = 0, LOCAL = 1 };
-
-    TopologyMetadata(const conduit::Node &topology, const conduit::Node &coordset);
-
-    void add_entity_assoc(IndexType type, index_t e0_id, index_t e0_dim, index_t e1_id, index_t e1_dim);
-
-    const std::vector<index_t> &get_entity_assocs(IndexType type, index_t entity_id, index_t entity_dim, index_t assoc_dim) const;
-    void get_dim_map(IndexType type, index_t src_dim, index_t dst_dim, Node &map_node) const;
-    void get_entity_data(IndexType type, index_t entity_id, index_t entity_dim, Node &data) const;
-    void get_point_data(IndexType type, index_t point_id, Node &data) const;
-
-    index_t get_length(index_t dim = -1) const;
-    index_t get_embed_length(index_t entity_dim, index_t embed_dim) const;
-
-    std::string to_json() const;
-
-    const conduit::Node *topo, *cset;
-    const conduit::DataType int_dtype, float_dtype;
-    const ShapeCascade topo_cascade;
-    const ShapeType topo_shape;
-
-    // per-dimension topology nodes (mapped onto 'cset' coordinate set)
-    std::vector< conduit::Node > dim_topos;
-    // per-dimension maps from an entity's point id set to its global entity id
-    std::vector< std::map< std::set<index_t>, index_t > > dim_geid_maps;
-    // per-dimension maps from global entity ids to per-dimension global associate ids
-    std::vector< std::vector< std::vector< std::pair< std::vector<index_t>, std::set<index_t> > > > > dim_geassocs_maps;
-    // per-dimension maps from local entity ids to per-dimension local associate ids
-    std::vector< std::vector< std::vector< std::pair< std::vector<index_t>, std::set<index_t> > > > > dim_leassocs_maps;
-    // per-dimension mapping from local entity ids to global entity ids (delegates)
-    std::vector< std::vector<index_t> > dim_le2ge_maps;
-};
-
 //-----------------------------------------------------------------------------
 /// blueprint mesh utility functions
 //-----------------------------------------------------------------------------
@@ -294,6 +214,7 @@ DataType CONDUIT_BLUEPRINT_API find_widest_dtype(const Node &node, const std::ve
 CONDUIT_BLUEPRINT_API const Node * find_reference_node(const Node &node, const std::string &ref_key);
 //-----------------------------------------------------------------------------
 index_t CONDUIT_BLUEPRINT_API find_domain_id(const Node &node);
+
 
 //-----------------------------------------------------------------------------
 // -- begin conduit::blueprint::mesh::utils::connectivity --
