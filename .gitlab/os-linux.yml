@@ -3,7 +3,7 @@
 ## Base images
 
 .fedora36:
-    image: "kitware/paraview:ci-catalyst-fedora36-20220607"
+    image: "kitware/paraview:ci-catalyst-fedora36-20230426"
     variables:
         GIT_CLONE_PATH: $CI_BUILDS_DIR/gitlab-kitware-sciviz-ci
 
@@ -37,6 +37,21 @@
     variables:
         CMAKE_CONFIGURATION: fedora36_mpi_replay
 
+.fedora36_extdeps_replay:
+    extends:
+        - .fedora36
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_extdeps_replay
+
+.fedora36_extdeps_mpi_replay:
+    extends:
+        - .fedora36
+        - .fedora_mpich_addon
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_extdeps_mpi_replay
+
 .fedora36_tidy:
     extends:
         - .fedora36
@@ -52,6 +67,15 @@
 
     variables:
         CMAKE_CONFIGURATION: fedora36_mpi_replay_tidy
+        CTEST_NO_WARNINGS_ALLOWED: 1
+
+.fedora36_extdeps_mpi_replay_tidy:
+    extends:
+        - .fedora36
+        - .fedora_mpich_addon
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_extdeps_mpi_replay_tidy
         CTEST_NO_WARNINGS_ALLOWED: 1
 
 .fedora36_memcheck:

@@ -15,6 +15,7 @@ endfunction ()
 
 configuration_flag(CATALYST_USE_MPI "mpi")
 configuration_flag(CATALYST_BUILD_REPLAY "replay")
+configuration_flag(CATALYST_WITH_EXTERNAL_CONDUIT "extdeps")
 
 if ("$ENV{CMAKE_CONFIGURATION}" MATCHES "_tidy")
   set(CMAKE_C_CLANG_TIDY "clang-tidy" "--header-filter=$ENV{CI_PROJECT_DIR}/(src|tests)" CACHE FILEPATH "")
