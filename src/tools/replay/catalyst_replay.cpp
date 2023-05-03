@@ -17,6 +17,7 @@
 #include <sstream>
 #include <string>
 
+#include <cstdint>
 #include <cstdlib>
 
 // NOLINTNEXTLINE(misc-no-recursion)
