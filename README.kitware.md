@@ -11,3 +11,7 @@ process.
   * Simplify CMakeBasics.cmake to remove unnecessary bits.
   * Write a CMake build system for use in Catalyst.
   * Mangle all symbols to avoid conflicts.
+  * Add harness for `CATALYST_WRAP_PYTHON` that includes python wrappings.
+  * Write CMake build system for python targets for use in Catalyst.
+  * Remove `blueprint.{mcarray.mesh,table}.examples` and `relay` python modules from __init__ files.
+  * Rename python package to `catalyst_conduit`
