@@ -13,6 +13,12 @@ configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/conduit_bitwidth_style_types.h.in"
 configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/conduit_exports.h.in"
                 "${CMAKE_CURRENT_BINARY_DIR}/conduit_exports.h")
 
+if(CATALYST_WRAP_FORTRAN)
+  configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/fortran/conduit_fortran_bitwidth_style_types.inc.in"
+                  "${CMAKE_CURRENT_BINARY_DIR}/fortran/conduit_fortran_bitwidth_style_types.inc")
+endif()
+
+
 #
 # Specify conduit cpp headers
 #
@@ -85,6 +91,20 @@ set(conduit_c_sources
     c/conduit_utils_c.cpp
     )
 
+#
+# Specify conduit fortran interface sources
+#
+set(conduit_fortran_sources)
+set(conduit_fortran_headers)
+if(CATALYST_WRAP_FORTRAN)
+  set(conduit_fortran_sources
+      fortran/conduit_fortran.F90
+     )
+
+  set(conduit_fortran_headers
+      ${CMAKE_CURRENT_BINARY_DIR}/fortran/conduit_fortran_bitwidth_style_types.inc
+     )
+endif()
 #-------------------------------------------------------------------------
 # an interface target to simply setup include paths.
 add_library(catalyst_conduit_headers INTERFACE)
@@ -94,17 +114,20 @@ add_library(catalyst::conduit_headers ALIAS catalyst_conduit_headers)
 target_include_directories(catalyst_conduit_headers
   INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<$<BOOL:${CATALYST_WRAP_FORTRAN}>:$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/fortran>>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/c>
     $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>)
 c_install_headers(
-  HEADERS ${conduit_c_headers})
+  HEADERS ${conduit_c_headers}
+          ${conduit_fortran_headers})
 
 #-------------------------------------------------------------------------
 # build conduit library
 add_library(catalyst_conduit OBJECT
     ${conduit_sources}
-    ${conduit_c_sources})
+    ${conduit_c_sources}
+    ${conduit_fortran_sources})
 target_include_directories(catalyst_conduit
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
@@ -124,3 +147,18 @@ endif ()
 set_property(TARGET catalyst_conduit PROPERTY
   EXPORT_NAME conduit)
 add_library(catalyst::conduit ALIAS catalyst_conduit)
+
+if(CATALYST_WRAP_PYTHON)
+ add_subdirectory(python)
+endif()
+
+if(CATALYST_WRAP_FORTRAN)
+  # Special install targets for conduit fortran modules
+  set(conduit_fortran_modules
+      ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit.mod)
+
+  # Setup install to copy the fortran modules
+  install(FILES
+          ${conduit_fortran_modules}
+          DESTINATION ${CATALYST_INSTALL_INCLUDE_DIR}/conduit)
+endif()

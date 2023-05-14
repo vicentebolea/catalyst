@@ -83,6 +83,15 @@ target_include_directories(catalyst_blueprint_headers
 c_install_headers(
   HEADERS ${blueprint_c_headers})
 
+# cpp headers are required for the python libraries
+add_library(catalyst_blueprint_cpp_headers INTERFACE)
+add_library(catalyst::blueprint_cpp_headers ALIAS catalyst_blueprint_cpp_headers)
+target_include_directories(catalyst_blueprint_cpp_headers
+  INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>)
+
 #-------------------------------------------------------------------------
 # build blueprint library
 add_library(catalyst_blueprint OBJECT
@@ -107,3 +116,7 @@ if (BUILD_SHARED_LIBS)
       conduit_blueprint_c_EXPORTS)
 endif ()
 add_library(catalyst::blueprint ALIAS catalyst_blueprint)
+
+if(CATALYST_WRAP_PYTHON)
+ add_subdirectory(python)
+endif()
