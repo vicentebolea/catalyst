@@ -8,7 +8,7 @@ readonly name="conduit"
 readonly ownership="Conduit Upstream <kwrobot@kitware.com>"
 readonly subtree="thirdparty/$name"
 readonly repo="https://gitlab.kitware.com/third-party/conduit.git"
-readonly tag="for/catalyst-20230426-v0.8.7"
+readonly tag="for/catalyst-20230512-v0.8.7"
 readonly paths="
 .gitattributes
 COPYRIGHT
@@ -23,6 +23,7 @@ src/libs/blueprint/c/*.*
 src/libs/blueprint/CMakeLists.catalyst.txt
 src/libs/blueprint/*.cpp
 src/libs/blueprint/fortran/*.*
+src/libs/blueprint/python
 src/libs/blueprint/*.h.in
 src/libs/blueprint/*.hpp
 src/libs/conduit/CMakeLists.catalyst.txt
@@ -36,6 +37,7 @@ src/libs/conduit/*.hpp
 src/libs/conduit/*.h
 src/libs/conduit/*.h.in
 src/libs/conduit/fortran/*.*
+src/libs/conduit/python
 src/thirdparty_builtin/fmt-7.1.0/
 src/thirdparty_builtin/libb64-1.2.1/README
 src/thirdparty_builtin/libb64-1.2.1/LICENSE
@@ -61,12 +63,16 @@ extract_source () {
     mv "$extractdir/$name-reduced/src/thirdparty_builtin/libb64-1.2.1" "$extractdir/$name-reduced/libb64"
     mv "$extractdir/$name-reduced/src/thirdparty_builtin/libyaml-690a781" "$extractdir/$name-reduced/libyaml"
     mv "$extractdir/$name-reduced/src/thirdparty_builtin/rapidjson" "$extractdir/$name-reduced/rapidjson"
+    rm -v "$extractdir/$name-reduced/conduit/python/run_python_with_conduit.sh.in"
+    mv "$extractdir/$name-reduced/conduit/python/py_src" "$extractdir/$name-reduced/conduit/python/catalyst_conduit"
 
     rmdir "$extractdir/$name-reduced/src/libs"
 
     mv "$extractdir/$name-reduced/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/CMakeLists.txt"
     mv "$extractdir/$name-reduced/conduit/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/conduit/CMakeLists.txt"
+    mv "$extractdir/$name-reduced/conduit/python/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/conduit/python/CMakeLists.txt"
     mv "$extractdir/$name-reduced/blueprint/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/blueprint/CMakeLists.txt"
+    mv "$extractdir/$name-reduced/blueprint/python/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/blueprint/python/CMakeLists.txt"
     mv "$extractdir/$name-reduced/fmt/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/fmt/CMakeLists.txt"
     mv "$extractdir/$name-reduced/libyaml/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/libyaml/CMakeLists.txt"
     mv "$extractdir/$name-reduced/libb64/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/libb64/CMakeLists.txt"

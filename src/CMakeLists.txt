@@ -1,4 +1,5 @@
 add_subdirectory(catalyst)
+add_subdirectory(wrap)
 
 option(CATALYST_BUILD_STUB_IMPLEMENTATION "Enable stub implementation" ON)
 if (CATALYST_BUILD_STUB_IMPLEMENTATION)

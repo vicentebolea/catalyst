@@ -9,7 +9,7 @@
 #include "conduit_fortran_bitwidth_style_types.inc"
 
 !------------------------------------------------------------------------------
-module conduit
+module catalyst_conduit
 !------------------------------------------------------------------------------
     use, intrinsic :: iso_c_binding, only : C_PTR
     implicit none
@@ -91,31 +91,31 @@ module conduit
     !--------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    subroutine conduit_about(cnode) &
-             bind(C, name="conduit_about")
+    subroutine catalyst_conduit_about(cnode) &
+             bind(C, name="catalyst_conduit_about")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
-     end subroutine conduit_about
+     end subroutine catalyst_conduit_about
 
     !--------------------------------------------------------------------------
     ! construction and destruction
     !--------------------------------------------------------------------------
     !--------------------------------------------------------------------------
-    function conduit_node_create() result(cnode) &
-             bind(C, name="conduit_node_create")
+    function catalyst_conduit_node_create() result(cnode) &
+             bind(C, name="catalyst_conduit_node_create")
          use iso_c_binding
          implicit none
          type(C_PTR) :: cnode
-     end function conduit_node_create
+     end function catalyst_conduit_node_create
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_destroy(cnode) &
-            bind(C, name="conduit_node_destroy")
+    subroutine catalyst_conduit_node_destroy(cnode) &
+            bind(C, name="catalyst_conduit_node_destroy")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
-    end subroutine conduit_node_destroy
+    end subroutine catalyst_conduit_node_destroy
 
 
     !--------------------------------------------------------------------------
@@ -123,236 +123,236 @@ module conduit
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    function c_conduit_node_fetch(cnode, path) result(res) &
-             bind(C, name="conduit_node_fetch")
+    function c_catalyst_conduit_node_fetch(cnode, path) result(res) &
+             bind(C, name="catalyst_conduit_node_fetch")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR) :: res
-     end function c_conduit_node_fetch
+     end function c_catalyst_conduit_node_fetch
 
      !--------------------------------------------------------------------------
-     function c_conduit_node_fetch_existing(cnode, path) result(res) &
-              bind(C, name="conduit_node_fetch_existing")
+     function c_catalyst_conduit_node_fetch_existing(cnode, path) result(res) &
+              bind(C, name="catalyst_conduit_node_fetch_existing")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
           character(kind=C_CHAR), intent(IN) :: path(*)
           type(C_PTR) :: res
-      end function c_conduit_node_fetch_existing
+      end function c_catalyst_conduit_node_fetch_existing
 
      !--------------------------------------------------------------------------
-     function conduit_node_append(cnode) result(res) &
-              bind(C, name="conduit_node_append")
+     function catalyst_conduit_node_append(cnode) result(res) &
+              bind(C, name="catalyst_conduit_node_append")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
           type(C_PTR) :: res
-      end function conduit_node_append
+      end function catalyst_conduit_node_append
 
       !--------------------------------------------------------------------------
-      function conduit_node_child(cnode,idx) result(res) &
-               bind(C, name="conduit_node_child")
+      function catalyst_conduit_node_child(cnode,idx) result(res) &
+               bind(C, name="catalyst_conduit_node_child")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            integer(C_SIZE_T), value, intent(in) :: idx
            type(C_PTR) :: res
-       end function conduit_node_child
+       end function catalyst_conduit_node_child
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_child_by_name(cnode,name) result(res) &
-            bind(C, name="conduit_node_child_by_name")
+    function c_catalyst_conduit_node_child_by_name(cnode,name) result(res) &
+            bind(C, name="catalyst_conduit_node_child_by_name")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: name(*)
         type(C_PTR) :: res
-    end function c_conduit_node_child_by_name
+    end function c_catalyst_conduit_node_child_by_name
 
     !--------------------------------------------------------------------------
     ! node info methods
     !--------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_is_root(cnode) result(res) &
-             bind(C, name="conduit_node_is_root")
+    function c_catalyst_conduit_node_is_root(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_is_root")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(C_INT) :: res
-     end function c_conduit_node_is_root
+     end function c_catalyst_conduit_node_is_root
 
      !--------------------------------------------------------------------------
-     function c_conduit_node_is_data_external(cnode) result(res) &
-           bind(C, name="conduit_node_is_data_external")
+     function c_catalyst_conduit_node_is_data_external(cnode) result(res) &
+           bind(C, name="catalyst_conduit_node_is_data_external")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(C_INT) :: res
-     end function c_conduit_node_is_data_external
+     end function c_catalyst_conduit_node_is_data_external
 
     !--------------------------------------------------------------------------
-    function conduit_node_parent(cnode) result(res) &
-           bind(C, name="conduit_node_parent")
+    function catalyst_conduit_node_parent(cnode) result(res) &
+           bind(C, name="catalyst_conduit_node_parent")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         type(C_PTR) :: res
-    end function conduit_node_parent
+    end function catalyst_conduit_node_parent
 
     !--------------------------------------------------------------------------
-    function conduit_node_number_of_elements(cnode) result(res) &
-            bind(C, name="conduit_node_number_of_elements")
+    function catalyst_conduit_node_number_of_elements(cnode) result(res) &
+            bind(C, name="catalyst_conduit_node_number_of_elements")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(C_SIZE_T) :: res
-    end function conduit_node_number_of_elements
+    end function catalyst_conduit_node_number_of_elements
 
     !--------------------------------------------------------------------------
-    function conduit_node_number_of_children(cnode) result(res) &
-             bind(C, name="conduit_node_number_of_children")
+    function catalyst_conduit_node_number_of_children(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_number_of_children")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(C_SIZE_T) :: res
-     end function conduit_node_number_of_children
+     end function catalyst_conduit_node_number_of_children
      
      !--------------------------------------------------------------------------
-     function c_conduit_node_has_child(cnode,name) result(res) &
-              bind(C, name="conduit_node_has_child")
+     function c_catalyst_conduit_node_has_child(cnode,name) result(res) &
+              bind(C, name="catalyst_conduit_node_has_child")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
           character(kind=C_CHAR), intent(IN) :: name(*)
           integer(C_INT) :: res
-      end function c_conduit_node_has_child
+      end function c_catalyst_conduit_node_has_child
      
       !--------------------------------------------------------------------------
-      subroutine c_conduit_node_remove_path(cnode,path) &
-               bind(C, name="conduit_node_remove_path")
+      subroutine c_catalyst_conduit_node_remove_path(cnode,path) &
+               bind(C, name="catalyst_conduit_node_remove_path")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            character(kind=C_CHAR), intent(IN) :: path(*)
-      end subroutine c_conduit_node_remove_path
+      end subroutine c_catalyst_conduit_node_remove_path
 
       !--------------------------------------------------------------------------
-      subroutine conduit_node_remove_child(cnode,idx) &
-               bind(C, name="conduit_node_remove_child")
+      subroutine catalyst_conduit_node_remove_child(cnode,idx) &
+               bind(C, name="catalyst_conduit_node_remove_child")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            integer(C_SIZE_T), value, intent(in) :: idx
-      end subroutine conduit_node_remove_child
+      end subroutine catalyst_conduit_node_remove_child
 
       !--------------------------------------------------------------------------
-      function c_conduit_node_add_child(cnode,name) result(res) &
-               bind(C, name="conduit_node_add_child")
+      function c_catalyst_conduit_node_add_child(cnode,name) result(res) &
+               bind(C, name="catalyst_conduit_node_add_child")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            character(kind=C_CHAR), intent(IN) :: name(*)
            type(C_PTR) :: res
-      end function c_conduit_node_add_child
+      end function c_catalyst_conduit_node_add_child
 
       !--------------------------------------------------------------------------
-      subroutine c_conduit_node_remove_child_by_name(cnode,name) &
-               bind(C, name="conduit_node_remove_child_by_name")
+      subroutine c_catalyst_conduit_node_remove_child_by_name(cnode,name) &
+               bind(C, name="catalyst_conduit_node_remove_child_by_name")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            character(kind=C_CHAR), intent(IN) :: name(*)
-      end subroutine c_conduit_node_remove_child_by_name
+      end subroutine c_catalyst_conduit_node_remove_child_by_name
 
       !--------------------------------------------------------------------------
-      subroutine c_conduit_node_rename_child(cnode,old_name, new_name) &
-                bind(C, name="conduit_node_rename_child")
+      subroutine c_catalyst_conduit_node_rename_child(cnode,old_name, new_name) &
+                bind(C, name="catalyst_conduit_node_rename_child")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode
             character(kind=C_CHAR), intent(IN) :: old_name(*)
             character(kind=C_CHAR), intent(IN) :: new_name(*)
-      end subroutine c_conduit_node_rename_child
+      end subroutine c_catalyst_conduit_node_rename_child
       !--------------------------------------------------------------------------
-      function c_conduit_node_has_path(cnode,path) result(res) &
-               bind(C, name="conduit_node_has_path")
+      function c_catalyst_conduit_node_has_path(cnode,path) result(res) &
+               bind(C, name="catalyst_conduit_node_has_path")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            character(kind=C_CHAR), intent(IN) :: path(*)
            integer(C_INT) :: res
-       end function c_conduit_node_has_path
+       end function c_catalyst_conduit_node_has_path
 
        !--------------------------------------------------------------------------
-       function conduit_node_total_strided_bytes(cnode) result(res) &
-               bind(C, name="conduit_node_total_strided_bytes")
+       function catalyst_conduit_node_total_strided_bytes(cnode) result(res) &
+               bind(C, name="catalyst_conduit_node_total_strided_bytes")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            integer(C_SIZE_T) :: res
-       end function conduit_node_total_strided_bytes
+       end function catalyst_conduit_node_total_strided_bytes
 
        !--------------------------------------------------------------------------
-       function conduit_node_total_bytes_allocated(cnode) result(res) &
-               bind(C, name="conduit_node_total_bytes_allocated")
+       function catalyst_conduit_node_total_bytes_allocated(cnode) result(res) &
+               bind(C, name="catalyst_conduit_node_total_bytes_allocated")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            integer(C_SIZE_T) :: res
-       end function conduit_node_total_bytes_allocated
+       end function catalyst_conduit_node_total_bytes_allocated
 
        !--------------------------------------------------------------------------
-       function conduit_node_total_bytes_compact(cnode) result(res) &
-               bind(C, name="conduit_node_total_bytes_compact")
+       function catalyst_conduit_node_total_bytes_compact(cnode) result(res) &
+               bind(C, name="catalyst_conduit_node_total_bytes_compact")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            integer(C_SIZE_T) :: res
-       end function conduit_node_total_bytes_compact
+       end function catalyst_conduit_node_total_bytes_compact
 
        !--------------------------------------------------------------------------
-       function c_conduit_node_is_compact(cnode) result(res) &
-                bind(C, name="conduit_node_is_compact")
+       function c_catalyst_conduit_node_is_compact(cnode) result(res) &
+                bind(C, name="catalyst_conduit_node_is_compact")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode
             integer(C_INT) :: res
-        end function c_conduit_node_is_compact
+        end function c_catalyst_conduit_node_is_compact
     
         !--------------------------------------------------------------------------
-        function c_conduit_node_is_contiguous(cnode) result(res) &
-             bind(C, name="conduit_node_is_contiguous")
+        function c_catalyst_conduit_node_is_contiguous(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_is_contiguous")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(C_INT) :: res
-        end function c_conduit_node_is_contiguous
+        end function c_catalyst_conduit_node_is_contiguous
 
         !--------------------------------------------------------------------------
-        function c_conduit_node_contiguous_with_node(cnode,cother) result(res) &
-              bind(C, name="conduit_node_contiguous_with_node")
+        function c_catalyst_conduit_node_contiguous_with_node(cnode,cother) result(res) &
+              bind(C, name="catalyst_conduit_node_contiguous_with_node")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
           type(C_PTR), value, intent(IN) :: cother
           integer(C_INT) :: res
-        end function c_conduit_node_contiguous_with_node
+        end function c_catalyst_conduit_node_contiguous_with_node
 
         !--------------------------------------------------------------------------
-        subroutine conduit_node_compact_to(cnode,cdest) &
-                bind(C, name="conduit_node_compact_to")
+        subroutine catalyst_conduit_node_compact_to(cnode,cdest) &
+                bind(C, name="catalyst_conduit_node_compact_to")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode
             type(C_PTR), value, intent(IN) :: cdest
-         end subroutine conduit_node_compact_to
+         end subroutine catalyst_conduit_node_compact_to
 
         !--------------------------------------------------------------------------
-        function c_conduit_node_diff(cnode,cother,cinfo,epsilon) result(res) &
-              bind(C, name="conduit_node_diff")
+        function c_catalyst_conduit_node_diff(cnode,cother,cinfo,epsilon) result(res) &
+              bind(C, name="catalyst_conduit_node_diff")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
@@ -360,11 +360,11 @@ module conduit
           type(C_PTR), value, intent(IN) :: cinfo
           real(8), value, intent(IN) :: epsilon
           integer(C_INT) :: res
-        end function c_conduit_node_diff
+        end function c_catalyst_conduit_node_diff
 
         !--------------------------------------------------------------------------
-        function c_conduit_node_diff_compatible(cnode,cother,cinfo,epsilon) result(res) &
-              bind(C, name="conduit_node_diff_compatible")
+        function c_catalyst_conduit_node_diff_compatible(cnode,cother,cinfo,epsilon) result(res) &
+              bind(C, name="catalyst_conduit_node_diff_compatible")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
@@ -372,137 +372,137 @@ module conduit
           type(C_PTR), value, intent(IN) :: cinfo
           real(8), value, intent(IN) :: epsilon
           integer(C_INT) :: res
-        end function c_conduit_node_diff_compatible
+        end function c_catalyst_conduit_node_diff_compatible
 
        !--------------------------------------------------------------------------
-       function c_conduit_node_compatible(cnode,cother) result(res) &
-               bind(C, name="conduit_node_compatible")
+       function c_catalyst_conduit_node_compatible(cnode,cother) result(res) &
+               bind(C, name="catalyst_conduit_node_compatible")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            type(C_PTR), value, intent(IN) :: cother
            integer(C_INT) :: res
-        end function c_conduit_node_compatible
+        end function c_catalyst_conduit_node_compatible
 
         !--------------------------------------------------------------------------
-        subroutine conduit_node_info(cnode,cdest) &
-                bind(C, name="conduit_node_info")
+        subroutine catalyst_conduit_node_info(cnode,cdest) &
+                bind(C, name="catalyst_conduit_node_info")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode
             type(C_PTR), value, intent(IN) :: cdest
-         end subroutine conduit_node_info
+         end subroutine catalyst_conduit_node_info
 
         !--------------------------------------------------------------------------
-        subroutine conduit_node_reset(cnode) &
-                 bind(C, name="conduit_node_reset")
+        subroutine catalyst_conduit_node_reset(cnode) &
+                 bind(C, name="catalyst_conduit_node_reset")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode
-        end subroutine conduit_node_reset
+        end subroutine catalyst_conduit_node_reset
 
         !--------------------------------------------------------------------------
-        subroutine conduit_node_move(cnode_a, cnode_b) &
-                 bind(C, name="conduit_node_move")
+        subroutine catalyst_conduit_node_move(cnode_a, cnode_b) &
+                 bind(C, name="catalyst_conduit_node_move")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode_a
             type(C_PTR), value, intent(IN) :: cnode_b
-        end subroutine conduit_node_move
+        end subroutine catalyst_conduit_node_move
 
         !--------------------------------------------------------------------------
-        subroutine conduit_node_swap(cnode_a, cnode_b) &
-                 bind(C, name="conduit_node_swap")
+        subroutine catalyst_conduit_node_swap(cnode_a, cnode_b) &
+                 bind(C, name="catalyst_conduit_node_swap")
             use iso_c_binding
             implicit none
             type(C_PTR), value, intent(IN) :: cnode_a
             type(C_PTR), value, intent(IN) :: cnode_b
-        end subroutine conduit_node_swap
+        end subroutine catalyst_conduit_node_swap
 
      !--------------------------------------------------------------------------
      ! node update methods
      !--------------------------------------------------------------------------
 
      !--------------------------------------------------------------------------
-     subroutine conduit_node_update(cnode,cdest) &
-             bind(C, name="conduit_node_update")
+     subroutine catalyst_conduit_node_update(cnode,cdest) &
+             bind(C, name="catalyst_conduit_node_update")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR), value, intent(IN) :: cdest
-      end subroutine conduit_node_update
+      end subroutine catalyst_conduit_node_update
 
       !--------------------------------------------------------------------------
-      subroutine conduit_node_update_compatible(cnode,cdest) &
-              bind(C, name="conduit_node_update_compatible")
+      subroutine catalyst_conduit_node_update_compatible(cnode,cdest) &
+              bind(C, name="catalyst_conduit_node_update_compatible")
           use iso_c_binding
           implicit none
           type(C_PTR), value, intent(IN) :: cnode
           type(C_PTR), value, intent(IN) :: cdest
-       end subroutine conduit_node_update_compatible
+       end subroutine catalyst_conduit_node_update_compatible
 
        !--------------------------------------------------------------------------
-       subroutine conduit_node_update_external(cnode,cdest) &
-               bind(C, name="conduit_node_update_external")
+       subroutine catalyst_conduit_node_update_external(cnode,cdest) &
+               bind(C, name="catalyst_conduit_node_update_external")
            use iso_c_binding
            implicit none
            type(C_PTR), value, intent(IN) :: cnode
            type(C_PTR), value, intent(IN) :: cdest
-        end subroutine conduit_node_update_external
+        end subroutine catalyst_conduit_node_update_external
 
     !--------------------------------------------------------------------------
     ! -- basic io, parsing, and generation ---
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_parse(cnode, schema, protocol) &
-        bind(C, name="conduit_node_parse")
+    subroutine c_catalyst_conduit_node_parse(cnode, schema, protocol) &
+        bind(C, name="catalyst_conduit_node_parse")
     use iso_c_binding
     implicit none
     type(C_PTR), value, intent(IN) :: cnode
     character(kind=C_CHAR), intent(IN) :: schema(*)
     character(kind=C_CHAR), intent(IN) :: protocol(*)
-    end subroutine c_conduit_node_parse
+    end subroutine c_catalyst_conduit_node_parse
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_load(cnode, path, protocol) &
-        bind(C, name="conduit_node_load")
+    subroutine c_catalyst_conduit_node_load(cnode, path, protocol) &
+        bind(C, name="catalyst_conduit_node_load")
     use iso_c_binding
     implicit none
     type(C_PTR), value, intent(IN) :: cnode
     character(kind=C_CHAR), intent(IN) :: path(*)
     character(kind=C_CHAR), intent(IN) :: protocol(*)
-    end subroutine c_conduit_node_load
+    end subroutine c_catalyst_conduit_node_load
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_save(cnode, path, protocol) &
-        bind(C, name="conduit_node_save")
+    subroutine c_catalyst_conduit_node_save(cnode, path, protocol) &
+        bind(C, name="catalyst_conduit_node_save")
     use iso_c_binding
     implicit none
     type(C_PTR), value, intent(IN) :: cnode
     character(kind=C_CHAR), intent(IN) :: path(*)
     character(kind=C_CHAR), intent(IN) :: protocol(*)
-    end subroutine c_conduit_node_save
+    end subroutine c_catalyst_conduit_node_save
 
      !--------------------------------------------------------------------------
      ! node print helpers
      !--------------------------------------------------------------------------
 
      !--------------------------------------------------------------------------
-     subroutine conduit_node_print(cnode) &
-         bind(C, name="conduit_node_print")
+     subroutine catalyst_conduit_node_print(cnode) &
+         bind(C, name="catalyst_conduit_node_print")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
-     end subroutine conduit_node_print
+     end subroutine catalyst_conduit_node_print
 
      !--------------------------------------------------------------------------
-     subroutine conduit_node_print_detailed(cnode) &
-         bind(C, name="conduit_node_print_detailed")
+     subroutine catalyst_conduit_node_print_detailed(cnode) &
+         bind(C, name="catalyst_conduit_node_print_detailed")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
-     end subroutine conduit_node_print_detailed
+     end subroutine catalyst_conduit_node_print_detailed
 
      !--------------------------------------------------------------------------
      !--------------------------------------------------------------------------
@@ -515,48 +515,48 @@ module conduit
      !--------------------------------------------------------------------------
      ! set_node
      !--------------------------------------------------------------------------
-     subroutine conduit_node_set_node(cnode, cother) &
-                    bind(C, name="conduit_node_set_node")
+     subroutine catalyst_conduit_node_set_node(cnode, cother) &
+                    bind(C, name="catalyst_conduit_node_set_node")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR), value, intent(IN) :: cother
-     end subroutine conduit_node_set_node
+     end subroutine catalyst_conduit_node_set_node
 
      !--------------------------------------------------------------------------
      ! set_node_external
      !--------------------------------------------------------------------------
-     subroutine conduit_node_set_external_node(cnode, cother) &
-                    bind(C, name="conduit_node_set_external_node")
+     subroutine catalyst_conduit_node_set_external_node(cnode, cother) &
+                    bind(C, name="catalyst_conduit_node_set_external_node")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR), value, intent(IN) :: cother
-     end subroutine conduit_node_set_external_node
+     end subroutine catalyst_conduit_node_set_external_node
 
      !--------------------------------------------------------------------------
      ! set_node_path
      !--------------------------------------------------------------------------
-     subroutine c_conduit_node_set_path_node(cnode, path, cother) &
-                    bind(C, name="conduit_node_set_path_node")
+     subroutine c_catalyst_conduit_node_set_path_node(cnode, path, cother) &
+                    bind(C, name="catalyst_conduit_node_set_path_node")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR), value, intent(IN) :: cother
-     end subroutine c_conduit_node_set_path_node
+     end subroutine c_catalyst_conduit_node_set_path_node
 
      !--------------------------------------------------------------------------
      ! set_node_path_external
      !--------------------------------------------------------------------------
-     subroutine c_conduit_node_set_path_external_node(cnode, path, cother) &
-                    bind(C, name="conduit_node_set_path_external_node")
+     subroutine c_catalyst_conduit_node_set_path_external_node(cnode, path, cother) &
+                    bind(C, name="catalyst_conduit_node_set_path_external_node")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR), value, intent(IN) :: cother
-     end subroutine c_conduit_node_set_path_external_node
+     end subroutine c_catalyst_conduit_node_set_path_external_node
 
     !--------------------------------------------------------------------------
     !--------------------------------------------------------------------------
@@ -569,70 +569,70 @@ module conduit
     !--------------------------------------------------------------------------
     ! int32 set
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_int32(cnode, val) &
-                   bind(C, name="conduit_node_set_int32")
+    subroutine catalyst_conduit_node_set_int32(cnode, val) &
+                   bind(C, name="catalyst_conduit_node_set_int32")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(4), value, intent(IN) :: val
-    end subroutine conduit_node_set_int32
+    end subroutine catalyst_conduit_node_set_int32
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_int32_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_int32_ptr")
+    subroutine catalyst_conduit_node_set_int32_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_int32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_int32_ptr
+    end subroutine catalyst_conduit_node_set_int32_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_external_int32_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_external_int32_ptr")
+    subroutine catalyst_conduit_node_set_external_int32_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_external_int32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_external_int32_ptr
+    end subroutine catalyst_conduit_node_set_external_int32_ptr
     
     !--------------------------------------------------------------------------
     ! int32 set_path
     !--------------------------------------------------------------------------
 
-    subroutine c_conduit_node_set_path_int32(cnode, path, val) &
-                   bind(C, name="conduit_node_set_path_int32")
+    subroutine c_catalyst_conduit_node_set_path_int32(cnode, path, val) &
+                   bind(C, name="catalyst_conduit_node_set_path_int32")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(4), value, intent(IN) :: val
-    end subroutine c_conduit_node_set_path_int32
+    end subroutine c_catalyst_conduit_node_set_path_int32
 
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_int32_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_int32_ptr")
+    subroutine c_catalyst_conduit_node_set_path_int32_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_int32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_int32_ptr
+    end subroutine c_catalyst_conduit_node_set_path_int32_ptr
     
     
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_external_int32_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_external_int32_ptr")
+    subroutine c_catalyst_conduit_node_set_path_external_int32_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_external_int32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_external_int32_ptr
+    end subroutine c_catalyst_conduit_node_set_path_external_int32_ptr
     
 
     !--------------------------------------------------------------------------
@@ -640,42 +640,42 @@ module conduit
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    pure function conduit_node_as_int32(cnode) result(res) &
-             bind(C, name="conduit_node_as_int32")
+    pure function catalyst_conduit_node_as_int32(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_as_int32")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(4) :: res
-    end function conduit_node_as_int32
+    end function catalyst_conduit_node_as_int32
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_as_int32_ptr(cnode) result(int32_ptr) &
-             bind(C, name="conduit_node_as_int32_ptr")
+    function c_catalyst_conduit_node_as_int32_ptr(cnode) result(int32_ptr) &
+             bind(C, name="catalyst_conduit_node_as_int32_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR) :: int32_ptr
-     end function c_conduit_node_as_int32_ptr
+     end function c_catalyst_conduit_node_as_int32_ptr
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_node_fetch_path_as_int32(cnode, path) result(res) &
-                   bind(C, name="conduit_node_fetch_path_as_int32")
+    pure function c_catalyst_conduit_node_fetch_path_as_int32(cnode, path) result(res) &
+                   bind(C, name="catalyst_conduit_node_fetch_path_as_int32")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(4) :: res
-    end function c_conduit_node_fetch_path_as_int32
+    end function c_catalyst_conduit_node_fetch_path_as_int32
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_fetch_path_as_int32_ptr(cnode, path) result(int32_ptr) &
-             bind(C, name="conduit_node_fetch_path_as_int32_ptr")
+    function c_catalyst_conduit_node_fetch_path_as_int32_ptr(cnode, path) result(int32_ptr) &
+             bind(C, name="catalyst_conduit_node_fetch_path_as_int32_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR) :: int32_ptr
-     end function c_conduit_node_fetch_path_as_int32_ptr
+     end function c_catalyst_conduit_node_fetch_path_as_int32_ptr
      
 
 
@@ -698,70 +698,70 @@ module conduit
     !--------------------------------------------------------------------------
     ! int64 set
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_int64(cnode, val) &
-                   bind(C, name="conduit_node_set_int64")
+    subroutine catalyst_conduit_node_set_int64(cnode, val) &
+                   bind(C, name="catalyst_conduit_node_set_int64")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(8), value, intent(IN) :: val
-    end subroutine conduit_node_set_int64
+    end subroutine catalyst_conduit_node_set_int64
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_int64_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_int64_ptr")
+    subroutine catalyst_conduit_node_set_int64_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_int64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_int64_ptr
+    end subroutine catalyst_conduit_node_set_int64_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_external_int64_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_external_int64_ptr")
+    subroutine catalyst_conduit_node_set_external_int64_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_external_int64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_external_int64_ptr
+    end subroutine catalyst_conduit_node_set_external_int64_ptr
     
     !--------------------------------------------------------------------------
     ! int64 set_path
     !--------------------------------------------------------------------------
 
-    subroutine c_conduit_node_set_path_int64(cnode, path, val) &
-                   bind(C, name="conduit_node_set_path_int64")
+    subroutine c_catalyst_conduit_node_set_path_int64(cnode, path, val) &
+                   bind(C, name="catalyst_conduit_node_set_path_int64")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(8), value, intent(IN) :: val
-    end subroutine c_conduit_node_set_path_int64
+    end subroutine c_catalyst_conduit_node_set_path_int64
 
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_int64_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_int64_ptr")
+    subroutine c_catalyst_conduit_node_set_path_int64_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_int64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_int64_ptr
+    end subroutine c_catalyst_conduit_node_set_path_int64_ptr
     
     
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_external_int64_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_external_int64_ptr")
+    subroutine c_catalyst_conduit_node_set_path_external_int64_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_external_int64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_external_int64_ptr
+    end subroutine c_catalyst_conduit_node_set_path_external_int64_ptr
     
 
     !--------------------------------------------------------------------------
@@ -769,42 +769,42 @@ module conduit
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    pure function conduit_node_as_int64(cnode) result(res) &
-             bind(C, name="conduit_node_as_int64")
+    pure function catalyst_conduit_node_as_int64(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_as_int64")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(8) :: res
-    end function conduit_node_as_int64
+    end function catalyst_conduit_node_as_int64
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_as_int64_ptr(cnode) result(int64_ptr) &
-             bind(C, name="conduit_node_as_int64_ptr")
+    function c_catalyst_conduit_node_as_int64_ptr(cnode) result(int64_ptr) &
+             bind(C, name="catalyst_conduit_node_as_int64_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR) :: int64_ptr
-     end function c_conduit_node_as_int64_ptr
+     end function c_catalyst_conduit_node_as_int64_ptr
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_node_fetch_path_as_int64(cnode, path) result(res) &
-                   bind(C, name="conduit_node_fetch_path_as_int64")
+    pure function c_catalyst_conduit_node_fetch_path_as_int64(cnode, path) result(res) &
+                   bind(C, name="catalyst_conduit_node_fetch_path_as_int64")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         integer(8) :: res
-    end function c_conduit_node_fetch_path_as_int64
+    end function c_catalyst_conduit_node_fetch_path_as_int64
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_fetch_path_as_int64_ptr(cnode, path) result(int64_ptr) &
-             bind(C, name="conduit_node_fetch_path_as_int64_ptr")
+    function c_catalyst_conduit_node_fetch_path_as_int64_ptr(cnode, path) result(int64_ptr) &
+             bind(C, name="catalyst_conduit_node_fetch_path_as_int64_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR) :: int64_ptr
-     end function c_conduit_node_fetch_path_as_int64_ptr
+     end function c_catalyst_conduit_node_fetch_path_as_int64_ptr
      
 
 
@@ -828,70 +828,70 @@ module conduit
     !--------------------------------------------------------------------------
     ! float32 set
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_float32(cnode, val) &
-                   bind(C, name="conduit_node_set_float32")
+    subroutine catalyst_conduit_node_set_float32(cnode, val) &
+                   bind(C, name="catalyst_conduit_node_set_float32")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(4), value, intent(IN) :: val
-    end subroutine conduit_node_set_float32
+    end subroutine catalyst_conduit_node_set_float32
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_float32_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_float32_ptr")
+    subroutine catalyst_conduit_node_set_float32_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_float32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_float32_ptr
+    end subroutine catalyst_conduit_node_set_float32_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_external_float32_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_external_float32_ptr")
+    subroutine catalyst_conduit_node_set_external_float32_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_external_float32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_external_float32_ptr
+    end subroutine catalyst_conduit_node_set_external_float32_ptr
     
     !--------------------------------------------------------------------------
     ! float32 set_path
     !--------------------------------------------------------------------------
 
-    subroutine c_conduit_node_set_path_float32(cnode, path, val) &
-                   bind(C, name="conduit_node_set_path_float32")
+    subroutine c_catalyst_conduit_node_set_path_float32(cnode, path, val) &
+                   bind(C, name="catalyst_conduit_node_set_path_float32")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(4), value, intent(IN) :: val
-    end subroutine c_conduit_node_set_path_float32
+    end subroutine c_catalyst_conduit_node_set_path_float32
 
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_float32_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_float32_ptr")
+    subroutine c_catalyst_conduit_node_set_path_float32_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_float32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_float32_ptr
+    end subroutine c_catalyst_conduit_node_set_path_float32_ptr
     
     
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_external_float32_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_external_float32_ptr")
+    subroutine c_catalyst_conduit_node_set_path_external_float32_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_external_float32_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_external_float32_ptr
+    end subroutine c_catalyst_conduit_node_set_path_external_float32_ptr
     
 
     !--------------------------------------------------------------------------
@@ -899,42 +899,42 @@ module conduit
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    pure function conduit_node_as_float32(cnode) result(res) &
-             bind(C, name="conduit_node_as_float32")
+    pure function catalyst_conduit_node_as_float32(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_as_float32")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          real(4) :: res
-    end function conduit_node_as_float32
+    end function catalyst_conduit_node_as_float32
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_as_float32_ptr(cnode) result(float32_ptr) &
-             bind(C, name="conduit_node_as_float32_ptr")
+    function c_catalyst_conduit_node_as_float32_ptr(cnode) result(float32_ptr) &
+             bind(C, name="catalyst_conduit_node_as_float32_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR) :: float32_ptr
-     end function c_conduit_node_as_float32_ptr
+     end function c_catalyst_conduit_node_as_float32_ptr
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_node_fetch_path_as_float32(cnode, path) result(res) &
-                   bind(C, name="conduit_node_fetch_path_as_float32")
+    pure function c_catalyst_conduit_node_fetch_path_as_float32(cnode, path) result(res) &
+                   bind(C, name="catalyst_conduit_node_fetch_path_as_float32")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(4) :: res
-    end function c_conduit_node_fetch_path_as_float32
+    end function c_catalyst_conduit_node_fetch_path_as_float32
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_fetch_path_as_float32_ptr(cnode, path) result(float32_ptr) &
-             bind(C, name="conduit_node_fetch_path_as_float32_ptr")
+    function c_catalyst_conduit_node_fetch_path_as_float32_ptr(cnode, path) result(float32_ptr) &
+             bind(C, name="catalyst_conduit_node_fetch_path_as_float32_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR) :: float32_ptr
-     end function c_conduit_node_fetch_path_as_float32_ptr
+     end function c_catalyst_conduit_node_fetch_path_as_float32_ptr
      
 
 
@@ -958,70 +958,70 @@ module conduit
     !--------------------------------------------------------------------------
     ! float64 set
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_float64(cnode, val) &
-                   bind(C, name="conduit_node_set_float64")
+    subroutine catalyst_conduit_node_set_float64(cnode, val) &
+                   bind(C, name="catalyst_conduit_node_set_float64")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(8), value, intent(IN) :: val
-    end subroutine conduit_node_set_float64
+    end subroutine catalyst_conduit_node_set_float64
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_float64_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_float64_ptr")
+    subroutine catalyst_conduit_node_set_float64_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_float64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_float64_ptr
+    end subroutine catalyst_conduit_node_set_float64_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_external_float64_ptr(cnode, data, num_elements) &
-                   bind(C, name="conduit_node_set_external_float64_ptr")
+    subroutine catalyst_conduit_node_set_external_float64_ptr(cnode, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_external_float64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine conduit_node_set_external_float64_ptr
+    end subroutine catalyst_conduit_node_set_external_float64_ptr
     
     !--------------------------------------------------------------------------
     ! float64 set_path
     !--------------------------------------------------------------------------
 
-    subroutine c_conduit_node_set_path_float64(cnode, path, val) &
-                   bind(C, name="conduit_node_set_path_float64")
+    subroutine c_catalyst_conduit_node_set_path_float64(cnode, path, val) &
+                   bind(C, name="catalyst_conduit_node_set_path_float64")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(8), value, intent(IN) :: val
-    end subroutine c_conduit_node_set_path_float64
+    end subroutine c_catalyst_conduit_node_set_path_float64
 
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_float64_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_float64_ptr")
+    subroutine c_catalyst_conduit_node_set_path_float64_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_float64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_float64_ptr
+    end subroutine c_catalyst_conduit_node_set_path_float64_ptr
     
     
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_external_float64_ptr(cnode, path, data, num_elements) &
-                   bind(C, name="conduit_node_set_path_external_float64_ptr")
+    subroutine c_catalyst_conduit_node_set_path_external_float64_ptr(cnode, path, data, num_elements) &
+                   bind(C, name="catalyst_conduit_node_set_path_external_float64_ptr")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
-    end subroutine c_conduit_node_set_path_external_float64_ptr
+    end subroutine c_catalyst_conduit_node_set_path_external_float64_ptr
     
 
     !--------------------------------------------------------------------------
@@ -1029,42 +1029,42 @@ module conduit
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    pure function conduit_node_as_float64(cnode) result(res) &
-             bind(C, name="conduit_node_as_float64")
+    pure function catalyst_conduit_node_as_float64(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_as_float64")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          real(8) :: res
-    end function conduit_node_as_float64
+    end function catalyst_conduit_node_as_float64
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_as_float64_ptr(cnode) result(float64_ptr) &
-             bind(C, name="conduit_node_as_float64_ptr")
+    function c_catalyst_conduit_node_as_float64_ptr(cnode) result(float64_ptr) &
+             bind(C, name="catalyst_conduit_node_as_float64_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR) :: float64_ptr
-     end function c_conduit_node_as_float64_ptr
+     end function c_catalyst_conduit_node_as_float64_ptr
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_node_fetch_path_as_float64(cnode, path) result(res) &
-                   bind(C, name="conduit_node_fetch_path_as_float64")
+    pure function c_catalyst_conduit_node_fetch_path_as_float64(cnode, path) result(res) &
+                   bind(C, name="catalyst_conduit_node_fetch_path_as_float64")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         real(8) :: res
-    end function c_conduit_node_fetch_path_as_float64
+    end function c_catalyst_conduit_node_fetch_path_as_float64
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_fetch_path_as_float64_ptr(cnode, path) result(float64_ptr) &
-             bind(C, name="conduit_node_fetch_path_as_float64_ptr")
+    function c_catalyst_conduit_node_fetch_path_as_float64_ptr(cnode, path) result(float64_ptr) &
+             bind(C, name="catalyst_conduit_node_fetch_path_as_float64_ptr")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR) :: float64_ptr
-     end function c_conduit_node_fetch_path_as_float64_ptr
+     end function c_catalyst_conduit_node_fetch_path_as_float64_ptr
      
 
 
@@ -1089,51 +1089,51 @@ module conduit
     ! char8_str set
     !--------------------------------------------------------------------------
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_char8_str(cnode,val) &
-                   bind(C, name="conduit_node_set_char8_str")
+    subroutine c_catalyst_conduit_node_set_char8_str(cnode,val) &
+                   bind(C, name="catalyst_conduit_node_set_char8_str")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: val(*)
-    end subroutine c_conduit_node_set_char8_str
+    end subroutine c_catalyst_conduit_node_set_char8_str
 
     !--------------------------------------------------------------------------
     ! char8_str set_path
     !--------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    subroutine c_conduit_node_set_path_char8_str(cnode, path, val) &
-                   bind(C, name="conduit_node_set_path_char8_str")
+    subroutine c_catalyst_conduit_node_set_path_char8_str(cnode, path, val) &
+                   bind(C, name="catalyst_conduit_node_set_path_char8_str")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(kind=C_CHAR), intent(IN) :: path(*)
         character(kind=C_CHAR), intent(IN) :: val(*)
-    end subroutine c_conduit_node_set_path_char8_str
+    end subroutine c_catalyst_conduit_node_set_path_char8_str
 
     !--------------------------------------------------------------------------
     ! char8_str as
     !--------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_as_char8_str(cnode) result(str_ptr) &
-             bind(C, name="conduit_node_as_char8_str")
+    function c_catalyst_conduit_node_as_char8_str(cnode) result(str_ptr) &
+             bind(C, name="catalyst_conduit_node_as_char8_str")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR) :: str_ptr
-     end function c_conduit_node_as_char8_str
+     end function c_catalyst_conduit_node_as_char8_str
 
 
     !--------------------------------------------------------------------------
-    function c_conduit_node_fetch_path_as_char8_str(cnode, path) result(str_ptr) &
-             bind(C, name="conduit_node_fetch_path_as_char8_str")
+    function c_catalyst_conduit_node_fetch_path_as_char8_str(cnode, path) result(str_ptr) &
+             bind(C, name="catalyst_conduit_node_fetch_path_as_char8_str")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          character(kind=C_CHAR), intent(IN) :: path(*)
          type(C_PTR) :: str_ptr
-     end function c_conduit_node_fetch_path_as_char8_str
+     end function c_catalyst_conduit_node_fetch_path_as_char8_str
 
     !--------------------------------------------------------------------------
     !--------------------------------------------------------------------------
@@ -1145,443 +1145,443 @@ module conduit
     !--------------------------------------------------------------------------
     
     
-    subroutine conduit_node_set_int(cnode, val) &
-                   bind(C, name="conduit_node_set_int")
+    subroutine catalyst_conduit_node_set_int(cnode, val) &
+                   bind(C, name="catalyst_conduit_node_set_int")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         integer(C_INT), value, intent(IN) :: val
-    end subroutine conduit_node_set_int
+    end subroutine catalyst_conduit_node_set_int
 
     !--------------------------------------------------------------------------
-    pure function conduit_node_as_int(cnode) result(res) &
-             bind(C, name="conduit_node_as_int")
+    pure function catalyst_conduit_node_as_int(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_as_int")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          integer(C_INT) :: res
-    end function conduit_node_as_int
+    end function catalyst_conduit_node_as_int
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_double(cnode, val) &
-                   bind(C, name="conduit_node_set_double")
+    subroutine catalyst_conduit_node_set_double(cnode, val) &
+                   bind(C, name="catalyst_conduit_node_set_double")
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         real(C_DOUBLE), value, intent(IN) :: val
-    end subroutine conduit_node_set_double
+    end subroutine catalyst_conduit_node_set_double
     
     !--------------------------------------------------------------------------
-    pure function conduit_node_as_double(cnode) result(res) &
-             bind(C, name="conduit_node_as_double")
+    pure function catalyst_conduit_node_as_double(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_as_double")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          real(C_DOUBLE) :: res
-    end function conduit_node_as_double
+    end function catalyst_conduit_node_as_double
 
     !--------------------------------------------------------------------------
-    pure function conduit_node_dtype(cnode) result(res) &
-             bind(C, name="conduit_node_dtype")
+    pure function catalyst_conduit_node_dtype(cnode) result(res) &
+             bind(C, name="catalyst_conduit_node_dtype")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
          type(C_PTR) :: res
-    end function conduit_node_dtype
+    end function catalyst_conduit_node_dtype
     
     !--------------------------------------------------------------------------
     ! DataType methods
     !--------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_sizeof_index_t() result(res) &
-             bind(C, name="conduit_datatype_sizeof_index_t")
+    pure function catalyst_conduit_datatype_sizeof_index_t() result(res) &
+             bind(C, name="catalyst_conduit_datatype_sizeof_index_t")
          use iso_c_binding
          implicit none
          integer(C_INT) :: res
-    end function conduit_datatype_sizeof_index_t
+    end function catalyst_conduit_datatype_sizeof_index_t
 
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_id(cdatatype) result(res) &
-             bind(C, name="conduit_datatype_id")
+    pure function catalyst_conduit_datatype_id(cdatatype) result(res) &
+             bind(C, name="catalyst_conduit_datatype_id")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_id
+    end function catalyst_conduit_datatype_id
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_name(cdatatype) result(res) &
-             bind(C, name="conduit_datatype_name")
+    pure function c_catalyst_conduit_datatype_name(cdatatype) result(res) &
+             bind(C, name="catalyst_conduit_datatype_name")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          character(kind=C_CHAR) ::res 
-    end function c_conduit_datatype_name
+    end function c_catalyst_conduit_datatype_name
     
     !--------------------------------------------------------------------------
-    subroutine c_conduit_datatype_name_destroy(nameStr) &
-             bind(C, name="conduit_datatype_name_destroy")
+    subroutine c_catalyst_conduit_datatype_name_destroy(nameStr) &
+             bind(C, name="catalyst_conduit_datatype_name_destroy")
          use iso_c_binding
          implicit none
          character(kind=C_CHAR), intent(IN) ::nameStr(*)
-    end subroutine c_conduit_datatype_name_destroy
+    end subroutine c_catalyst_conduit_datatype_name_destroy
 
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_number_of_elements(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_number_of_elements")
+    pure function catalyst_conduit_datatype_number_of_elements(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_number_of_elements")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_number_of_elements
+    end function catalyst_conduit_datatype_number_of_elements
 
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_offset(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_offset")
+    pure function catalyst_conduit_datatype_offset(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_offset")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_offset
+    end function catalyst_conduit_datatype_offset
     
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_stride(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_stride")
+    pure function catalyst_conduit_datatype_stride(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_stride")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_stride
+    end function catalyst_conduit_datatype_stride
     
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_element_bytes(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_element_bytes")
+    pure function catalyst_conduit_datatype_element_bytes(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_element_bytes")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_element_bytes
+    end function catalyst_conduit_datatype_element_bytes
     
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_endianness(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_endianness")
+    pure function catalyst_conduit_datatype_endianness(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_endianness")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_endianness
+    end function catalyst_conduit_datatype_endianness
     
     !--------------------------------------------------------------------------
-    pure function conduit_datatype_element_index(cdatatype, idx) result(res) &
-            bind(C, name="conduit_datatype_element_index")
+    pure function catalyst_conduit_datatype_element_index(cdatatype, idx) result(res) &
+            bind(C, name="catalyst_conduit_datatype_element_index")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(F_CONDUIT_INDEX_ID)), value, intent(IN) :: idx
          integer(kind(F_CONDUIT_INDEX_ID)) :: res
-    end function conduit_datatype_element_index
+    end function catalyst_conduit_datatype_element_index
 
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_empty(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_empty")
+    pure function c_catalyst_conduit_datatype_is_empty(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_empty")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_empty
+    end function c_catalyst_conduit_datatype_is_empty
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_object(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_object")
+    pure function c_catalyst_conduit_datatype_is_object(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_object")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_object
+    end function c_catalyst_conduit_datatype_is_object
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_list(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_list")
+    pure function c_catalyst_conduit_datatype_is_list(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_list")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_list
+    end function c_catalyst_conduit_datatype_is_list
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_number(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_number")
+    pure function c_catalyst_conduit_datatype_is_number(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_number")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_number
+    end function c_catalyst_conduit_datatype_is_number
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_floating_point(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_floating_point")
+    pure function c_catalyst_conduit_datatype_is_floating_point(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_floating_point")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_floating_point
+    end function c_catalyst_conduit_datatype_is_floating_point
 
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_integer(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_integer")
+    pure function c_catalyst_conduit_datatype_is_integer(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_integer")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_integer
+    end function c_catalyst_conduit_datatype_is_integer
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_signed_integer(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_signed_integer")
+    pure function c_catalyst_conduit_datatype_is_signed_integer(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_signed_integer")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_signed_integer
+    end function c_catalyst_conduit_datatype_is_signed_integer
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_unsigned_integer(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_unsigned_integer")
+    pure function c_catalyst_conduit_datatype_is_unsigned_integer(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_unsigned_integer")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_unsigned_integer
+    end function c_catalyst_conduit_datatype_is_unsigned_integer
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_int8(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_int8")
+    pure function c_catalyst_conduit_datatype_is_int8(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_int8")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_int8
+    end function c_catalyst_conduit_datatype_is_int8
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_int16(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_int16")
+    pure function c_catalyst_conduit_datatype_is_int16(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_int16")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_int16
+    end function c_catalyst_conduit_datatype_is_int16
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_int32(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_int32")
+    pure function c_catalyst_conduit_datatype_is_int32(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_int32")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_int32
+    end function c_catalyst_conduit_datatype_is_int32
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_int64(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_int64")
+    pure function c_catalyst_conduit_datatype_is_int64(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_int64")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_int64
+    end function c_catalyst_conduit_datatype_is_int64
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_uint8(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_uint8")
+    pure function c_catalyst_conduit_datatype_is_uint8(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_uint8")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_uint8
+    end function c_catalyst_conduit_datatype_is_uint8
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_uint16(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_uint16")
+    pure function c_catalyst_conduit_datatype_is_uint16(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_uint16")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_uint16
+    end function c_catalyst_conduit_datatype_is_uint16
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_uint32(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_uint32")
+    pure function c_catalyst_conduit_datatype_is_uint32(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_uint32")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_uint32
+    end function c_catalyst_conduit_datatype_is_uint32
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_uint64(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_uint64")
+    pure function c_catalyst_conduit_datatype_is_uint64(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_uint64")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_uint64
+    end function c_catalyst_conduit_datatype_is_uint64
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_float32(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_float32")
+    pure function c_catalyst_conduit_datatype_is_float32(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_float32")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_float32
+    end function c_catalyst_conduit_datatype_is_float32
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_float64(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_float64")
+    pure function c_catalyst_conduit_datatype_is_float64(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_float64")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_float64
+    end function c_catalyst_conduit_datatype_is_float64
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_char(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_char")
+    pure function c_catalyst_conduit_datatype_is_char(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_char")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_char
+    end function c_catalyst_conduit_datatype_is_char
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_short(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_short")
+    pure function c_catalyst_conduit_datatype_is_short(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_short")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_short
+    end function c_catalyst_conduit_datatype_is_short
 
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_int(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_int")
+    pure function c_catalyst_conduit_datatype_is_int(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_int")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_int
+    end function c_catalyst_conduit_datatype_is_int
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_long(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_long")
+    pure function c_catalyst_conduit_datatype_is_long(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_long")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_long
+    end function c_catalyst_conduit_datatype_is_long
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_unsigned_char(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_unsigned_char")
+    pure function c_catalyst_conduit_datatype_is_unsigned_char(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_unsigned_char")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_unsigned_char
+    end function c_catalyst_conduit_datatype_is_unsigned_char
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_unsigned_short(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_unsigned_short")
+    pure function c_catalyst_conduit_datatype_is_unsigned_short(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_unsigned_short")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_unsigned_short
+    end function c_catalyst_conduit_datatype_is_unsigned_short
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_unsigned_int(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_unsigned_int")
+    pure function c_catalyst_conduit_datatype_is_unsigned_int(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_unsigned_int")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_unsigned_int
+    end function c_catalyst_conduit_datatype_is_unsigned_int
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_unsigned_long(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_unsigned_long")
+    pure function c_catalyst_conduit_datatype_is_unsigned_long(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_unsigned_long")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_unsigned_long
+    end function c_catalyst_conduit_datatype_is_unsigned_long
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_float(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_float")
+    pure function c_catalyst_conduit_datatype_is_float(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_float")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_float
+    end function c_catalyst_conduit_datatype_is_float
 
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_double(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_double")
+    pure function c_catalyst_conduit_datatype_is_double(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_double")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_double
+    end function c_catalyst_conduit_datatype_is_double
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_string(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_string")
+    pure function c_catalyst_conduit_datatype_is_string(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_string")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_string
+    end function c_catalyst_conduit_datatype_is_string
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_char8_str(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_char8_str")
+    pure function c_catalyst_conduit_datatype_is_char8_str(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_char8_str")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_char8_str
+    end function c_catalyst_conduit_datatype_is_char8_str
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_little_endian(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_little_endian")
+    pure function c_catalyst_conduit_datatype_is_little_endian(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_little_endian")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_little_endian
+    end function c_catalyst_conduit_datatype_is_little_endian
     
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_is_big_endian(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_is_big_endian")
+    pure function c_catalyst_conduit_datatype_is_big_endian(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_is_big_endian")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_is_big_endian
+    end function c_catalyst_conduit_datatype_is_big_endian
 
     !--------------------------------------------------------------------------
-    pure function c_conduit_datatype_endianness_matches_machine(cdatatype) result(res) &
-            bind(C, name="conduit_datatype_endianness_matches_machine")
+    pure function c_catalyst_conduit_datatype_endianness_matches_machine(cdatatype) result(res) &
+            bind(C, name="catalyst_conduit_datatype_endianness_matches_machine")
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(C_INT) :: res
-    end function c_conduit_datatype_endianness_matches_machine
+    end function c_catalyst_conduit_datatype_endianness_matches_machine
 
 
     !--------------------------------------------------------------------------
@@ -1594,7 +1594,7 @@ contains
 !
 !------------------------------------------------------------------------------
     !--------------------------------------------------------------------------
-    function conduit_node_is_root(cnode) result(res)
+    function catalyst_conduit_node_is_root(cnode) result(res)
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
@@ -1602,16 +1602,16 @@ contains
          !-- c interface returns an int, we convert to logical here
          integer(C_INT) :: c_res
          !---
-         c_res = c_conduit_node_is_root(cnode)
+         c_res = c_catalyst_conduit_node_is_root(cnode)
          if (c_res .EQ. 1) then
              res = .true.
          else
              res = .false.
          endif
-     end function conduit_node_is_root
+     end function catalyst_conduit_node_is_root
 
     !--------------------------------------------------------------------------
-    function conduit_node_is_data_external(cnode) result(res)
+    function catalyst_conduit_node_is_data_external(cnode) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1619,16 +1619,16 @@ contains
         !-- c interface returns an int, we convert to logical here
         integer(C_INT) :: c_res
         !---
-        c_res = c_conduit_node_is_data_external(cnode)
+        c_res = c_catalyst_conduit_node_is_data_external(cnode)
         if (c_res .EQ. 1) then
             res = .true.
         else
             res = .false.
         endif
-    end function conduit_node_is_data_external
+    end function catalyst_conduit_node_is_data_external
 
     !--------------------------------------------------------------------------
-    function conduit_node_is_compact(cnode) result(res)
+    function catalyst_conduit_node_is_compact(cnode) result(res)
          use iso_c_binding
          implicit none
          type(C_PTR), value, intent(IN) :: cnode
@@ -1636,16 +1636,16 @@ contains
          !-- c interface returns an int, we convert to logical here
          integer(C_INT) :: c_res
          !---
-         c_res = c_conduit_node_is_compact(cnode)
+         c_res = c_catalyst_conduit_node_is_compact(cnode)
          if (c_res .EQ. 1) then
              res = .true.
          else
              res = .false.
          endif
-     end function conduit_node_is_compact
+     end function catalyst_conduit_node_is_compact
 
      !--------------------------------------------------------------------------
-     function conduit_node_is_contiguous(cnode) result(res)
+     function catalyst_conduit_node_is_contiguous(cnode) result(res)
       use iso_c_binding
       implicit none
       type(C_PTR), value, intent(IN) :: cnode
@@ -1653,16 +1653,16 @@ contains
           !-- c interface returns an int, we convert to logical here
           integer(C_INT) :: c_res
           !---
-          c_res = c_conduit_node_is_contiguous(cnode)
+          c_res = c_catalyst_conduit_node_is_contiguous(cnode)
           if (c_res .EQ. 1) then
               res = .true.
           else
               res = .false.
           endif
-     end function conduit_node_is_contiguous
+     end function catalyst_conduit_node_is_contiguous
 
      !--------------------------------------------------------------------------
-     function conduit_node_contiguous_with_node(cnode,cother) result(res)
+     function catalyst_conduit_node_contiguous_with_node(cnode,cother) result(res)
        use iso_c_binding
        implicit none
        type(C_PTR), value, intent(IN) :: cnode
@@ -1671,36 +1671,16 @@ contains
        !-- c interface returns an int, we convert to logical here
        integer(C_INT) :: c_res
        !---
-       c_res = c_conduit_node_contiguous_with_node(cnode,cother)
+       c_res = c_catalyst_conduit_node_contiguous_with_node(cnode,cother)
        if (c_res .EQ. 1) then
            res = .true.
        else
            res = .false.
        endif
-     end function conduit_node_contiguous_with_node
+     end function catalyst_conduit_node_contiguous_with_node
 
      !--------------------------------------------------------------------------
-     function conduit_node_diff(cnode,cother,cinfo,epsilon) result(res)
-       use iso_c_binding
-       implicit none
-       type(C_PTR), value, intent(IN) :: cnode
-       type(C_PTR), value, intent(IN) :: cother
-       type(C_PTR), value, intent(IN) :: cinfo
-       real(8), value, intent(IN) :: epsilon
-       logical(C_BOOL) :: res
-       !-- c interface returns an int, we convert to logical here
-       integer(C_INT) :: c_res
-       !---
-       c_res = c_conduit_node_diff(cnode,cother,cinfo,epsilon)
-       if (c_res .EQ. 1) then
-           res = .true.
-       else
-           res = .false.
-       endif
-     end function conduit_node_diff
-
-     !--------------------------------------------------------------------------
-     function conduit_node_diff_compatible(cnode,cother,cinfo,epsilon) result(res)
+     function catalyst_conduit_node_diff(cnode,cother,cinfo,epsilon) result(res)
        use iso_c_binding
        implicit none
        type(C_PTR), value, intent(IN) :: cnode
@@ -1711,16 +1691,36 @@ contains
        !-- c interface returns an int, we convert to logical here
        integer(C_INT) :: c_res
        !---
-       c_res = c_conduit_node_diff_compatible(cnode,cother,cinfo,epsilon)
+       c_res = c_catalyst_conduit_node_diff(cnode,cother,cinfo,epsilon)
        if (c_res .EQ. 1) then
            res = .true.
        else
            res = .false.
        endif
-     end function conduit_node_diff_compatible
+     end function catalyst_conduit_node_diff
+
+     !--------------------------------------------------------------------------
+     function catalyst_conduit_node_diff_compatible(cnode,cother,cinfo,epsilon) result(res)
+       use iso_c_binding
+       implicit none
+       type(C_PTR), value, intent(IN) :: cnode
+       type(C_PTR), value, intent(IN) :: cother
+       type(C_PTR), value, intent(IN) :: cinfo
+       real(8), value, intent(IN) :: epsilon
+       logical(C_BOOL) :: res
+       !-- c interface returns an int, we convert to logical here
+       integer(C_INT) :: c_res
+       !---
+       c_res = c_catalyst_conduit_node_diff_compatible(cnode,cother,cinfo,epsilon)
+       if (c_res .EQ. 1) then
+           res = .true.
+       else
+           res = .false.
+       endif
+     end function catalyst_conduit_node_diff_compatible
 
     !--------------------------------------------------------------------------
-    function conduit_node_compatible(cnode,cother) result(res)
+    function catalyst_conduit_node_compatible(cnode,cother) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1729,38 +1729,38 @@ contains
         !-- c interface returns an int, we convert to logical here
         integer(C_INT) :: c_res
         !---
-        c_res = c_conduit_node_compatible(cnode,cother)
+        c_res = c_catalyst_conduit_node_compatible(cnode,cother)
         if (c_res .EQ. 1) then
             res = .true.
         else
             res = .false.
         endif
-     end function conduit_node_compatible
+     end function catalyst_conduit_node_compatible
 
     !--------------------------------------------------------------------------
-    function conduit_node_fetch(cnode, path) result(res)
+    function catalyst_conduit_node_fetch(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         type(C_PTR) :: res
         !---
-        res = c_conduit_node_fetch(cnode, trim(path) // C_NULL_CHAR)
-    end function conduit_node_fetch
+        res = c_catalyst_conduit_node_fetch(cnode, trim(path) // C_NULL_CHAR)
+    end function catalyst_conduit_node_fetch
 
     !--------------------------------------------------------------------------
-    function conduit_node_fetch_existing(cnode, path) result(res)
+    function catalyst_conduit_node_fetch_existing(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         type(C_PTR) :: res
         !---
-        res = c_conduit_node_fetch_existing(cnode, trim(path) // C_NULL_CHAR)
-    end function conduit_node_fetch_existing
+        res = c_catalyst_conduit_node_fetch_existing(cnode, trim(path) // C_NULL_CHAR)
+    end function catalyst_conduit_node_fetch_existing
 
     !--------------------------------------------------------------------------
-    function conduit_node_has_child(cnode, name) result(res)
+    function catalyst_conduit_node_has_child(cnode, name) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1769,102 +1769,102 @@ contains
         !-- c interface returns an int, we convert to logical here
         integer(C_INT) :: c_res
         !---
-        c_res = c_conduit_node_has_child(cnode, trim(name) // C_NULL_CHAR)
+        c_res = c_catalyst_conduit_node_has_child(cnode, trim(name) // C_NULL_CHAR)
         if (c_res .EQ. 1) then
             res = .true.
         else
             res = .false.
         endif
-    end function conduit_node_has_child
+    end function catalyst_conduit_node_has_child
 
     !--------------------------------------------------------------------------
-    function conduit_node_add_child(cnode, name) result(res)
+    function catalyst_conduit_node_add_child(cnode, name) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: name
         type(C_PTR) :: res
         !---
-        res = c_conduit_node_add_child(cnode, trim(name) // C_NULL_CHAR)
-    end function conduit_node_add_child
+        res = c_catalyst_conduit_node_add_child(cnode, trim(name) // C_NULL_CHAR)
+    end function catalyst_conduit_node_add_child
 
     !--------------------------------------------------------------------------
-    function conduit_node_child_by_name(cnode, name) result(res)
+    function catalyst_conduit_node_child_by_name(cnode, name) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: name
         type(C_PTR) :: res
         !---
-        res = c_conduit_node_child_by_name(cnode, trim(name) // C_NULL_CHAR)
-    end function conduit_node_child_by_name
+        res = c_catalyst_conduit_node_child_by_name(cnode, trim(name) // C_NULL_CHAR)
+    end function catalyst_conduit_node_child_by_name
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_remove_path(cnode, path)
+    subroutine catalyst_conduit_node_remove_path(cnode, path)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         !---
-        call c_conduit_node_remove_path(cnode, trim(path) // C_NULL_CHAR)
-    end subroutine conduit_node_remove_path
+        call c_catalyst_conduit_node_remove_path(cnode, trim(path) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_remove_path
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_remove_child_by_name(cnode, name)
+    subroutine catalyst_conduit_node_remove_child_by_name(cnode, name)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: name
         !---
-        call c_conduit_node_remove_child_by_name(cnode, trim(name) // C_NULL_CHAR)
-    end subroutine conduit_node_remove_child_by_name
+        call c_catalyst_conduit_node_remove_child_by_name(cnode, trim(name) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_remove_child_by_name
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_rename_child(cnode, old_name, new_name)
+    subroutine catalyst_conduit_node_rename_child(cnode, old_name, new_name)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: old_name
         character(*), intent(IN) :: new_name
         !---
-        call c_conduit_node_rename_child(cnode, trim(old_name) // C_NULL_CHAR, trim(new_name) // C_NULL_CHAR)
-    end subroutine conduit_node_rename_child
+        call c_catalyst_conduit_node_rename_child(cnode, trim(old_name) // C_NULL_CHAR, trim(new_name) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_rename_child
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_parse(cnode, schema, protocol )
+    subroutine catalyst_conduit_node_parse(cnode, schema, protocol )
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: schema
         character(*), intent(IN) :: protocol
         !---
-        call c_conduit_node_parse(cnode, trim(schema) // C_NULL_CHAR, trim(protocol) // C_NULL_CHAR)
-    end subroutine conduit_node_parse
+        call c_catalyst_conduit_node_parse(cnode, trim(schema) // C_NULL_CHAR, trim(protocol) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_parse
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_save(cnode, path, protocol )
+    subroutine catalyst_conduit_node_save(cnode, path, protocol )
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         character(*), intent(IN) :: protocol
         !---
-        call c_conduit_node_save(cnode, trim(path) // C_NULL_CHAR, trim(protocol) // C_NULL_CHAR)
-    end subroutine conduit_node_save
+        call c_catalyst_conduit_node_save(cnode, trim(path) // C_NULL_CHAR, trim(protocol) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_save
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_load(cnode, path, protocol )
+    subroutine catalyst_conduit_node_load(cnode, path, protocol )
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         character(*), intent(IN) :: protocol
         !---
-        call c_conduit_node_load(cnode, trim(path) // C_NULL_CHAR, trim(protocol) // C_NULL_CHAR)
-    end subroutine conduit_node_load
+        call c_catalyst_conduit_node_load(cnode, trim(path) // C_NULL_CHAR, trim(protocol) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_load
 
     !--------------------------------------------------------------------------
-    function conduit_node_has_path(cnode, path) result(res)
+    function catalyst_conduit_node_has_path(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1873,55 +1873,55 @@ contains
         !-- c interface returns an int, we convert to logical here
         integer(C_INT) :: c_res
         !---
-        c_res = c_conduit_node_has_path(cnode, trim(path) // C_NULL_CHAR)
+        c_res = c_catalyst_conduit_node_has_path(cnode, trim(path) // C_NULL_CHAR)
         if (c_res .EQ. 1) then
             res = .true.
         else
             res = .false.
         endif
-    end function conduit_node_has_path
+    end function catalyst_conduit_node_has_path
     
     !--------------------------------------------------------------------------
     ! set node subs
     !--------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_node(cnode, path, cother)
+    subroutine catalyst_conduit_node_set_path_node(cnode, path, cother)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         type(C_PTR), value, intent(IN) :: cother
         !---
-        call c_conduit_node_set_path_node(cnode, trim(path) // C_NULL_CHAR, cother)
-    end subroutine conduit_node_set_path_node
+        call c_catalyst_conduit_node_set_path_node(cnode, trim(path) // C_NULL_CHAR, cother)
+    end subroutine catalyst_conduit_node_set_path_node
     
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_external_node(cnode, path, cother)
+    subroutine catalyst_conduit_node_set_path_external_node(cnode, path, cother)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         type(C_PTR), value, intent(IN) :: cother
         !---
-        call c_conduit_node_set_path_external_node(cnode, trim(path) // C_NULL_CHAR, cother)
-    end subroutine conduit_node_set_path_external_node
+        call c_catalyst_conduit_node_set_path_external_node(cnode, trim(path) // C_NULL_CHAR, cother)
+    end subroutine catalyst_conduit_node_set_path_external_node
 
     !--------------------------------------------------------------------------
     ! int32 subs
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_int32(cnode, path, val)
+    subroutine catalyst_conduit_node_set_path_int32(cnode, path, val)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         integer(4), value, intent(IN) :: val
         !---
-        call c_conduit_node_set_path_int32(cnode, trim(path) // C_NULL_CHAR, val)
-    end subroutine conduit_node_set_path_int32
+        call c_catalyst_conduit_node_set_path_int32(cnode, trim(path) // C_NULL_CHAR, val)
+    end subroutine catalyst_conduit_node_set_path_int32
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_int32_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_int32_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1929,11 +1929,11 @@ contains
         integer(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_int32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_int32_ptr
+        call c_catalyst_conduit_node_set_path_int32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_int32_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_external_int32_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_external_int32_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1941,22 +1941,22 @@ contains
         integer(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_external_int32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_external_int32_ptr
+        call c_catalyst_conduit_node_set_path_external_int32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_external_int32_ptr
 
     !--------------------------------------------------------------------------
-    function conduit_node_fetch_path_as_int32(cnode, path) result(res)
+    function catalyst_conduit_node_fetch_path_as_int32(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         integer(4) :: res
         !---
-        res =  c_conduit_node_fetch_path_as_int32(cnode, trim(path) // C_NULL_CHAR)
-    end function conduit_node_fetch_path_as_int32
+        res =  c_catalyst_conduit_node_fetch_path_as_int32(cnode, trim(path) // C_NULL_CHAR)
+    end function catalyst_conduit_node_fetch_path_as_int32
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_as_int32_ptr(cnode,f_out)
+    subroutine catalyst_conduit_node_as_int32_ptr(cnode,f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1964,13 +1964,13 @@ contains
         integer(C_SIZE_T) :: n
         type(C_PTR) :: int32_c_ptr
         !---
-        n = conduit_node_number_of_elements(cnode)
-        int32_c_ptr = c_conduit_node_as_int32_ptr(cnode)
+        n = catalyst_conduit_node_number_of_elements(cnode)
+        int32_c_ptr = c_catalyst_conduit_node_as_int32_ptr(cnode)
         call c_f_pointer(int32_c_ptr, f_out, (/n/))
-    end subroutine conduit_node_as_int32_ptr
+    end subroutine catalyst_conduit_node_as_int32_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_fetch_path_as_int32_ptr(cnode, path, f_out)
+    subroutine catalyst_conduit_node_fetch_path_as_int32_ptr(cnode, path, f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -1978,25 +1978,25 @@ contains
         integer(4), pointer :: f_out(:)
         type(C_PTR) :: sub_node
         !---
-        sub_node = c_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
-        call conduit_node_as_int32_ptr(sub_node,f_out)
-    end subroutine conduit_node_fetch_path_as_int32_ptr
+        sub_node = c_catalyst_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
+        call catalyst_conduit_node_as_int32_ptr(sub_node,f_out)
+    end subroutine catalyst_conduit_node_fetch_path_as_int32_ptr
 
     !--------------------------------------------------------------------------
     ! int64 subs
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_int64(cnode, path, val)
+    subroutine catalyst_conduit_node_set_path_int64(cnode, path, val)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         integer(8), value, intent(IN) :: val
         !---
-        call c_conduit_node_set_path_int64(cnode, trim(path) // C_NULL_CHAR, val)
-    end subroutine conduit_node_set_path_int64
+        call c_catalyst_conduit_node_set_path_int64(cnode, trim(path) // C_NULL_CHAR, val)
+    end subroutine catalyst_conduit_node_set_path_int64
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_int64_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_int64_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2004,11 +2004,11 @@ contains
         integer(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_int64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_int64_ptr
+        call c_catalyst_conduit_node_set_path_int64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_int64_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_external_int64_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_external_int64_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2016,23 +2016,23 @@ contains
         integer(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_external_int64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_external_int64_ptr
+        call c_catalyst_conduit_node_set_path_external_int64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_external_int64_ptr
     
 
     !--------------------------------------------------------------------------
-    function conduit_node_fetch_path_as_int64(cnode, path) result(res)
+    function catalyst_conduit_node_fetch_path_as_int64(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         integer(8) :: res
         !---
-        res =  c_conduit_node_fetch_path_as_int64(cnode, trim(path) // C_NULL_CHAR)
-    end function conduit_node_fetch_path_as_int64
+        res =  c_catalyst_conduit_node_fetch_path_as_int64(cnode, trim(path) // C_NULL_CHAR)
+    end function catalyst_conduit_node_fetch_path_as_int64
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_as_int64_ptr(cnode,f_out)
+    subroutine catalyst_conduit_node_as_int64_ptr(cnode,f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2040,13 +2040,13 @@ contains
         integer(C_SIZE_T) :: n
         type(C_PTR) :: int64_c_ptr
         !---
-        n = conduit_node_number_of_elements(cnode)
-        int64_c_ptr = c_conduit_node_as_int64_ptr(cnode)
+        n = catalyst_conduit_node_number_of_elements(cnode)
+        int64_c_ptr = c_catalyst_conduit_node_as_int64_ptr(cnode)
         call c_f_pointer(int64_c_ptr, f_out, (/n/))
-    end subroutine conduit_node_as_int64_ptr
+    end subroutine catalyst_conduit_node_as_int64_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_fetch_path_as_int64_ptr(cnode, path, f_out)
+    subroutine catalyst_conduit_node_fetch_path_as_int64_ptr(cnode, path, f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2054,26 +2054,26 @@ contains
         integer(8), pointer :: f_out(:)
         type(C_PTR) :: sub_node
         !---
-        sub_node = c_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
-        call conduit_node_as_int64_ptr(sub_node,f_out)
-    end subroutine conduit_node_fetch_path_as_int64_ptr
+        sub_node = c_catalyst_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
+        call catalyst_conduit_node_as_int64_ptr(sub_node,f_out)
+    end subroutine catalyst_conduit_node_fetch_path_as_int64_ptr
 
 
     !--------------------------------------------------------------------------
     ! float 32 subs
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_float32(cnode, path, val)
+    subroutine catalyst_conduit_node_set_path_float32(cnode, path, val)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         real(4), value, intent(IN) :: val
         !---
-        call c_conduit_node_set_path_float32(cnode, trim(path) // C_NULL_CHAR, val)
-    end subroutine conduit_node_set_path_float32
+        call c_catalyst_conduit_node_set_path_float32(cnode, trim(path) // C_NULL_CHAR, val)
+    end subroutine catalyst_conduit_node_set_path_float32
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_float32_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_float32_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2081,11 +2081,11 @@ contains
         real(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_float32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_float32_ptr
+        call c_catalyst_conduit_node_set_path_float32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_float32_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_external_float32_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_external_float32_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2093,23 +2093,23 @@ contains
         real(4), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_external_float32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_external_float32_ptr
+        call c_catalyst_conduit_node_set_path_external_float32_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_external_float32_ptr
     
 
     !--------------------------------------------------------------------------
-    function conduit_node_fetch_path_as_float32(cnode, path) result(res)
+    function catalyst_conduit_node_fetch_path_as_float32(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         real(4) :: res
         !---
-        res =  c_conduit_node_fetch_path_as_float32(cnode, trim(path) // C_NULL_CHAR)
-    end function conduit_node_fetch_path_as_float32
+        res =  c_catalyst_conduit_node_fetch_path_as_float32(cnode, trim(path) // C_NULL_CHAR)
+    end function catalyst_conduit_node_fetch_path_as_float32
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_as_float32_ptr(cnode,f_out)
+    subroutine catalyst_conduit_node_as_float32_ptr(cnode,f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2117,13 +2117,13 @@ contains
         integer(C_SIZE_T) :: n
         type(C_PTR) :: float32_c_ptr
         !---
-        n = conduit_node_number_of_elements(cnode)
-        float32_c_ptr = c_conduit_node_as_float32_ptr(cnode)
+        n = catalyst_conduit_node_number_of_elements(cnode)
+        float32_c_ptr = c_catalyst_conduit_node_as_float32_ptr(cnode)
         call c_f_pointer(float32_c_ptr, f_out, (/n/))
-    end subroutine conduit_node_as_float32_ptr
+    end subroutine catalyst_conduit_node_as_float32_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_fetch_path_as_float32_ptr(cnode, path, f_out)
+    subroutine catalyst_conduit_node_fetch_path_as_float32_ptr(cnode, path, f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2131,27 +2131,27 @@ contains
         real(4), pointer :: f_out(:)
         type(C_PTR) :: sub_node
         !---
-        sub_node = c_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
-        call conduit_node_as_float32_ptr(sub_node,f_out)
-    end subroutine conduit_node_fetch_path_as_float32_ptr
+        sub_node = c_catalyst_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
+        call catalyst_conduit_node_as_float32_ptr(sub_node,f_out)
+    end subroutine catalyst_conduit_node_fetch_path_as_float32_ptr
 
 
 
     !--------------------------------------------------------------------------
     ! float 64 subs
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_float64(cnode, path, val)
+    subroutine catalyst_conduit_node_set_path_float64(cnode, path, val)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         real(8), value, intent(IN) :: val
         !---
-        call c_conduit_node_set_path_float64(cnode, trim(path) // C_NULL_CHAR, val)
-    end subroutine conduit_node_set_path_float64
+        call c_catalyst_conduit_node_set_path_float64(cnode, trim(path) // C_NULL_CHAR, val)
+    end subroutine catalyst_conduit_node_set_path_float64
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_float64_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_float64_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2159,11 +2159,11 @@ contains
         real(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_float64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_float64_ptr
+        call c_catalyst_conduit_node_set_path_float64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_float64_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_external_float64_ptr(cnode, path, data, num_elements)
+    subroutine catalyst_conduit_node_set_path_external_float64_ptr(cnode, path, data, num_elements)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2171,23 +2171,23 @@ contains
         real(8), intent (IN), dimension (*) :: data
         integer(C_SIZE_T), value, intent(in) :: num_elements
         !---
-        call c_conduit_node_set_path_external_float64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
-    end subroutine conduit_node_set_path_external_float64_ptr
+        call c_catalyst_conduit_node_set_path_external_float64_ptr(cnode, trim(path) // C_NULL_CHAR, data, num_elements)
+    end subroutine catalyst_conduit_node_set_path_external_float64_ptr
     
 
     !--------------------------------------------------------------------------
-    function conduit_node_fetch_path_as_float64(cnode, path) result(res)
+    function catalyst_conduit_node_fetch_path_as_float64(cnode, path) result(res)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         real(8) :: res
         !---
-        res =  c_conduit_node_fetch_path_as_float64(cnode, trim(path) // C_NULL_CHAR)
-    end function conduit_node_fetch_path_as_float64
+        res =  c_catalyst_conduit_node_fetch_path_as_float64(cnode, trim(path) // C_NULL_CHAR)
+    end function catalyst_conduit_node_fetch_path_as_float64
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_as_float64_ptr(cnode,f_out)
+    subroutine catalyst_conduit_node_as_float64_ptr(cnode,f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2195,13 +2195,13 @@ contains
         integer(C_SIZE_T) :: n
         type(C_PTR) :: float64_c_ptr
         !---
-        n = conduit_node_number_of_elements(cnode)
-        float64_c_ptr = c_conduit_node_as_float64_ptr(cnode)
+        n = catalyst_conduit_node_number_of_elements(cnode)
+        float64_c_ptr = c_catalyst_conduit_node_as_float64_ptr(cnode)
         call c_f_pointer(float64_c_ptr, f_out, (/n/))
-    end subroutine conduit_node_as_float64_ptr
+    end subroutine catalyst_conduit_node_as_float64_ptr
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_fetch_path_as_float64_ptr(cnode, path, f_out)
+    subroutine catalyst_conduit_node_fetch_path_as_float64_ptr(cnode, path, f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2209,9 +2209,9 @@ contains
         real(8), pointer :: f_out(:)
         type(C_PTR) :: sub_node
         !---
-        sub_node = c_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
-        call conduit_node_as_float64_ptr(sub_node,f_out)
-    end subroutine conduit_node_fetch_path_as_float64_ptr
+        sub_node = c_catalyst_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
+        call catalyst_conduit_node_as_float64_ptr(sub_node,f_out)
+    end subroutine catalyst_conduit_node_fetch_path_as_float64_ptr
 
 
     !--------------------------------------------------------------------------
@@ -2219,26 +2219,26 @@ contains
     !--------------------------------------------------------------------------
     
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_char8_str(cnode,val)
+    subroutine catalyst_conduit_node_set_char8_str(cnode,val)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: val
-        call c_conduit_node_set_char8_str(cnode,trim(val) // C_NULL_CHAR)
-    end subroutine conduit_node_set_char8_str
+        call c_catalyst_conduit_node_set_char8_str(cnode,trim(val) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_set_char8_str
     
     !--------------------------------------------------------------------------
-    subroutine conduit_node_set_path_char8_str(cnode, path, val)
+    subroutine catalyst_conduit_node_set_path_char8_str(cnode, path, val)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
         character(*), intent(IN) :: path
         character(*), intent(IN) :: val
-        call c_conduit_node_set_path_char8_str(cnode, trim(path) // C_NULL_CHAR, trim(val) // C_NULL_CHAR)
-    end subroutine conduit_node_set_path_char8_str
+        call c_catalyst_conduit_node_set_path_char8_str(cnode, trim(path) // C_NULL_CHAR, trim(val) // C_NULL_CHAR)
+    end subroutine catalyst_conduit_node_set_path_char8_str
 
     !--------------------------------------------------------------------------
-    subroutine conduit_node_as_char8_str(cnode, f_out)
+    subroutine catalyst_conduit_node_as_char8_str(cnode, f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2246,13 +2246,13 @@ contains
         integer(C_SIZE_T) :: n
         type(C_PTR) :: str_c_ptr
         !---
-        n = conduit_node_number_of_elements(cnode)
-        str_c_ptr = c_conduit_node_as_char8_str(cnode)
+        n = catalyst_conduit_node_number_of_elements(cnode)
+        str_c_ptr = c_catalyst_conduit_node_as_char8_str(cnode)
         call c_f_pointer(str_c_ptr, f_out, (/n/))
-    end subroutine conduit_node_as_char8_str
+    end subroutine catalyst_conduit_node_as_char8_str
     
     !--------------------------------------------------------------------------
-    subroutine conduit_node_fetch_path_as_char8_str(cnode, path, f_out)
+    subroutine catalyst_conduit_node_fetch_path_as_char8_str(cnode, path, f_out)
         use iso_c_binding
         implicit none
         type(C_PTR), value, intent(IN) :: cnode
@@ -2260,12 +2260,12 @@ contains
         character,pointer :: f_out(:)
         type(C_PTR) :: sub_node
         !---
-        sub_node = c_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
-        call conduit_node_as_char8_str(sub_node,f_out)
-    end subroutine conduit_node_fetch_path_as_char8_str
+        sub_node = c_catalyst_conduit_node_fetch(cnode,trim(path) // C_NULL_CHAR)
+        call catalyst_conduit_node_as_char8_str(sub_node,f_out)
+    end subroutine catalyst_conduit_node_fetch_path_as_char8_str
 
 
 !------------------------------------------------------------------------------
-end module conduit
+end module catalyst_conduit
 !------------------------------------------------------------------------------
 

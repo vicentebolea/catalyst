@@ -21,3 +21,15 @@ add_executable(test_internal_conduit_impl test_internal_conduit_impl.c)
 target_compile_definitions(test_internal_conduit_impl PRIVATE "CATALYST_WITH_EXTERNAL_CONDUIT=$<BOOL:${CATALYST_WITH_EXTERNAL_CONDUIT}>")
 target_link_libraries(test_internal_conduit_impl catalyst::catalyst)
 add_test(NAME catalyst-impl-internal-conduit COMMAND test_internal_conduit_impl)
+
+
+if(CATALYST_WRAP_PYTHON)
+  catalyst_add_python_test(SCRIPT catalyst_conduit/test_conduit_import.py
+                           NAME  test_conduit_import_python)
+
+  catalyst_add_python_test(SCRIPT test_catalyst_import.py
+                           NAME test_catalyst_import_python)
+
+  catalyst_add_python_test(SCRIPT test_double_impl.py
+                           NAME test_double_impl_python)
+endif()
