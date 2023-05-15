@@ -15,7 +15,9 @@ if (NM_EXECUTABLE)
       "-Dnm=${NM_EXECUTABLE}"
       "-Dlibrary=$<TARGET_FILE:catalyst::catalyst>"
       "-Dsymbols=${CMAKE_CURRENT_SOURCE_DIR}/catalyst.symbols.txt"
+      "-Dfortran_symbols=$<$<BOOL:${CATALYST_WRAP_FORTRAN}>:${CMAKE_CURRENT_SOURCE_DIR}/catalyst_fortran.symbols.txt>"
       "-Dapple_mangle=$<BOOL:${APPLE}>"
+      "-Difort_mangle=$<OR:$<STREQUAL:${CMAKE_Fortran_COMPILER_ID},Intel>,$<STREQUAL:${CMAKE_Fortran_COMPILER_ID},IntelLLVM>>"
       -P "${CMAKE_CURRENT_SOURCE_DIR}/nm.cmake")
 endif ()
 

@@ -33,3 +33,9 @@ if(CATALYST_WRAP_PYTHON)
   catalyst_add_python_test(SCRIPT test_double_impl.py
                            NAME test_double_impl_python)
 endif()
+
+if(CATALYST_WRAP_FORTRAN)
+  add_executable(test_double_impl_f test_double_impl.f90 )
+  target_link_libraries(test_double_impl_f catalyst_fortran)
+  add_test(NAME catalyst-impl-double-fortran COMMAND test_double_impl_f)
+endif()

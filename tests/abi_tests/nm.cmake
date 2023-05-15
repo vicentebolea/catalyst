@@ -46,6 +46,22 @@ file(STRINGS "${symbols}" expected)
 list(REMOVE_ITEM expected "")
 list(SORT expected)
 
+if(fortran_symbols)
+  file(STRINGS "${fortran_symbols}" expected_fortran)
+  list(REMOVE_ITEM expected_fortran "")
+  list(SORT expected_fortran)
+
+  if (ifort_mangle)
+    list(TRANSFORM expected_fortran REPLACE "^__" "")
+    list(TRANSFORM expected_fortran REPLACE "_MOD_" "_mp_")
+    list(TRANSFORM expected_fortran APPEND "_")
+    # extra symbol added only by ifort
+     list(APPEND expected "catalyst_conduit._")
+  endif ()
+
+  list(APPEND expected "${expected_fortran}")
+endif()
+
 if (apple_mangle)
   list(TRANSFORM expected PREPEND "_")
 endif ()
