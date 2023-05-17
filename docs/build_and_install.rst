@@ -87,6 +87,12 @@ Important `CMake`_ options that affect how Catalyst is built are:
   external dependencies will be embedded into the install tree rendering it
   unable to be relocated to other machines without similar setup.
 
+* ``CATALYST_WRAP_PYTHON`` (default: ``OFF``): Build python wrappers for
+  Catalyst and Conduit.
+
+* ``CATALYST_WRAP_FORTRAN`` (default: ``OFF``): Build Fortran wrappers for
+  Catalyst and Conduit.
+
 
 .. _`Git`: https://git-scm.com/
 .. _`CMake`: https://cmake.org
