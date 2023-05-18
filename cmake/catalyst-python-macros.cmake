@@ -227,8 +227,10 @@ function (catalyst_add_python_test)
      set(_catalyst_add_python_test_NAME ${_catalyst_add_python_test_SCRIPT})
   endif ()
 
+  set(_catalyst_python_path)
+  catalyst_module_python_default_destination(_catalyst_python_path)
   add_test(NAME ${_catalyst_add_python_test_NAME}
-      COMMAND ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages
+    COMMAND ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CMAKE_BINARY_DIR}/${_catalyst_python_path}
           ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${_catalyst_add_python_test_SCRIPT}
   )
   set_tests_properties(${_catalyst_add_python_test_NAME} PROPERTIES LABELS "Python")
