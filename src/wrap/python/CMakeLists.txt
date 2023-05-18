@@ -14,12 +14,16 @@ target_link_libraries(catalyst_python
     catalyst::conduit_python_cpp_headers 
 )
 
-catalyst_install_python_library(catalyst_python
-  MODULE_DESTINATION catalyst)
+set(CATALYST_PYTHON_SITE_PACKAGES_SUFFIX)
+catalyst_module_python_default_destination(CATALYST_PYTHON_SITE_PACKAGES_SUFFIX)
 
-catalyst_module_add_python_package(catalyst
-  PACKAGE catalyst
-  FILES ${catalyst_python_py_sources})
+configure_file(
+  catalyst/__init__.py.in
+  "${CMAKE_BINARY_DIR}/${CATALYST_PYTHON_SITE_PACKAGES_SUFFIX}/catalyst/__init__.py"
+   @ONLY)
+
+catalyst_install_python_library(catalyst_python
+   MODULE_DESTINATION catalyst)
 
 # make possible for the installed module to find libcatalyst during runtime
 set_target_properties(catalyst_python PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
