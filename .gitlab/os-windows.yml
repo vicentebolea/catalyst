@@ -46,7 +46,7 @@
     variables:
         CMAKE_CONFIGURATION: windows_vs2022_replay_wrappings
         CATALYST_SETUP_PYTHON_ENV: 1
-
+        CMAKE_BUILD_TYPE: "Release"
 ## Tags
 
 .windows_builder_tags:
