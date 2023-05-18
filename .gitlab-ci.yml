@@ -194,6 +194,22 @@ build-test:macos-x86_64-replay:
         - .macos_x86_64_builder_tags
         - .run_automatically
 
+build-test:macos-arm64-replay-wrappings:
+    extends:
+        - .macos_arm64_replay_wrappings
+        - .cmake_build_test_macos
+        - .cmake_build_artifacts
+        - .macos_arm64_builder_tags
+        - .run_automatically
+
+build-test:macos-x86_64-replay-wrappings:
+    extends:
+        - .macos_x86_64_replay_wrappings
+        - .cmake_build_test_macos
+        - .cmake_build_artifacts
+        - .macos_x86_64_builder_tags
+        - .run_automatically
+
 # Windows
 
 build-test:windows-vs2022-mpi-replay:
