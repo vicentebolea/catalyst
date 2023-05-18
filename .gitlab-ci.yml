@@ -211,3 +211,11 @@ build-test:windows-vs2022-replay:
         - .cmake_build_artifacts
         - .windows_builder_tags
         - .run_automatically
+
+build-test:windows-vs2022-replay-wrappings:
+    extends:
+        - .windows_vs2022_replay_wrappings
+        - .cmake_build_test_windows
+        - .cmake_build_artifacts
+        - .windows_builder_tags
+        - .run_automatically

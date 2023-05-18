@@ -40,6 +40,13 @@
     variables:
         CMAKE_CONFIGURATION: windows_vs2022_replay
 
+.windows_vs2022_replay_wrappings:
+    extends: .windows_vs2022
+
+    variables:
+        CMAKE_CONFIGURATION: windows_vs2022_replay_wrappings
+        CATALYST_SETUP_PYTHON_ENV: 1
+
 ## Tags
 
 .windows_builder_tags:
@@ -70,6 +77,7 @@
     - ninja --version
     - Invoke-Expression -Command .gitlab/ci/gtest.ps1
     - Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\gtest\bin;$env:PATH"
+    - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { (python -m venv venv) -and  (. .\venv\Scripts\Activate.ps1) -and  (pip install numpy) }
 
 .cmake_build_test_windows:
     stage: build-test
