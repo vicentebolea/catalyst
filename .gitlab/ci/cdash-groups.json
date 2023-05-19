@@ -8,6 +8,11 @@
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
+            "buildname": "[fedora36_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
             "buildname": "[fedora36_asan]"
         },
         {
@@ -38,7 +43,17 @@
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
+            "buildname": "[fedora36_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
             "buildname": "[fedora36_mpi_replay]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[fedora36_mpi_replay_wrappings]"
         },
         {
             "group": "catalyst-master",
@@ -73,12 +88,32 @@
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
+            "buildname": "[macos_arm64_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[macos_x86_64_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
             "buildname": "[windows_vs2022_mpi_replay]"
         },
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
             "buildname": "[windows_vs2022_replay]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[windows_vs2022_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[windows_vs2022_mpi_replay_wrappings]"
         }
     ]
 }
