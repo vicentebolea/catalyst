@@ -36,6 +36,6 @@ endif()
 
 if(CATALYST_WRAP_FORTRAN)
   add_executable(test_double_impl_f test_double_impl.f90 )
-  target_link_libraries(test_double_impl_f catalyst_fortran)
+  target_link_libraries(test_double_impl_f catalyst::catalyst_fortran)
   add_test(NAME catalyst-impl-double-fortran COMMAND test_double_impl_f)
 endif()

@@ -1,6 +1,7 @@
 add_library(catalyst_fortran
   catalyst_api.f90)
 
+add_library(catalyst::catalyst_fortran ALIAS catalyst_fortran)
 target_link_libraries(catalyst_fortran
   PUBLIC
     catalyst::catalyst)
