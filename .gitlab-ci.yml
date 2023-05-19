@@ -176,6 +176,30 @@ build-test:fedora36-mpi-replay-ubsan:
         - .linux_sanitizer_tags
         - .run_automatically
 
+build-test:fedora36-wrappings:
+    extends:
+        - .fedora36_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-replay-wrappings:
+    extends:
+        - .fedora36_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-mpi-replay-wrappings:
+    extends:
+        - .fedora36_mpi_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
 # macOS
 
 build-test:macos-arm64-replay:

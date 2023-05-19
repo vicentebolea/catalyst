@@ -129,6 +129,28 @@
     variables:
         CMAKE_CONFIGURATION: fedora36_mpi_replay_ubsan
 
+.fedora36_wrappings:
+    extends:
+        - .fedora36
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_wrappings
+
+.fedora36_replay_wrappings:
+    extends:
+        - .fedora36
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_replay_wrappings
+
+.fedora36_mpi_replay_wrappings:
+    extends:
+        - .fedora36
+        - .fedora_mpich_addon
+
+    variables:
+        CMAKE_CONFIGURATION: fedora36_mpi_replay_wrappings
+
 ## Tags
 
 .linux_builder_tags:
