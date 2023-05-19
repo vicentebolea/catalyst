@@ -9,7 +9,8 @@ target_link_libraries(catalyst_fortran
 # set include directories for fortran module `.mod` files
 target_include_directories(catalyst_fortran PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}> )
+  $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}> 
+  $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}/conduit>)
 
 
 set(catalyst_fortran_modules 
