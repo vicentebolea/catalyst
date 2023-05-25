@@ -16,3 +16,7 @@ add_catalyst_test(replay_missing_execute_invc)
 if(CATALYST_WRAP_FORTRAN)
   add_subdirectory(fortran)
 endif()
+
+if(CATALYST_WRAP_PYTHON)
+  add_subdirectory(python)
+endif()
