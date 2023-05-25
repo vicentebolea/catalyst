@@ -244,6 +244,14 @@ build-test:windows-vs2022-mpi-replay:
         - .windows_mpi_builder_tags
         - .run_automatically
 
+build-test:windows-vs2022-mpi-replay-wrappings:
+    extends:
+        - .windows_vs2022_mpi_replay_wrappings
+        - .cmake_build_test_windows
+        - .cmake_build_artifacts
+        - .windows_mpi_builder_tags
+        - .run_automatically
+
 build-test:windows-vs2022-replay:
     extends:
         - .windows_vs2022_replay
