@@ -41,6 +41,12 @@ find_dependency(Conduit 0.8.6)
     "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/catalyst-conduit-targets.cmake")
 endif ()
 
+set(CATALYST_PYTHONPATH)
+if (CATALYST_WRAP_PYTHON)
+  set(path)
+  catalyst_module_python_default_destination(path)
+  set(CATALYST_PYTHONPATH "${path}")
+endif()
 # These are targets for users of Catalyst
 # i.e the simulation codes.
 export(
