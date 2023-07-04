@@ -6,10 +6,10 @@ dnf install -y --setopt=install_weak_deps=False \
     cmake
 
 dnf clean all
-
-readonly conduit_version="0.8.6"
+# if version changes, make sure to update all places where "conduit_version" is used
+readonly conduit_version="0.8.7"
 readonly conduit_tarball="conduit-v$conduit_version-src-with-blt.tar.gz"
-readonly conduit_sha256sum="8ca5d37033143ed7181c7286dd25a3f6126ba0358889066f13a2b32f68fc647e"
+readonly conduit_sha256sum="f3bf44d860783f4e0d61517c5e280c88144af37414569f4cf86e2d29b3ba5293"
 
 readonly conduit_root="$HOME/conduit"
 readonly conduit_src="$conduit_root/src"

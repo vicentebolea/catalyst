@@ -24,9 +24,10 @@ else ()
   set(Conduit_DIR \"${Conduit_DIR}\")
 endif ()
 ")
+  # if version changes, make sure to update all places where "conduit_version" is used
   set(relocatable_content
 "include(CMakeFindDependencyMacro)
-find_dependency(Conduit 0.8.6)
+find_dependency(Conduit 0.8.7)
 ")
   file(WRITE "${_binary_package_dir}/catalyst-conduit-targets.cmake"
     "${non_relocatable_content}${relocatable_content}")

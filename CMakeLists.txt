@@ -61,7 +61,8 @@ option(CATALYST_WITH_EXTERNAL_CONDUIT "Build Catalyst with an external Conduit l
 mark_as_advanced(CATALYST_WITH_EXTERNAL_CONDUIT)
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
-  find_package(Conduit 0.8.6 REQUIRED)
+  # if version changes, make sure to update all places where "conduit_version" is used
+  find_package(Conduit 0.8.7 REQUIRED)
   if(CATALYST_WRAP_FORTRAN AND (NOT CONDUIT_FORTRAN_ENABLED))
       message(FATAL_ERROR "Provided Conduit library was NOT built with Fortran support.")
   endif()
