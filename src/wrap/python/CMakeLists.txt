@@ -5,14 +5,23 @@ set(catalyst_python_py_sources catalyst/__init__.py)
 
 Python3_add_library(catalyst_python ${catalyst_python_cpp_sources})
 
-target_link_libraries(catalyst_python
-  PRIVATE 
-    catalyst::catalyst 
-    catalyst::conduit 
-    catalyst::conduit_b64
-    catalyst::conduit_libyaml
-    catalyst::conduit_python_cpp_headers 
-)
+if (CATALYST_WITH_EXTERNAL_CONDUIT)
+  target_link_libraries(catalyst_python
+    PRIVATE 
+      catalyst::catalyst 
+      conduit::conduit
+      conduit::conduit_python
+  )
+else()
+  target_link_libraries(catalyst_python
+    PRIVATE 
+      catalyst::catalyst 
+      catalyst::conduit 
+      catalyst::conduit_b64
+      catalyst::conduit_libyaml
+      catalyst::conduit_python_cpp_headers 
+  )
+endif()
 
 set(CATALYST_PYTHON_SITE_PACKAGES_SUFFIX)
 catalyst_module_python_default_destination(CATALYST_PYTHON_SITE_PACKAGES_SUFFIX)

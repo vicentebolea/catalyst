@@ -45,7 +45,13 @@ set(CATALYST_PYTHONPATH)
 if (CATALYST_WRAP_PYTHON)
   set(path)
   catalyst_module_python_default_destination(path)
-  set(CATALYST_PYTHONPATH "${path}")
+  set(paths ${path}
+            ${CONDUIT_PYTHON_MODULE_DIR})
+  if(WIN32)
+    list(JOIN paths ";" CATALYST_PYTHONPATH)
+  else()
+    list(JOIN paths ":" CATALYST_PYTHONPATH)
+  endif()
 endif()
 # These are targets for users of Catalyst
 # i.e the simulation codes.
