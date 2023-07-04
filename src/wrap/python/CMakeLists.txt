@@ -34,5 +34,23 @@ configure_file(
 catalyst_install_python_library(catalyst_python
    MODULE_DESTINATION catalyst)
 
+if (CATALYST_WITH_EXTERNAL_CONDUIT)
+
+  set(conduit_py_python_sources
+      # conduit
+      catalyst_conduit/__init__.py
+      catalyst_conduit/utils/__init__.py
+      # conduit.blueprint
+      catalyst_conduit/blueprint/__init__.py
+      catalyst_conduit/blueprint/mcarray/__init__.py
+      catalyst_conduit/blueprint/mesh/__init__.py
+      catalyst_conduit/blueprint/table/__init__.py)
+
+  catalyst_module_add_python_package(catalyst_conduit
+    PACKAGE catalyst_conduit
+    FILES ${conduit_py_python_sources})
+
+endif()
+
 # make possible for the installed module to find libcatalyst during runtime
 set_target_properties(catalyst_python PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
