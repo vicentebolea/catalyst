@@ -38,6 +38,16 @@
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
+            "buildname": "[fedora36_extdeps_mpi_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[fedora36_extdeps_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
             "buildname": "[fedora36_replay]"
         },
         {

@@ -200,6 +200,22 @@ build-test:fedora36-mpi-replay-wrappings:
         - .linux_builder_tags
         - .run_automatically
 
+build-test:fedora36-extdeps-replay-wrappings:
+    extends:
+        - .fedora36_extdeps_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-extdeps-mpi-replay-wrappings:
+    extends:
+        - .fedora36_extdeps_mpi_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
 # macOS
 
 build-test:macos-arm64-replay:
