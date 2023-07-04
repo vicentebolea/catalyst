@@ -1,5 +1,6 @@
 try:
     import catalyst_conduit
+    import catalyst_conduit.utils
     import catalyst_conduit.blueprint
     import catalyst_conduit.blueprint.mesh
     import catalyst_conduit.blueprint.table
