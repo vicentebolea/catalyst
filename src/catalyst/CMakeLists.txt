@@ -69,7 +69,6 @@ target_link_libraries(catalyst
   PRIVATE
     ${CMAKE_DL_LIBS})
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
-  find_package(Conduit 0.8.6 REQUIRED)
   target_link_libraries(catalyst
     PUBLIC
       conduit::conduit)
