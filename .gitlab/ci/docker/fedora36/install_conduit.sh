@@ -28,32 +28,56 @@ tar --strip-components=1 -C "$conduit_src" -xf "$conduit_tarball"
 mkdir -p "$conduit_build"
 cd "$conduit_build"
 
-cmake \
-    -G Ninja \
-    -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_GTEST=OFF \
-    -DENABLE_ASTYLE=OFF \
-    -DENABLE_CLANGFORMAT=OFF \
-    -DENABLE_CLANGQUERY=OFF \
-    -DENABLE_CLANGTIDY=OFF \
-    -DENABLE_CMAKEFORMAT=OFF \
-    -DENABLE_CPPCHECK=OFF \
-    -DENABLE_DOCS=OFF \
-    -DENABLE_DOXYGEN=OFF \
-    -DENABLE_EXAMPLES=OFF \
-    -DENABLE_FORTRAN=ON \
-    -DENABLE_FRUIT=OFF \
-    -DENABLE_GTEST=OFF \
-    -DENABLE_PYTHON=ON \
-    -DENABLE_RELAY_WEBSERVER=OFF \
-    -DENABLE_SPHINX=OFF \
-    -DENABLE_TESTS=OFF \
-    -DENABLE_UNCRUSTIFY=OFF \
-    -DENABLE_UTILS=OFF \
-    -DENABLE_VALGRIND=OFF \
-    -DENABLE_YAPF=OFF \
-    "$conduit_src/src"
+cmake_args=""
+
+update_cmake_args()
+{
+    cmake_args="\
+-GNinja \
+-DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
+-DCMAKE_BUILD_TYPE=Release \
+-DBUILD_GTEST=OFF \
+-DENABLE_ASTYLE=OFF \
+-DENABLE_CLANGFORMAT=OFF \
+-DENABLE_CLANGQUERY=OFF \
+-DENABLE_CLANGTIDY=OFF \
+-DENABLE_CMAKEFORMAT=OFF \
+-DENABLE_CPPCHECK=OFF \
+-DENABLE_DOCS=OFF \
+-DENABLE_DOXYGEN=OFF \
+-DENABLE_EXAMPLES=OFF \
+-DENABLE_FORTRAN=$ENABLE_WRAPPERS \
+-DENABLE_FRUIT=OFF \
+-DENABLE_GTEST=OFF \
+-DENABLE_PYTHON=$ENABLE_WRAPPERS \
+-DENABLE_RELAY_WEBSERVER=OFF \
+-DENABLE_SPHINX=OFF \
+-DENABLE_TESTS=OFF \
+-DENABLE_UNCRUSTIFY=OFF \
+-DENABLE_UTILS=OFF \
+-DENABLE_VALGRIND=OFF \
+-DENABLE_YAPF=OFF \
+$conduit_src/src
+"
+}
+
+# install non-wrapped version of conduit
+INSTALL_PATH="/opt/conduit/basic"
+ENABLE_WRAPPERS="OFF"
+update_cmake_args
+
+cmake $cmake_args
+ninja
+ninja install
+
+# install wrapped version of conduit
+INSTALL_PATH="/opt/conduit/wrapped"
+ENABLE_WRAPPERS="ON"
+update_cmake_args
+
+ninja clean
+
+cmake $cmake_args
 ninja
 ninja install
 

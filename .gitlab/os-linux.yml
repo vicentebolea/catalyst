@@ -3,7 +3,7 @@
 ## Base images
 
 .fedora36:
-    image: "kitware/paraview:ci-catalyst-fedora36-20230704"
+    image: "kitware/paraview:ci-catalyst-fedora36-20230710"
     variables:
         GIT_CLONE_PATH: $CI_BUILDS_DIR/gitlab-kitware-sciviz-ci
 
@@ -14,6 +14,14 @@
         # network instead for reliability.
         # https://wiki.mpich.org/mpich/index.php/Frequently_Asked_Questions#Q:_Why_MPI_Put_raises_SIGBUS_error_inside_docker.3F
         MPIR_CVAR_NOLOCAL: 1
+
+.fedora36_extdeps_addon:
+    variables:
+        CMAKE_PREFIX_PATH: "/opt/conduit/basic"
+
+.fedora36_extdeps_wrappings_addon:
+    variables:
+        CMAKE_PREFIX_PATH: "/opt/conduit/wrapped"
 
 .fedora36_basic:
     extends:
@@ -40,6 +48,7 @@
 .fedora36_extdeps_replay:
     extends:
         - .fedora36
+        - .fedora36_extdeps_addon
 
     variables:
         CMAKE_CONFIGURATION: fedora36_extdeps_replay
@@ -47,6 +56,7 @@
 .fedora36_extdeps_mpi_replay:
     extends:
         - .fedora36
+        - .fedora36_extdeps_addon
         - .fedora_mpich_addon
 
     variables:
@@ -72,6 +82,7 @@
 .fedora36_extdeps_mpi_replay_tidy:
     extends:
         - .fedora36
+        - .fedora36_extdeps_addon
         - .fedora_mpich_addon
 
     variables:
@@ -154,6 +165,7 @@
 .fedora36_extdeps_replay_wrappings:
     extends:
         - .fedora36
+        - .fedora36_extdeps_wrappings_addon
 
     variables:
         CMAKE_CONFIGURATION: fedora36_extdeps_replay_wrappings
@@ -161,6 +173,7 @@
 .fedora36_extdeps_mpi_replay_wrappings:
     extends:
         - .fedora36
+        - .fedora36_extdeps_wrappings_addon
         - .fedora_mpich_addon
 
     variables:
