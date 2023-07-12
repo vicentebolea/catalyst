@@ -2,6 +2,20 @@ include(catalyst-python-macros)
 set(catalyst_python_cpp_sources catalyst_python.cpp)
 set(catalyst_python_py_sources catalyst/__init__.py)
 
+#-------------------------------------------------------------------------
+# interface library to hold platform flags
+
+add_library(catalyst_python_flags INTERFACE)
+set(platform_flags
+    # Apple flags.
+    # fixes warning "ld: warning: -undefined dynamic_lookup may not work with chained fixups"
+    # for Xcode < 14.3
+    "$<$<PLATFORM_ID:Darwin>:LINKER:-no_fixup_chains>"
+)
+target_link_options(catalyst_python_flags
+  INTERFACE
+     ${platform_flags})
+#-------------------------------------------------------------------------
 
 Python3_add_library(catalyst_python ${catalyst_python_cpp_sources})
 
@@ -11,6 +25,7 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
       catalyst::catalyst 
       conduit::conduit
       conduit::conduit_python
+      catalyst_python_flags
   )
 else()
   target_link_libraries(catalyst_python
@@ -20,6 +35,7 @@ else()
       catalyst::conduit_b64
       catalyst::conduit_libyaml
       catalyst::conduit_python_cpp_headers 
+      catalyst_python_flags
   )
 endif()
 
