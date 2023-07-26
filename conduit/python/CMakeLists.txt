@@ -24,6 +24,25 @@ set(conduit_py_headers
 set(conduit_py_cpp_sources 
     conduit_python.cpp)
 
+#-------------------------------------------------------------------------
+# interface library to hold platform flags
+set(_platform_flags)
+
+# Xcode 13.0+ automatically enables fixup_chains which introduces 
+# "ld: warning: -undefined dynamic_lookup may not work with chained fixups" warnings
+# Apple Clang >= 14.0.3 (Xcode 14.3) automatically disables fixup_chains  when
+# dynamic_lookup is used (default for python libraries)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" AND
+     CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0 AND
+     CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14.0.3)
+set(_platform_flags
+    "LINKER:-no_fixup_chains")
+endif ()
+
+add_library(conduit_python_flags INTERFACE)
+target_link_options(conduit_python_flags
+  INTERFACE
+     ${_platform_flags})
 
 #-------------------------------------------------------------------------
 # conduit module
@@ -38,7 +57,9 @@ target_link_libraries(conduit_python
     catalyst::conduit_fmt
     catalyst::conduit_libyaml
     catalyst::conduit_b64
-    catalyst::conduit_rapidjson)
+    catalyst::conduit_rapidjson
+    conduit_python_flags
+    )
 
 target_include_directories(conduit_python
   PRIVATE 
@@ -66,7 +87,8 @@ target_link_libraries(conduit_utils_python
   PRIVATE 
     catalyst::conduit 
     catalyst::conduit_b64
-    catalyst::conduit_libyaml)
+    catalyst::conduit_libyaml
+    conduit_python_flags)
 
 target_include_directories(conduit_utils_python
   PRIVATE
