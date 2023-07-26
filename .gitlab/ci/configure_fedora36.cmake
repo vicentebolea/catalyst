@@ -1,3 +1,1 @@
-set(CATALYST_WRAP_PYTHON ON CACHE BOOL "")
-set(CATALYST_WRAP_FORTRAN ON CACHE BOOL "") 
 include("${CMAKE_CURRENT_LIST_DIR}/configure_common.cmake")

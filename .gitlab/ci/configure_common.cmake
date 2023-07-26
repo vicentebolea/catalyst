@@ -13,9 +13,16 @@ function (configuration_flag variable configuration)
   endif ()
 endfunction ()
 
+if(WIN32 OR APPLE)
+  set(CATALYST_WRAP_FORTRAN OFF CACHE BOOL "")
+endif ()
+
 configuration_flag(CATALYST_USE_MPI "mpi")
 configuration_flag(CATALYST_BUILD_REPLAY "replay")
 configuration_flag(CATALYST_WITH_EXTERNAL_CONDUIT "extdeps")
+configuration_flag(CATALYST_WRAP_PYTHON "wrappings")
+configuration_flag(CATALYST_WRAP_FORTRAN "wrappings")
+
 
 if ("$ENV{CMAKE_CONFIGURATION}" MATCHES "_tidy")
   set(CMAKE_C_CLANG_TIDY "clang-tidy" "--header-filter=$ENV{CI_PROJECT_DIR}/(src|tests)" CACHE FILEPATH "")
