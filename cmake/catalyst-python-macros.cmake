@@ -147,7 +147,6 @@ function (catalyst_module_add_python_package name)
   set(_catalyst_add_python_package_MODULE_DESTINATION)
   catalyst_module_python_default_destination(_catalyst_add_python_package_MODULE_DESTINATION)
 
-  set(_catalyst_add_python_package_file_outputs)
   foreach (_catalyst_add_python_package_file IN LISTS _catalyst_add_python_package_FILES)
     if (IS_ABSOLUTE "${_catalyst_add_python_package_file}")
       file(RELATIVE_PATH _catalyst_add_python_package_name
@@ -179,7 +178,7 @@ function (catalyst_module_add_python_package name)
     if (BUILD_SHARED_LIBS)
       get_filename_component(_catalyst_add_python_package_install_path "${_catalyst_add_python_package_name}" DIRECTORY)
       install(
-        FILES       "${_catalyst_add_python_package_name}"
+        FILES       "${_catalyst_add_python_package_file_output}"
         DESTINATION "${_catalyst_add_python_package_MODULE_DESTINATION}/${_catalyst_add_python_package_install_path}")
     endif()
   endforeach ()

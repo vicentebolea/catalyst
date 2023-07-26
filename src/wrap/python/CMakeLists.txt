@@ -44,11 +44,19 @@ catalyst_module_python_default_destination(CATALYST_PYTHON_SITE_PACKAGES_SUFFIX)
 
 configure_file(
   catalyst/__init__.py.in
-  "${CMAKE_BINARY_DIR}/${CATALYST_PYTHON_SITE_PACKAGES_SUFFIX}/catalyst/__init__.py"
+  catalyst/__init__.py
    @ONLY)
+
+set(catalyst_python_sources
+  "${CMAKE_CURRENT_BINARY_DIR}/catalyst/__init__.py"
+)
 
 catalyst_install_python_library(catalyst_python
    MODULE_DESTINATION catalyst)
+  
+catalyst_module_add_python_package(catalyst
+   PACKAGE catalyst
+   FILES ${catalyst_python_sources})
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
 
