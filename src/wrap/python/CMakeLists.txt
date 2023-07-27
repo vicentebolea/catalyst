@@ -77,4 +77,16 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
 endif()
 
 # make possible for the installed module to find libcatalyst during runtime
-set_target_properties(catalyst_python PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
+if (UNIX)
+    file(RELATIVE_PATH _catalyst_python_relpath
+      "${CMAKE_BINARY_DIR}/${CATALYST_PYTHON_SITE_PACKAGES_SUFFIX}"
+      "${CMAKE_BINARY_DIR}")
+
+    if (APPLE)
+      set(_catalyst_python_origin_stem "@loader_path")
+    else ()
+      set(_catalyst_python_origin_stem "$ORIGIN")
+    endif()
+
+    set_target_properties(catalyst_python PROPERTIES INSTALL_RPATH "${_catalyst_python_origin_stem}/${_catalyst_python_relpath}")
+endif ()
