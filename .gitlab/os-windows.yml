@@ -40,6 +40,22 @@
     variables:
         CMAKE_CONFIGURATION: windows_vs2022_replay
 
+.windows_vs2022_replay_wrappings:
+    extends: .windows_vs2022
+
+    variables:
+        CMAKE_CONFIGURATION: windows_vs2022_replay_wrappings
+        CATALYST_SETUP_PYTHON_ENV: 1
+        CMAKE_BUILD_TYPE: "Release"
+
+.windows_vs2022_mpi_replay_wrappings:
+    extends: .windows_vs2022
+
+    variables:
+        CMAKE_CONFIGURATION: windows_vs2022_mpi_replay_wrappings
+        CATALYST_SETUP_PYTHON_ENV: 1
+        CMAKE_BUILD_TYPE: "Release"
+
 ## Tags
 
 .windows_builder_tags:
@@ -70,6 +86,14 @@
     - ninja --version
     - Invoke-Expression -Command .gitlab/ci/gtest.ps1
     - Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\gtest\bin;$env:PATH"
+    # Setup python
+    - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { cmake -P .gitlab/ci/download_python.cmake }
+    - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\python;$env:PATH" }
+    - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { Set-Item -Force -Path "env:PYTHONHOME" -Value "$pwdpath\.gitlab\python" }
+    # use cmd.exe so we can use "&&" and catch any errors
+    - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { cmd /c "python -m venv venv && .\venv\Scripts\activate.bat && pip install numpy mpi4py" }
+    # python env was activated only for the lifetime of cmd. Activate for powershell for the rest of the script
+    - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { . .\venv\Scripts\Activate.ps1 }
 
 .cmake_build_test_windows:
     stage: build-test

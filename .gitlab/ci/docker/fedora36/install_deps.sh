@@ -18,6 +18,6 @@ dnf install -y --setopt=install_weak_deps=False \
 
 # Python dependencies
 dnf install -y --setopt=install_weak_deps=False \
-  python-devel python-numpy
+  python-devel python-numpy python3-mpi4py-mpich
 
 dnf clean all

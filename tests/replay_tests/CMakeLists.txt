@@ -12,3 +12,11 @@ add_catalyst_test(replay_high_num_execute_invc)
 add_catalyst_test(replay_no_data_dump_dir)
 add_catalyst_test(replay_missing_initialize_data)
 add_catalyst_test(replay_missing_execute_invc)
+
+if(CATALYST_WRAP_FORTRAN)
+  add_subdirectory(fortran)
+endif()
+
+if(CATALYST_WRAP_PYTHON)
+  add_subdirectory(python)
+endif()

@@ -57,13 +57,26 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-add_subdirectory(src)
-
 option(CATALYST_WITH_EXTERNAL_CONDUIT "Build Catalyst with an external Conduit library" OFF)
 mark_as_advanced(CATALYST_WITH_EXTERNAL_CONDUIT)
+
+if (CATALYST_WITH_EXTERNAL_CONDUIT)
+  # if version changes, make sure to update all places where "conduit_version" is used
+  find_package(Conduit 0.8.7 REQUIRED)
+  if(CATALYST_WRAP_FORTRAN AND (NOT CONDUIT_FORTRAN_ENABLED))
+      message(FATAL_ERROR "Provided Conduit library was NOT built with Fortran support.")
+  endif()
+  
+  if(CATALYST_WRAP_PYTHON AND (NOT CONDUIT_PYTHON_ENABLED))
+      message(FATAL_ERROR "Provided Conduit library was NOT built with Python support.")
+  endif()
+endif()
+
 if (NOT CATALYST_WITH_EXTERNAL_CONDUIT)
   add_subdirectory(thirdparty/conduit)
 endif ()
+
+add_subdirectory(src)
 
 # include install/package rules.
 include(cInstallCMakePackage)

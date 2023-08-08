@@ -147,7 +147,6 @@ function (catalyst_module_add_python_package name)
   set(_catalyst_add_python_package_MODULE_DESTINATION)
   catalyst_module_python_default_destination(_catalyst_add_python_package_MODULE_DESTINATION)
 
-  set(_catalyst_add_python_package_file_outputs)
   foreach (_catalyst_add_python_package_file IN LISTS _catalyst_add_python_package_FILES)
     if (IS_ABSOLUTE "${_catalyst_add_python_package_file}")
       file(RELATIVE_PATH _catalyst_add_python_package_name
@@ -179,7 +178,7 @@ function (catalyst_module_add_python_package name)
     if (BUILD_SHARED_LIBS)
       get_filename_component(_catalyst_add_python_package_install_path "${_catalyst_add_python_package_name}" DIRECTORY)
       install(
-        FILES       "${_catalyst_add_python_package_name}"
+        FILES       "${_catalyst_add_python_package_file_output}"
         DESTINATION "${_catalyst_add_python_package_MODULE_DESTINATION}/${_catalyst_add_python_package_install_path}")
     endif()
   endforeach ()
@@ -227,8 +226,18 @@ function (catalyst_add_python_test)
      set(_catalyst_add_python_test_NAME ${_catalyst_add_python_test_SCRIPT})
   endif ()
 
+  set(_path)
+  catalyst_module_python_default_destination(_path)
+  set(paths "${CMAKE_BINARY_DIR}/${_path}"
+            ${CONDUIT_PYTHON_MODULE_DIR})
+  if(WIN32)
+    list(JOIN paths ";" _catalyst_pythonpath)
+  else()
+    list(JOIN paths ":" _catalyst_pythonpath)
+  endif()
+
   add_test(NAME ${_catalyst_add_python_test_NAME}
-      COMMAND ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages
+    COMMAND ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${_catalyst_pythonpath}
           ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${_catalyst_add_python_test_SCRIPT}
   )
   set_tests_properties(${_catalyst_add_python_test_NAME} PROPERTIES LABELS "Python")

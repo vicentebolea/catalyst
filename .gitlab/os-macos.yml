@@ -7,7 +7,7 @@
         GIT_CLONE_PATH: "$CI_BUILDS_DIR/catalyst-ci-ext/$CI_CONCURRENT_ID"
         # TODO: Factor this out so that each job selects the Xcode version to
         # use so that different versions can be tested in a single pipeline.
-        DEVELOPER_DIR: "/Applications/Xcode-13.3.app/Contents/Developer"
+        DEVELOPER_DIR: "/Applications/Xcode-14.2.app/Contents/Developer"
 
 ### Build and test
 
@@ -36,6 +36,20 @@
         CMAKE_CONFIGURATION: macos_x86_64_replay
         CTEST_NO_WARNINGS_ALLOWED: 1
 
+.macos_arm64_replay_wrappings:
+    extends: .macos_arm64_replay
+
+    variables:
+        CMAKE_CONFIGURATION: macos_arm64_replay_wrappings
+        CATALYST_SETUP_PYTHON_ENV: 1
+
+.macos_x86_64_replay_wrappings:
+    extends: .macos_x86_64_replay
+
+    variables:
+        CMAKE_CONFIGURATION: macos_x86_64_replay_wrappings
+        CATALYST_SETUP_PYTHON_ENV: 1
+
 ## Tags
 
 .macos_x86_64_builder_tags:
@@ -43,7 +57,7 @@
         - paraview
         - macos-x86_64
         - shell
-        - xcode-13.3
+        - xcode-14.2
         - concurrent
 
 .macos_arm64_builder_tags:
@@ -51,7 +65,7 @@
         - paraview
         - macos-arm64
         - shell
-        - xcode-13.3
+        - xcode-14.2
         - concurrent
 
 ## macOS-specific scripts
@@ -63,6 +77,7 @@
     - cmake --version
     - ninja --version
     - .gitlab/ci/gtest.sh
+    - '[ -n "$CATALYST_SETUP_PYTHON_ENV" ] && python3 -m venv venv && source venv/bin/activate && pip install numpy'
 
 .cmake_build_test_macos:
     stage: build-test

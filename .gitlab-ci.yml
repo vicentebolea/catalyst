@@ -176,6 +176,46 @@ build-test:fedora36-mpi-replay-ubsan:
         - .linux_sanitizer_tags
         - .run_automatically
 
+build-test:fedora36-wrappings:
+    extends:
+        - .fedora36_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-replay-wrappings:
+    extends:
+        - .fedora36_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-mpi-replay-wrappings:
+    extends:
+        - .fedora36_mpi_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-extdeps-replay-wrappings:
+    extends:
+        - .fedora36_extdeps_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:fedora36-extdeps-mpi-replay-wrappings:
+    extends:
+        - .fedora36_extdeps_mpi_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
 # macOS
 
 build-test:macos-arm64-replay:
@@ -194,6 +234,22 @@ build-test:macos-x86_64-replay:
         - .macos_x86_64_builder_tags
         - .run_automatically
 
+build-test:macos-arm64-replay-wrappings:
+    extends:
+        - .macos_arm64_replay_wrappings
+        - .cmake_build_test_macos
+        - .cmake_build_artifacts
+        - .macos_arm64_builder_tags
+        - .run_automatically
+
+build-test:macos-x86_64-replay-wrappings:
+    extends:
+        - .macos_x86_64_replay_wrappings
+        - .cmake_build_test_macos
+        - .cmake_build_artifacts
+        - .macos_x86_64_builder_tags
+        - .run_automatically
+
 # Windows
 
 build-test:windows-vs2022-mpi-replay:
@@ -204,9 +260,25 @@ build-test:windows-vs2022-mpi-replay:
         - .windows_mpi_builder_tags
         - .run_automatically
 
+build-test:windows-vs2022-mpi-replay-wrappings:
+    extends:
+        - .windows_vs2022_mpi_replay_wrappings
+        - .cmake_build_test_windows
+        - .cmake_build_artifacts
+        - .windows_mpi_builder_tags
+        - .run_automatically
+
 build-test:windows-vs2022-replay:
     extends:
         - .windows_vs2022_replay
+        - .cmake_build_test_windows
+        - .cmake_build_artifacts
+        - .windows_builder_tags
+        - .run_automatically
+
+build-test:windows-vs2022-replay-wrappings:
+    extends:
+        - .windows_vs2022_replay_wrappings
         - .cmake_build_test_windows
         - .cmake_build_artifacts
         - .windows_builder_tags

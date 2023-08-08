@@ -1,7 +1,8 @@
 try:
     import catalyst
-except ImportError:
+except ImportError as ex:
     print("ERROR : Could not import catalyst module")
+    print(ex)
     exit(1)
 
 

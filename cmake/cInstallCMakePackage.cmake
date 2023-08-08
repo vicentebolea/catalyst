@@ -24,9 +24,10 @@ else ()
   set(Conduit_DIR \"${Conduit_DIR}\")
 endif ()
 ")
+  # if version changes, make sure to update all places where "conduit_version" is used
   set(relocatable_content
 "include(CMakeFindDependencyMacro)
-find_dependency(Conduit 0.8.6)
+find_dependency(Conduit 0.8.7)
 ")
   file(WRITE "${_binary_package_dir}/catalyst-conduit-targets.cmake"
     "${non_relocatable_content}${relocatable_content}")
@@ -41,6 +42,18 @@ find_dependency(Conduit 0.8.6)
     "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/catalyst-conduit-targets.cmake")
 endif ()
 
+set(CATALYST_PYTHONPATH)
+if (CATALYST_WRAP_PYTHON)
+  set(path)
+  catalyst_module_python_default_destination(path)
+  set(paths ${path}
+            ${CONDUIT_PYTHON_MODULE_DIR})
+  if(WIN32)
+    list(JOIN paths ";" CATALYST_PYTHONPATH)
+  else()
+    list(JOIN paths ":" CATALYST_PYTHONPATH)
+  endif()
+endif()
 # These are targets for users of Catalyst
 # i.e the simulation codes.
 export(

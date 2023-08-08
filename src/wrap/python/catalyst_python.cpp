@@ -4,8 +4,13 @@
 #include "conduit_cpp_to_c.hpp" // for conduit::c_node
 #include "conduit_python.hpp" // for conduit python api PyConduit_Node_Check, PyConduit_Node_Get_Node_Ptr
 
-#include "catalyst_api.h"    // catalyst API
-#include "catalyst_export.h" // for CATALYST_EXPORT
+#include "catalyst_api.h" // catalyst API
+
+#ifdef _WIN32
+#define CATALYST_PYTHON_EXPORT __declspec(dllexport)
+#else
+#define CATALYST_PYTHON_EXPORT __attribute__((visibility("default")))
+#endif
 
 //---------------------------------------------------------------------------//
 static PyObject* CatalystError = NULL;
@@ -197,7 +202,7 @@ static struct PyModuleDef catalyst_module =
 
 extern "C"
 {
-  CATALYST_EXPORT PyObject* PyInit_catalyst_python(void)
+  CATALYST_PYTHON_EXPORT PyObject* PyInit_catalyst_python(void)
   {
     PyObject* py_module = PyModule_Create(&catalyst_module);
     if (!py_module)
@@ -226,3 +231,4 @@ extern "C"
 #undef CATALYST_TOSTRING
 #undef CATALYST_STRINGIFY
 #undef CATALYST_CREATE_EXCEPTION
+#undef CATALYST_PYTHON_EXPORT
