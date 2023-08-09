@@ -28,16 +28,17 @@ To do a fresh build, start with an empty directory as follows:
     ccmake -G Ninja [path to catalyst source directory]
 
     # do the build
-    ninja
+    cmake --build .
 
     # optionally, run tests
     ctest
 
     # do the install
-    ninja install
+    cmake --install .
 
 
 ``ccmake`` is a graphical GUI that lets you specify various options for CMake.
+On Windows ``cmake-gui`` can be used.
 Alternately, those options can be specified on command line to ``cmake`` using
 ``-Doption:type=value`` (or ``-Doption=value``) parameters as follows:
 
@@ -48,8 +49,7 @@ Alternately, those options can be specified on command line to ``cmake`` using
 
 Using ``-G Ninja`` results in CMake generating build files for Ninja. You can
 switch to using any other supported generator of your choice. See `CMake Docs`_
-for details. In that case, ``ninja`` will be replaced by the appropriate build
-tool in the steps above.
+for details.
 
 Supported CMake Options
 =======================
