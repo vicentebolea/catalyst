@@ -69,3 +69,15 @@ such developers can use to initialize and invoke ParaView in situ.
 .. _`Fides`: https://gitlab.kitware.com/vtk/fides
 
 .. _`API`: https://kitware.github.io/paraview-docs/nightly/cxx/group__Insitu.html
+
+Catalyst API Implementations
+============================
+
+Known implementations of the Catalyst API include:
+
+* `ParaView Catalyst`_
+* `Adios Catalyst`_
+* Ascent Catalyst
+
+.. _`ParaView Catalyst` : https://docs.paraview.org/en/latest/Catalyst/index.html
+.. _`Adios Catalyst` : https://gitlab.kitware.com/paraview/adioscatalyst
