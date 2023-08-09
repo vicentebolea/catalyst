@@ -8,6 +8,7 @@ ParaView 5.9. For earlier versions of Catalyst, please refer to earlier `docs`_.
 
 .. toctree::
    :caption: Contents:
+   :titlesonly:
 
    introduction
    build_and_install
