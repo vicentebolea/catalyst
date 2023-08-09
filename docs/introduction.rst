@@ -7,7 +7,7 @@ scientific data producers) to analyze and visualize data in situ.
 It also includes the following:
 
 * A light-weight implementation of the Catalyst API. This implementation
-  is called **stub**. [TODO:  need a better name]
+  is called **stub**.
 * An SDK for developers to develop implementations of the Catalyst API to perform
   custom data processing and visualization tasks.
 
@@ -54,12 +54,12 @@ releases, we use the names to refer to specific components:
 
 ParaView Catalyst supports several ways for simulations to describe
 computational meshes and fields. One way is to use Conduit's `Mesh Blueprint`_.
-Another way is to use `Fides`_. Furthermore, developers can develop their own
+Another way is to use `Fides`_.
+
+Furthermore, developers can develop their own
 implementations of the Catalyst API and still use ParaView's capabilities for
-in situ data processing and visualization. ParaView provides API that
+in situ data processing and visualization. ParaView provides `API`_ that
 such developers can use to initialize and invoke ParaView in situ.
-[TODO: link to ParaView docs for API to use in custom Catalyst implementations
-that use ParaView].
 
 
 .. _`Conduit`: https://llnl-conduit.readthedocs.io/en/latest/index.html
@@ -67,3 +67,5 @@ that use ParaView].
 .. _`Mesh Blueprint`: https://llnl-conduit.readthedocs.io/en/latest/blueprint_mesh.html#mesh-blueprint
 
 .. _`Fides`: https://gitlab.kitware.com/vtk/fides
+
+.. _`API`: https://kitware.github.io/paraview-docs/nightly/cxx/group__Insitu.html
