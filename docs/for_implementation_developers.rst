@@ -17,7 +17,7 @@ implementation for the Catalyst API.
   To build a custom Catalyst implementation, your project needs to be a
   CMake-based project i.e. use CMake as the build system generator. While
   it is technically feasible to use a non-CMake based project, it is highly
-  recommended to prefer to use CMake.
+  recommended to use CMake.
 
 
 CMake Setup
