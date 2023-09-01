@@ -2,11 +2,13 @@ Catalyst
 ########
 
 This document refers to the Catalyst API which was first introduced in
-ParaView 5.9. For earlier versions of Catalyst, please refer to earlier docs
-[TODO: add link]
+ParaView 5.9. For earlier versions of Catalyst, please refer to earlier `docs`_.
+
+.. _docs: https://www.paraview.org/files/catalyst/docs/ParaViewCatalystUsersGuide_v2.pdf
 
 .. toctree::
    :caption: Contents:
+   :titlesonly:
 
    introduction
    build_and_install

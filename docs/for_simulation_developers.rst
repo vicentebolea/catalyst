@@ -67,11 +67,9 @@ In a typical Catalyst install at location, ``CATALYST_INSTALL_PREFIX``, these ar
 
 Using ``gcc``, for example, this translates to the following command-line:
 
-[TODO: fix me]
-
 .. code-block:: bash
 
-    > TODO
+    gcc test_driver.c -I<CATALYST_INSTALL_PREFIX>/include/catalyst-2.0 <CATALYST_INSTALL_PREFIX>/lib/libcatalyst.so.3
 
 Catalyst API
 ============

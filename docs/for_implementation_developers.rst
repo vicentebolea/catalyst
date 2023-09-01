@@ -11,19 +11,19 @@ This section describes the workflow for those who want to implement a custom
 implementation for the Catalyst API.
 
 
-Prerequisites
-=============
+.. admonition:: Prerequisites
+  :class: tip
 
-* To build a custom Catalyst implementation, your project needs to be a
+  To build a custom Catalyst implementation, your project needs to be a
   CMake-based project i.e. use CMake as the build system generator. While
   it is technically feasible to use a non-CMake based project, it is highly
-  recommended to prefer to use CMake.
+  recommended to use CMake.
 
 
 CMake Setup
 ===========
 
-The following sample CMakeLists.txt shows how to build a Catalyst
+The following sample ``CMakeLists.txt`` shows how to build a Catalyst
 implementation.
 
 .. code-block:: cmake
@@ -62,10 +62,11 @@ Implementing Catalyst API
 
 Providing an implementation for the Catalyst API implies providing code for the
 five ``catalyst_`` functions that are part of the Catalyst API:
-* ``catalyst_initialize_MyImplName``,
-* ``catalyst_finalize_MyImplName``,
-* ``catalyst_execute_MyImplName``,
-* ``catalyst_about_MyImplName``,
+
+* ``catalyst_initialize_MyImplName``
+* ``catalyst_finalize_MyImplName``
+* ``catalyst_execute_MyImplName``
+* ``catalyst_about_MyImplName``
 * ``catalyst_results_MyImplName``
 
 To do that, simply include ``catalyst.h`` and ``catalyst_impl_MyImplName.h``
