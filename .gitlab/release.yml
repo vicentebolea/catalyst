@@ -2,7 +2,7 @@
     image: alpine:latest
     stage: build-test
     tags:
-        - linux
+        - linux-x86_64
         - docker
         - build
     script:
@@ -15,7 +15,7 @@
     image: curlimages/curl:latest
     stage: upload
     tags:
-        - linux
+        - linux-x86_64
         - docker
         - build
     script:
@@ -25,7 +25,7 @@
     image: registry.gitlab.com/gitlab-org/release-cli:latest
     stage: release
     tags:
-        - linux
+        - linux-x86_64
         - docker
         - build
     script:
