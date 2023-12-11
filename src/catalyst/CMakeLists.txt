@@ -78,6 +78,7 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
       conduit::conduit)
   if(CATALYST_WRAP_PYTHON)
     set(conduit_private_libraries 
+       catalyst_python_flags
        conduit::conduit_python
        Python3::Python)
   endif()
@@ -94,6 +95,7 @@ else ()
     set(conduit_private_libraries 
         ${conduit_private_libraries}
        catalyst::conduit_python_cpp_headers 
+       catalyst_python_flags
        Python3::Python)
   endif()
 endif ()

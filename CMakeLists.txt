@@ -31,6 +31,7 @@ include(cInitializeBuildType)
 include(cDirectories)
 if (CATALYST_WRAP_PYTHON)
   include(catalyst-python-macros)
+  include(catalyst-python-flags)
 endif ()
 
 # Currently, we require shared builds.
