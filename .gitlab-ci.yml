@@ -216,6 +216,38 @@ build-test:fedora36-extdeps-mpi-replay-wrappings:
         - .linux_builder_tags
         - .run_automatically
 
+build-test:el8-icc-replay-wrappings:
+    extends:
+        - .el8_icc_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:el8-icc-extdeps-replay-wrappings:
+    extends:
+        - .el8_icc_extdeps_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:el8-icx-replay-wrappings:
+    extends:
+        - .el8_icx_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
+build-test:el8-icx-extdeps-replay-wrappings:
+    extends:
+        - .el8_icx_extdeps_replay_wrappings
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_builder_tags
+        - .run_automatically
+
 # macOS
 
 build-test:macos-arm64-replay:
