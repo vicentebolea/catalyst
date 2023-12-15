@@ -1138,7 +1138,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_id(cdatatype) result(res) &
              bind(C, name="conduit_datatype_id")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)) :: res
@@ -1165,7 +1165,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_number_of_elements(cdatatype) result(res) &
             bind(C, name="conduit_datatype_number_of_elements")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)) :: res
@@ -1175,7 +1175,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_offset(cdatatype) result(res) &
             bind(C, name="conduit_datatype_offset")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)) :: res
@@ -1185,7 +1185,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_stride(cdatatype) result(res) &
             bind(C, name="conduit_datatype_stride")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)) :: res
@@ -1195,7 +1195,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_element_bytes(cdatatype) result(res) &
             bind(C, name="conduit_datatype_element_bytes")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)) :: res
@@ -1205,7 +1205,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_endianness(cdatatype) result(res) &
             bind(C, name="conduit_datatype_endianness")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)) :: res
@@ -1215,7 +1215,7 @@ module catalyst_conduit
     pure function catalyst_conduit_datatype_element_index(cdatatype, idx) result(res) &
             bind(C, name="conduit_datatype_element_index")
          use iso_c_binding
-         use conduit
+         use conduit, ONLY : CONDUIT_INDEX_ID
          implicit none
          type(C_PTR), value, intent(IN) :: cdatatype
          integer(kind(CONDUIT_INDEX_ID)), value, intent(IN) :: idx
