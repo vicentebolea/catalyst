@@ -40,12 +40,14 @@ if (NOT symbol_names)
 endif ()
 
 list(SORT symbol_names)
+list(REMOVE_DUPLICATES symbol_names)
 
 # Read the list of expected symbols.
 file(STRINGS "${symbols}" expected)
 list(REMOVE_ITEM expected "")
 list(SORT expected)
 
+# Add extra symbols for fortran
 if(fortran_symbols)
   file(STRINGS "${fortran_symbols}" expected_fortran)
   list(REMOVE_ITEM expected_fortran "")
@@ -64,6 +66,18 @@ endif()
 
 if (apple_mangle)
   list(TRANSFORM expected PREPEND "_")
+endif ()
+
+# extra symbols added only by intel compilers C/C++
+if (icc_mangle OR icx_mangle)
+  list(APPEND expected  
+    "__bss_start"
+    "_edata"
+    "_end")
+endif ()
+if (icc_mangle)
+  list(APPEND expected
+    ".debug_info_seg")
 endif ()
 
 set(unexpected "${symbol_names}")
