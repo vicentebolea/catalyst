@@ -88,6 +88,26 @@
         {
             "group": "catalyst-master",
             "site": "gitlab-ci",
+            "buildname": "[el8_icc_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[el8_icc_extdeps_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[el8_icx_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
+            "buildname": "[el8_icx_extdeps_replay_wrappings]"
+        },
+        {
+            "group": "catalyst-master",
+            "site": "gitlab-ci",
             "buildname": "[macos_arm64_replay]"
         },
         {

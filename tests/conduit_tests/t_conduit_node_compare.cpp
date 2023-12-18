@@ -144,8 +144,8 @@ void compare_leaf_numeric(
 
   { // Leaf Difference Test //
     Node info;
-    memset(o.element_ptr(0), 1, 1);
-    memset(o.element_ptr(4), 1, 1);
+    memset(o.element_ptr(0), 1, o.dtype().element_bytes());
+    memset(o.element_ptr(4), 1, o.dtype().element_bytes());
     EXPECT_TRUE(diff_nodes(n, o, info));
 
     Node info_diff = info["value"];

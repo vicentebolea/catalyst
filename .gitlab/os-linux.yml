@@ -7,6 +7,23 @@
     variables:
         GIT_CLONE_PATH: $CI_BUILDS_DIR/gitlab-kitware-sciviz-ci
 
+### intel "classic" compilers
+.el8_icc:
+    image: "kitware/paraview:ci-catalyst-el8-icc-20231214"
+    variables:
+        CC: icc
+        CXX: icpc
+        FC: ifort
+
+### intel oneAPI compilers
+.el8_icx:
+    image: "kitware/paraview:ci-catalyst-el8-icx-20231214"
+    variables:
+        CC: icx
+        CXX: icpx
+        FC: ifx
+
+
 .fedora_mpich_addon:
     variables:
         MODULES: mpi/mpich-x86_64
@@ -179,6 +196,36 @@
     variables:
         CMAKE_CONFIGURATION: fedora36_extdeps_mpi_replay_wrappings
 
+.el8_icc_replay_wrappings:
+    extends:
+        - .el8_icc
+
+    variables:
+        CMAKE_CONFIGURATION: el8_icc_replay_wrappings
+
+.el8_icx_replay_wrappings:
+    extends:
+        - .el8_icx
+
+    variables:
+        CMAKE_CONFIGURATION: el8_icx_replay_wrappings
+
+.el8_icc_extdeps_replay_wrappings:
+    extends:
+        - .el8_icc
+        - .fedora36_extdeps_wrappings_addon
+
+    variables:
+        CMAKE_CONFIGURATION: el8_icc_extdeps_replay_wrappings
+
+.el8_icx_extdeps_replay_wrappings:
+    extends:
+        - .el8_icx
+        - .fedora36_extdeps_wrappings_addon
+
+    variables:
+        CMAKE_CONFIGURATION: el8_icx_extdeps_replay_wrappings
+
 ## Tags
 
 .linux_builder_tags:
@@ -203,6 +250,8 @@
     - export PATH=$PWD/.gitlab:$PWD/.gitlab/cmake/bin:$PATH
     - cmake --version
     - ninja --version
+    # Enable Intel compiler if required
+    - '([ "$CC" = "icx" ] || [ "$CC" = "icc" ]) && source /opt/intel/oneapi/setvars.sh || true'
     - "$LAUNCHER .gitlab/ci/gtest.sh"
     # Load any modules that may be necessary.
     - '[ -n "$MODULES" ] && . /etc/profile.d/modules.sh && module load $MODULES'

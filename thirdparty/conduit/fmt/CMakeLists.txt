@@ -13,9 +13,16 @@ set(fmt_headers
     conduit_fmt/printf.h
     conduit_fmt/ranges.h
     )
-
 add_library(catalyst_conduit_fmt INTERFACE
   ${fmt_headers})
+
+# fix warning
+# explicit comparison with infinity in fast floating point mode [-Wtautological-constant-compare]
+target_compile_options(catalyst_conduit_fmt
+  INTERFACE
+  $<BUILD_LOCAL_INTERFACE:$<$<CXX_COMPILER_ID:IntelLLVM>:-fp-model=precise>>)
+
+
 target_include_directories(catalyst_conduit_fmt
   INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
