@@ -109,9 +109,15 @@ set(catalyst_conduit_is_external 0)
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
   set(catalyst_conduit_is_external 1)
 endif ()
+
+set(catalyst_wrap_python 0)
+if (CATALYST_WRAP_PYTHON)
+  set(catalyst_wrap_python 1)
+endif ()
+
 target_compile_definitions(catalyst
   PUBLIC
-    "CATALYST_WRAP_PYTHON=$<BOOL:${CATALYST_WRAP_PYTHON}>"
+    "CATALYST_WRAP_PYTHON=${catalyst_wrap_python}"
   PRIVATE
     "CATALYST_WITH_EXTERNAL_CONDUIT=${catalyst_conduit_is_external}")
 set_property(TARGET catalyst
