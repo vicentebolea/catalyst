@@ -7,12 +7,16 @@ set(headers
   catalyst_conduit.hpp
   catalyst_conduit_blueprint.hpp
   catalyst_conduit_error.hpp
-  catalyst_python_tools.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit_abi.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/catalyst_python_tools.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_version.h)
 configure_file(catalyst_version.h.in catalyst_version.h)
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/catalyst_python_tools.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/catalyst_python_tools.h"
+  @ONLY)
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
   set(catalyst_conduit_state external)
@@ -110,14 +114,8 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
   set(catalyst_conduit_is_external 1)
 endif ()
 
-set(catalyst_wrap_python 0)
-if (CATALYST_WRAP_PYTHON)
-  set(catalyst_wrap_python 1)
-endif ()
 
 target_compile_definitions(catalyst
-  PUBLIC
-    "CATALYST_WRAP_PYTHON=${catalyst_wrap_python}"
   PRIVATE
     "CATALYST_WITH_EXTERNAL_CONDUIT=${catalyst_conduit_is_external}")
 set_property(TARGET catalyst

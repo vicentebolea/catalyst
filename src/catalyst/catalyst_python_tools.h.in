@@ -5,6 +5,8 @@
 #ifndef catalyst_python_tools_h
 #define catalyst_python_tools_h
 
+#cmakedefine01 CATALYST_WRAP_PYTHON
+
 #if CATALYST_WRAP_PYTHON
 #include "Python.h"
 #else
