@@ -1,5 +1,15 @@
 add_executable(test_catalyst_abi test_catalyst_abi.cpp)
-target_link_libraries(test_catalyst_abi catalyst::catalyst)
+
+set(test_libraries
+  catalyst::catalyst)
+if(CATALYST_WRAP_PYTHON)
+  set(test_libraries
+    ${test_libraries}
+    Python3::Python
+  )
+endif()
+
+target_link_libraries(test_catalyst_abi ${test_libraries})
 target_compile_features(test_catalyst_abi PRIVATE cxx_std_17)
 add_test(NAME catalyst-abi COMMAND test_catalyst_abi)
 

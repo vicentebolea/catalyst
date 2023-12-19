@@ -475,3 +475,4 @@ catalyst_stub_execute
 catalyst_stub_finalize
 catalyst_stub_initialize
 catalyst_stub_results
+PyCatalystConduit_Node_Wrap

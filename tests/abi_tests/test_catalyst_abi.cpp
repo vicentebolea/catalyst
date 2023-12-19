@@ -7,6 +7,7 @@
 
 #include <catalyst.h>
 #include <catalyst_impl.h>
+#include <catalyst_python_tools.h>
 #include <catalyst_stub.h>
 
 #include <array>
@@ -308,6 +309,31 @@ static int test_catalyst_stub()
   return ret;
 }
 
+static int test_catalyst_python_tools_abi()
+{
+  int ret = EXIT_SUCCESS;
+
+  // Only add assertions to this list; removal or modification of any
+  // checks constitutes an ABI break.
+
+  // PyCatalystConduit_Node_Wrap
+  {
+    using func_types = funcinfo<decltype(PyCatalystConduit_Node_Wrap)>;
+    abi_require(&PyCatalystConduit_Node_Wrap, "PyCatalystConduit_Node_Wrap must be defined");
+    static_assert(std::is_same<func_types::return_t, PyObject*>::value,
+      "PyCatalystConduit_Node_Wrap must return a PyObject* instance");
+    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      "PyCatalystConduit_Node_Wrap must take two arguments");
+    static_assert(
+      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      "PyCatalystConduit_Node_Wrap should take as a first argument a conduit_node*");
+    static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, int>::value,
+      "PyCatalystConduit_Node_Wrap should take as a second argument an int");
+  }
+
+  return ret;
+}
+
 int main(int /*argc*/, char* /*argv*/[])
 {
   int ret = EXIT_SUCCESS;
@@ -331,6 +357,12 @@ int main(int /*argc*/, char* /*argv*/[])
   }
 
   test_ret = test_catalyst_stub();
+  if (test_ret != EXIT_SUCCESS)
+  {
+    ret = test_ret;
+  }
+
+  test_ret = test_catalyst_python_tools_abi();
   if (test_ret != EXIT_SUCCESS)
   {
     ret = test_ret;

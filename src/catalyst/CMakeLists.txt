@@ -10,8 +10,13 @@ set(headers
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_conduit_abi.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/catalyst_python_tools.h
   ${CMAKE_CURRENT_BINARY_DIR}/catalyst_version.h)
 configure_file(catalyst_version.h.in catalyst_version.h)
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/catalyst_python_tools.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/catalyst_python_tools.h"
+  @ONLY)
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
   set(catalyst_conduit_state external)
@@ -52,6 +57,7 @@ add_library(catalyst
   catalyst_api_default.cpp
   catalyst_stub.cpp
   catalyst_conduit_abi_${catalyst_conduit_state}.c
+  catalyst_python_tools.cpp
   ${headers}
   ${private_headers})
 target_compile_features(catalyst
@@ -68,25 +74,47 @@ target_link_libraries(catalyst
     catalyst::catalyst_headers
   PRIVATE
     ${CMAKE_DL_LIBS})
+
+set(conduit_public_libraries)
+set(conduit_private_libraries)
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
-  target_link_libraries(catalyst
-    PUBLIC
+  set(conduit_public_libraries
       conduit::conduit)
+  if(CATALYST_WRAP_PYTHON)
+    set(conduit_private_libraries 
+       catalyst_python_flags
+       conduit::conduit_python
+       Python3::Python)
+  endif()
 else ()
-  target_link_libraries(catalyst
-    PUBLIC
+  set(conduit_public_libraries
       "$<BUILD_INTERFACE:catalyst::blueprint_headers>"
-      "$<BUILD_INTERFACE:catalyst::conduit_headers>"
-    PRIVATE
+      "$<BUILD_INTERFACE:catalyst::conduit_headers>")
+  set(conduit_private_libraries
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit>"
       "$<BUILD_LOCAL_INTERFACE:catalyst::blueprint>"
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_libyaml>"
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>")
+  if(CATALYST_WRAP_PYTHON)
+    set(conduit_private_libraries 
+        ${conduit_private_libraries}
+       catalyst::conduit_python_cpp_headers 
+       catalyst_python_flags
+       Python3::Python)
+  endif()
 endif ()
+
+target_link_libraries(catalyst
+  PUBLIC
+    ${conduit_public_libraries}
+  PRIVATE
+    ${conduit_private_libraries})
 set(catalyst_conduit_is_external 0)
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
   set(catalyst_conduit_is_external 1)
 endif ()
+
+
 target_compile_definitions(catalyst
   PRIVATE
     "CATALYST_WITH_EXTERNAL_CONDUIT=${catalyst_conduit_is_external}")
