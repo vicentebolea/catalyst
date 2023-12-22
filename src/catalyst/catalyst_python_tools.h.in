@@ -7,10 +7,14 @@
 
 #cmakedefine01 CATALYST_WRAP_PYTHON
 
-#if CATALYST_WRAP_PYTHON
+// The first condition checks indirectly if PyObject is already defined (due to
+// e.g the consumers including Python.h themselves) in this case we do not want to
+// redefine PyObject. see also https://docs.python.org/3/c-api/structures.html#c.PyObject_HEAD
+#if defined(PyObject_HEAD) || defined(CATALYST_WRAP_PYTHON)
 #include "Python.h"
+typedef PyObject catalyst_py_object;
 #else
-using PyObject = struct
+using catalyst_py_object = struct
 {
   int x;
 };
@@ -28,7 +32,7 @@ extern "C"
   // Wrap a conduit node for python. This is indented for passing a node from
   // C/C++ to python if owns == 1 the ownership of the node passes to Python
   // and thus upon descrution of the PyObject the node is freed.
-  CATALYST_EXPORT PyObject* PyCatalystConduit_Node_Wrap(conduit_node* node, int owns);
+  CATALYST_EXPORT catalyst_py_object* PyCatalystConduit_Node_Wrap(conduit_node* node, int owns);
 #ifdef __cplusplus
 } // extern "C"
 #endif
