@@ -83,7 +83,9 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
   if(CATALYST_WRAP_PYTHON)
     set(conduit_private_libraries 
        catalyst_python_flags
-       conduit::conduit_python
+       conduit::conduit_python)
+    set(conduit_public_libraries
+       ${conduit_public_libraries} 
        Python3::Python)
   endif()
 else ()
@@ -99,8 +101,10 @@ else ()
     set(conduit_private_libraries 
         ${conduit_private_libraries}
        catalyst::conduit_python_cpp_headers 
-       catalyst_python_flags
-       Python3::Python)
+       catalyst_python_flags)
+    set(conduit_public_libraries
+       ${conduit_public_libraries} 
+      "$<BUILD_INTERFACE:Python3::Python>")
   endif()
 endif ()
 

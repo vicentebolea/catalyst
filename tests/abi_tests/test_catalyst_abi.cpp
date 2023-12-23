@@ -320,8 +320,8 @@ static int test_catalyst_python_tools_abi()
   {
     using func_types = funcinfo<decltype(PyCatalystConduit_Node_Wrap)>;
     abi_require(&PyCatalystConduit_Node_Wrap, "PyCatalystConduit_Node_Wrap must be defined");
-    static_assert(std::is_same<func_types::return_t, PyObject*>::value,
-      "PyCatalystConduit_Node_Wrap must return a PyObject* instance");
+    static_assert(std::is_same<func_types::return_t, catalyst_py_object*>::value,
+      "PyCatalystConduit_Node_Wrap must return a catalyst_py_object* instance");
     abi_require(std::tuple_size<func_types::argument_t>::value == 2,
       "PyCatalystConduit_Node_Wrap must take two arguments");
     static_assert(
