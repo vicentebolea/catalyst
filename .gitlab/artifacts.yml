@@ -7,6 +7,8 @@
         reports:
             junit:
                 - build/junit.xml
+            annotations:
+                - build/annotations.json
         paths:
             # CTest files.
             - build/CTestCustom*.cmake
@@ -15,6 +17,7 @@
 
             # CDash files.
             - build/DartConfiguration.tcl
+            - build/cdash-build-id
 
 .release_artifacts:
     artifacts:
