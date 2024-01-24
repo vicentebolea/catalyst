@@ -28,7 +28,7 @@ bool initialize_conduit()
 }
 #endif
 
-catalyst_py_object* PyCatalystConduit_Node_Wrap(conduit_node* node, int owns)
+PyObject* PyCatalystConduit_Node_Wrap(conduit_node* node, int owns)
 {
 #if CATALYST_WRAP_PYTHON
   if (initialize_conduit())
