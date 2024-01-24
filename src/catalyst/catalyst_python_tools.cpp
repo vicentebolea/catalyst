@@ -1,9 +1,14 @@
+/*
+ * Distributed under OSI-approved BSD 3-Clause License. See
+ * accompanying License.txt
+ */
 
 #define catalyst_python_tools_impl // allow catalyst_python_tools.h
                                    // to be included without first
                                    // without errors so we can get
                                    // CATALYST_WRAP_PYTHON
 #include "catalyst_python_tools.h"
+
 #if CATALYST_WRAP_PYTHON
 #include "Python.h"
 #include "conduit.hpp"          // for conduit::Node
