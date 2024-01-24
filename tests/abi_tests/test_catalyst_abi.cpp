@@ -3,6 +3,10 @@
  * accompanying License.txt
  */
 
+#ifdef CATALYST_WRAP_PYTHON
+#include "Python.h"
+#endif
+
 // XXX(c++14): use `_t` and `_v`-suffixed type queries.
 
 #include <catalyst.h>

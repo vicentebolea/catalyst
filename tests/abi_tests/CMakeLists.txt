@@ -7,6 +7,7 @@ if(CATALYST_WRAP_PYTHON)
     ${test_libraries}
     Python3::Python
   )
+  target_compile_definitions(test_catalyst_abi PRIVATE CATALYST_WRAP_PYTHON)
 endif()
 
 target_link_libraries(test_catalyst_abi ${test_libraries})
