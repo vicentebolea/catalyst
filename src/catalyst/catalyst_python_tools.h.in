@@ -5,14 +5,25 @@
 #ifndef catalyst_python_tools_h
 #define catalyst_python_tools_h
 
+// This header should be included only if an application uses python and it
+// should be included *after* Python.h.
+
 #cmakedefine01 CATALYST_WRAP_PYTHON
 
-// The first condition checks indirectly if PyObject is already defined (due to
+#if CATALYST_WRAP_PYTHON
+// The condition checks indirectly if PyObject is already defined (due to
 // e.g the consumers including Python.h themselves) in this case we do not want to
 // redefine PyObject. see also https://docs.python.org/3/c-api/structures.html#c.PyObject_HEAD
-#if defined(PyObject_HEAD) || CATALYST_WRAP_PYTHON
-#include "Python.h"
-typedef PyObject catalyst_py_object;
+#ifndef PyObject_HEAD
+  #ifndef catalyst_python_tools_impl
+  #error "Python.h needs to be included first"
+  #else
+  // forward declare PyObject
+  struct _object;
+  typedef _object PyObject;
+  #endif
+#endif
+using catalyst_py_object = PyObject;
 #else
 using catalyst_py_object = struct
 {

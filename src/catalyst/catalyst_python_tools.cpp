@@ -1,5 +1,16 @@
+/*
+ * Distributed under OSI-approved BSD 3-Clause License. See
+ * accompanying License.txt
+ */
+
+#define catalyst_python_tools_impl // allow catalyst_python_tools.h
+                                   // to be included without first
+                                   // without errors so we can get
+                                   // CATALYST_WRAP_PYTHON
 #include "catalyst_python_tools.h"
+
 #if CATALYST_WRAP_PYTHON
+#include "Python.h"
 #include "conduit.hpp"          // for conduit::Node
 #include "conduit_cpp_to_c.hpp" // for conduit::c_node
 #include "conduit_python.hpp"   // PyConduit_Node_Python_Wrap
@@ -43,3 +54,4 @@ catalyst_py_object* PyCatalystConduit_Node_Wrap(conduit_node* node, int owns)
   return nullptr;
 #endif
 }
+#undef catalyst_python_tools_impl
