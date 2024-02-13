@@ -81,3 +81,38 @@ Known implementations of the Catalyst API include:
 
 .. _`ParaView Catalyst` : https://docs.paraview.org/en/latest/Catalyst/index.html
 .. _`Adios Catalyst` : https://gitlab.kitware.com/paraview/adioscatalyst
+
+License
+========
+
+Catalyst is distributed under the OSI-approved BSD 3-clause License. See
+`here`_ for details.
+
+.. _`here`: https://gitlab.kitware.com/paraview/catalyst/-/blob/master/License.txt
+
+Citing
+======
+
+When citing Catalyst in your scientific research, please mention the following work to support increased visibility and dissemination of our software:
+
+
+::
+
+   Ayachit, U., Bauer Andrew C., Boeckel Ben, Geveci Berk, Moreland Kenneth, O`Leary Patrick, Osika Tom  (2021). Catalyst Revised: Rethinking the ParaView in Situ Analysis and Visualization API. In: Jagode, H., Anzt, H., Ltaief, H., Luszczek, P. (eds) High Performance Computing. ISC High Performance 2021. Lecture Notes in Computer Science(), vol 12761. Springer, Cham. https://doi.org/10.1007/978-3-030-90539-2_33
+
+For your convenience here is a bibtex entry:
+
+.. code-block:: bibtex
+
+   @InProceedings{catalyst_revised2021,
+     author="Ayachit, Utkarsh and Bauer, Andrew C.  and Boeckel, Ben and Geveci, Berk and Moreland, Kenneth and O'Leary, Patrick and Osika, Tom",
+     editor="Jagode, Heike and Anzt, Hartwig and Ltaief, Hatem and Luszczek, Piotr",
+     title="Catalyst Revised: Rethinking the ParaView in Situ Analysis and Visualization API",
+     booktitle="High Performance Computing",
+     year="2021",
+     publisher="Springer International Publishing",
+     address="Cham",
+     pages="484--494",
+     isbn="978-3-030-90539-2",
+     doi="10.1007/978-3-030-90539-2_33"
+   }
