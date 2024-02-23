@@ -235,6 +235,14 @@
         - docker
         - linux-x86_64
 
+.linux_oneapi_builder_tags:
+    tags:
+        - build
+        - paraview
+        - docker
+        - linux-x86_64
+        - linux-x86_64-v3
+
 .linux_sanitizer_tags:
     tags:
         - privileged

@@ -237,7 +237,7 @@ build-test:el8-icx-replay-wrappings:
         - .el8_icx_replay_wrappings
         - .cmake_build_test_linux
         - .cmake_build_artifacts
-        - .linux_builder_tags
+        - .linux_oneapi_builder_tags
         - .run_automatically
 
 build-test:el8-icx-extdeps-replay-wrappings:
@@ -245,7 +245,7 @@ build-test:el8-icx-extdeps-replay-wrappings:
         - .el8_icx_extdeps_replay_wrappings
         - .cmake_build_test_linux
         - .cmake_build_artifacts
-        - .linux_builder_tags
+        - .linux_oneapi_builder_tags
         - .run_automatically
 
 # macOS
