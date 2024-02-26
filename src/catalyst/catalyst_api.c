@@ -433,6 +433,8 @@ catalyst_handle_t handle_open(const char* directory, const char* libname)
   {
     printf("failed to open library: %s\n", dlerror());
   }
+  catalyst_debug(
+    "trying to load `%s`: %s\n", full_library_path, handle_is_valid(handle) ? "valid" : "invalid");
 
   free(full_library_path);
   return handle;
