@@ -65,6 +65,7 @@
         - shell
         - vs2022
         - windows-x86_64
+        - paraview
 
 .windows_mpi_builder_tags:
     tags:
@@ -74,6 +75,7 @@
         - vs2022
         - windows-x86_64
         - msmpi
+        - paraview
 
 ## Windows-specific scripts
 
