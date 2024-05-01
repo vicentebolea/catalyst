@@ -127,6 +127,7 @@ build:fedora36-tidy:
         - .cmake_build_artifacts
         - .linux_builder_tags
         - .run_automatically
+    timeout: 10 minutes
 
 build-test:fedora36-asan:
     extends:
@@ -159,6 +160,7 @@ build:fedora36-mpi-replay-tidy:
         - .cmake_build_artifacts
         - .linux_builder_tags
         - .run_automatically
+    timeout: 10 minutes
 
 build:fedora36-extdeps-mpi-replay-tidy:
     extends:
@@ -167,6 +169,7 @@ build:fedora36-extdeps-mpi-replay-tidy:
         - .cmake_build_artifacts
         - .linux_builder_tags
         - .run_automatically
+    timeout: 10 minutes
 
 build-test:fedora36-mpi-replay-ubsan:
     extends:
