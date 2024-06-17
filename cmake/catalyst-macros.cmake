@@ -69,12 +69,32 @@ function (catalyst_implementation)
   else ()
     set(catalyst_impl_catalyst_target_req "${catalyst_impl_CATALYST_TARGET}")
   endif ()
-  get_property(catalyst_conduit_property_is_external
+  get_property(catalyst_conduit_property_is_external_is_set
     TARGET    "${catalyst_impl_catalyst_target_req}"
-    PROPERTY  CATALYST_WITH_EXTERNAL_CONDUIT)
-  set(catalyst_impl_conduit_is_external 0)
-  if (catalyst_conduit_property_is_external)
-    set(catalyst_impl_conduit_is_external 1)
+    PROPERTY  CATALYST_WITH_EXTERNAL_CONDUIT
+    SET)
+  if (NOT catalyst_conduit_property_is_external_is_set)
+    set(catalyst_warning_property_name "__catalyst_warned_about_${catalyst_impl_catalyst_target_req}")
+    get_property(catalyst_conduit_warned GLOBAL
+      PROPERTY "${catalyst_warning_property_name}")
+    if (NOT catalyst_conduit_warned)
+      message(AUTHOR_WARNING
+        "The `CATALYST_TARGET` '${catalyst_impl_CATALYST_TARGET}' does not have "
+        "the `CATALYST_WITH_EXTERNAL_CONDUIT` target property set; assuming "
+        "that an internal Conduit is used.")
+    endif ()
+    set_property(GLOBAL
+      PROPERTY
+        "${catalyst_warning_property_name}" 1)
+    set(catalyst_impl_conduit_is_external 0)
+  else ()
+    get_property(catalyst_conduit_property_is_external
+      TARGET    "${catalyst_impl_catalyst_target_req}"
+      PROPERTY  CATALYST_WITH_EXTERNAL_CONDUIT)
+    set(catalyst_impl_conduit_is_external 0)
+    if (catalyst_conduit_property_is_external)
+      set(catalyst_impl_conduit_is_external 1)
+    endif ()
   endif ()
 
   if (NOT catalyst_impl_LIBRARY_DESTINATION)
