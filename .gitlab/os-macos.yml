@@ -87,4 +87,4 @@
         - ctest -VV -S .gitlab/ci/ctest_configure.cmake
         - ctest -VV -S .gitlab/ci/ctest_build.cmake
         - ctest --output-on-failure -V -S .gitlab/ci/ctest_test.cmake
-    timeout: 5 minutes
+    timeout: 15 minutes

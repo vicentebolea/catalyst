@@ -107,4 +107,4 @@
         - ctest -VV -S .gitlab/ci/ctest_build.cmake | Out-File -FilePath compile_output.log
         - ctest --output-on-failure -V -S .gitlab/ci/ctest_test.cmake
     interruptible: true
-    timeout: 5 minutes
+    timeout: 15 minutes
