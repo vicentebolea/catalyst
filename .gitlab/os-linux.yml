@@ -273,7 +273,7 @@
         - "$LAUNCHER ctest -VV -S .gitlab/ci/ctest_build.cmake"
 
     interruptible: true
-    timeout: 5 minutes
+    timeout: 15 minutes
 
 .cmake_build_test_linux:
     stage: build-test
@@ -285,7 +285,7 @@
         - "$LAUNCHER ctest --output-on-failure -V -S .gitlab/ci/ctest_test.cmake"
 
     interruptible: true
-    timeout: 5 minutes
+    timeout: 15 minutes
 
 .cmake_memcheck_linux:
     stage: build-test
@@ -297,4 +297,4 @@
         - "$LAUNCHER ctest --output-on-failure -V -S .gitlab/ci/ctest_memcheck.cmake"
 
     interruptible: true
-    timeout: 5 minutes
+    timeout: 15 minutes
