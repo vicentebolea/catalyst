@@ -10,6 +10,7 @@
         - tag=$( git describe --match=v* --always --abbrev=12 )
         - git archive --prefix=catalyst-$tag/ --format=zip HEAD > catalyst-$tag.zip
         - git archive --prefix=catalyst-$tag/ --format=tar.gz HEAD > catalyst-$tag.tar.gz
+    timeout: 15 minutes
 
 .upload_job:
     image: curlimages/curl:latest
@@ -20,6 +21,7 @@
         - build
     script:
         - .gitlab/ci/upload-files.sh
+    timeout: 15 minutes
 
 .release_job:
     image: registry.gitlab.com/gitlab-org/release-cli:latest
@@ -30,3 +32,4 @@
         - build
     script:
         - .gitlab/ci/make-release.sh
+    timeout: 15 minutes
