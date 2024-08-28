@@ -12,3 +12,5 @@ if(CATALYST_USE_MPI)
             MPI_NO_CPPBIND
             _MPICC_H)
 endif()
+
+c_install_targets(catalyst_replay)
