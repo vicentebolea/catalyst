@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 project(CATALYST_EXPORT_ABOUT)
 
 find_package(catalyst REQUIRED)
