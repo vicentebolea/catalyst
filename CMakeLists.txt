@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
 project(CATALYST VERSION 2.0 LANGUAGES C CXX)
 
+# De-duplicate libraries on link lines based on linker capabilities.
+if (POLICY CMP0156)
+  cmake_policy(SET CMP0156 NEW)
+endif ()
+
 include(CMakeDependentOption)
 
 #------------------------------------------------------------------------------
