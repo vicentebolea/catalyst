@@ -94,8 +94,6 @@
     - Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab;$pwdpath\.gitlab\cmake\bin;$env:PATH"
     - cmake --version
     - ninja --version
-    - Invoke-Expression -Command .gitlab/ci/gtest.ps1
-    - Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\gtest\bin;$env:PATH"
     # Setup python
     - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { cmake -P .gitlab/ci/download_python.cmake }
     - if ( "$env:CATALYST_SETUP_PYTHON_ENV" -eq "1" ) { Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\python;$env:PATH" }
@@ -111,6 +109,8 @@
     script:
         - *before_script_windows
         - Invoke-Expression -Command .gitlab/ci/vcvarsall.ps1
+        - Invoke-Expression -Command .gitlab/ci/gtest.ps1
+        - Set-Item -Force -Path "env:PATH" -Value "$pwdpath\.gitlab\gtest\bin;$env:PATH"
         - ctest -VV -S .gitlab/ci/ctest_configure.cmake
         - ctest -VV -S .gitlab/ci/ctest_build.cmake | Out-File -FilePath compile_output.log
         - ctest --output-on-failure -V -S .gitlab/ci/ctest_test.cmake
