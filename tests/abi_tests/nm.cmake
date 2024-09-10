@@ -75,7 +75,9 @@ if (icc_mangle OR icx_mangle)
     "_edata"
     "_end")
 endif ()
-if (icc_mangle)
+set(debug_types
+  Debug)
+if (icc_mangle AND build_config IN_LIST debug_types)
   list(APPEND expected
     ".debug_info_seg")
 endif ()

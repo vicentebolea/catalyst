@@ -31,6 +31,7 @@ if (NM_EXECUTABLE)
       "-Difort_mangle=$<OR:$<STREQUAL:${CMAKE_Fortran_COMPILER_ID},Intel>,$<STREQUAL:${CMAKE_Fortran_COMPILER_ID},IntelLLVM>>"
       "-Dicc_mangle=$<STREQUAL:${CMAKE_C_COMPILER_ID},Intel>"
       "-Dicx_mangle=$<STREQUAL:${CMAKE_C_COMPILER_ID},IntelLLVM>"
+      "-Dbuild_config=$<CONFIG>"
       -P "${CMAKE_CURRENT_SOURCE_DIR}/nm.cmake")
 endif ()
 
