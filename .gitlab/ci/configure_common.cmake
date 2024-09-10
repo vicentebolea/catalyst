@@ -23,6 +23,12 @@ configuration_flag(CATALYST_WITH_EXTERNAL_CONDUIT "extdeps")
 configuration_flag(CATALYST_WRAP_PYTHON "wrappings")
 configuration_flag(CATALYST_WRAP_FORTRAN "wrappings")
 
+# Default to Release builds.
+if ("$ENV{CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
+else ()
+  set(CMAKE_BUILD_TYPE "$ENV{CMAKE_BUILD_TYPE}" CACHE STRING "")
+endif ()
 
 if ("$ENV{CMAKE_CONFIGURATION}" MATCHES "_tidy")
   set(CMAKE_C_CLANG_TIDY "clang-tidy" "--header-filter=$ENV{CI_PROJECT_DIR}/(src|tests)" CACHE FILEPATH "")
