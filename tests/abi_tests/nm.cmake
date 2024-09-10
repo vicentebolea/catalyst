@@ -70,7 +70,7 @@ endif ()
 
 # extra symbols added only by intel compilers C/C++
 if (icc_mangle OR icx_mangle)
-  list(APPEND expected  
+  list(APPEND expected
     "__bss_start"
     "_edata"
     "_end")
