@@ -24,6 +24,7 @@ cd build
 cmake -GNinja `
     -DCMAKE_BUILD_TYPE=Release `
     -DCMAKE_INSTALL_PREFIX="$env:CI_PROJECT_DIR/.gitlab/gtest" `
+    -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
     -DBUILD_GMOCK=OFF `
     ..
 cmake --build .
