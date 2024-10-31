@@ -28,7 +28,7 @@ stages:
 # Additionally, jobs may also contain:
 #
 #   - artifacts
-#   - dependency/needs jobs for required jobs
+#   - needs jobs for required jobs
 ################################################################################
 
 # Release jobs
@@ -47,24 +47,38 @@ upload:source:
     needs:
         - build-test:source
         # Ensure all builds and tests pass.
-        - build:fedora36-tidy
-        - build:fedora36-mpi-replay-tidy
-        - build:fedora36-extdeps-mpi-replay-tidy
-        - build-test:fedora36
-        - build-test:fedora36-replay
-        - build-test:fedora36-mpi-replay
-        - build-test:fedora36-extdeps-replay
-        - build-test:fedora36-extdeps-mpi-replay
-        - build-test:fedora36-asan
-        - build-test:fedora36-ubsan
-        - build-test:fedora36-asan-mpi-replay
-        - build-test:fedora36-mpi-replay-ubsan
-        - build-test:macos-arm64-replay
-        - build-test:macos-x86_64-replay
-        - build-test:windows-vs2022-mpi-replay
-        - build-test:windows-vs2022-replay
-    dependencies:
-        - build-test:source
+        - job: build:fedora36-tidy
+          artifacts: false
+        - job: build:fedora36-mpi-replay-tidy
+          artifacts: false
+        - job: build:fedora36-extdeps-mpi-replay-tidy
+          artifacts: false
+        - job: build-test:fedora36
+          artifacts: false
+        - job: build-test:fedora36-replay
+          artifacts: false
+        - job: build-test:fedora36-mpi-replay
+          artifacts: false
+        - job: build-test:fedora36-extdeps-replay
+          artifacts: false
+        - job: build-test:fedora36-extdeps-mpi-replay
+          artifacts: false
+        - job: build-test:fedora36-asan
+          artifacts: false
+        - job: build-test:fedora36-ubsan
+          artifacts: false
+        - job: build-test:fedora36-asan-mpi-replay
+          artifacts: false
+        - job: build-test:fedora36-mpi-replay-ubsan
+          artifacts: false
+        - job: build-test:macos-arm64-replay
+          artifacts: false
+        - job: build-test:macos-x86_64-replay
+          artifacts: false
+        - job: build-test:windows-vs2022-mpi-replay
+          artifacts: false
+        - job: build-test:windows-vs2022-replay
+          artifacts: false
     variables:
         UPLOAD_FILES: catalyst-*
 
@@ -74,9 +88,8 @@ release:source:
         - .release_only
     needs:
         - build-test:source
-        - upload:source
-    dependencies:
-        - build-test:source
+        - job: upload:source
+          artifacts: false
 
 # Linux
 
