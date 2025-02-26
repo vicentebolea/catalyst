@@ -300,6 +300,14 @@ build-test:macos-x86_64-replay-wrappings:
 
 # Windows
 
+build-test:windows-vs2022-debug-mpi-replay:
+    extends:
+        - .windows_vs2022_debug_mpi_replay
+        - .cmake_build_test_windows
+        - .cmake_build_artifacts
+        - .windows_mpi_builder_tags
+        - .run_automatically
+
 build-test:windows-vs2022-mpi-replay:
     extends:
         - .windows_vs2022_mpi_replay

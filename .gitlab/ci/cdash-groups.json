@@ -25,6 +25,7 @@
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[macos_arm64_replay_wrappings]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[macos_x86_64_replay]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[macos_x86_64_replay_wrappings]" },
+        { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[windows_vs2022_debug_mpi_replay]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[windows_vs2022_mpi_replay]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[windows_vs2022_mpi_replay_wrappings]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[windows_vs2022_replay]" },
