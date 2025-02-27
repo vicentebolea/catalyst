@@ -48,6 +48,14 @@
         CATALYST_SETUP_PYTHON_ENV: 1
         CMAKE_BUILD_TYPE: "Release"
 
+.windows_vs2022_debug_mpi_replay:
+    extends: .windows_vs2022
+
+    variables:
+        CMAKE_CONFIGURATION: windows_vs2022_debug_mpi_replay
+        CATALYST_SETUP_PYTHON_ENV: 1
+        CMAKE_BUILD_TYPE: "Debug"
+
 .windows_vs2022_mpi_replay_wrappings:
     extends: .windows_vs2022
 
