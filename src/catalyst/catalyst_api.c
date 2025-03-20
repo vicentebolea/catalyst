@@ -351,8 +351,30 @@ catalyst_handle_t handle_open(const char* directory, const char* libname)
 
   catalyst_handle_t handle = LoadLibraryExA(full_library_path, NULL, 0);
 
-  catalyst_debug(
-    "trying to load `%s`: %s\n", full_library_path, handle_is_valid(handle) ? "valid" : "invalid");
+  LPSTR errstring = NULL;
+  const char* noerror = "(no error)";
+  if (debug_flag && !handle_is_valid(handle))
+  {
+    DWORD const err_code = GetLastError();
+
+    DWORD const ret = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+      NULL, err_code, 0, (LPSTR)&errstring, 0, NULL);
+
+    if (!ret)
+    {
+      catalyst_debug("failed to get error string from system");
+      errstring = NULL;
+      noerror = "(failed to get error string)";
+    }
+  }
+
+  catalyst_debug("trying to load `%s`: %s (%s)\n", full_library_path,
+    handle_is_valid(handle) ? "valid" : "invalid", errstring ? errstring : noerror);
+
+  if (errstring)
+  {
+    LocalFree(errstring);
+  }
 
   free(full_library_path);
   return handle;
@@ -433,8 +455,13 @@ catalyst_handle_t handle_open(const char* directory, const char* libname)
   {
     printf("failed to open library: %s\n", dlerror());
   }
-  catalyst_debug(
-    "trying to load `%s`: %s\n", full_library_path, handle_is_valid(handle) ? "valid" : "invalid");
+  char* errstring = NULL;
+  if (!handle_is_valid(handle))
+  {
+    errstring = dlerror();
+  }
+  catalyst_debug("trying to load `%s`: %s (%s)\n", full_library_path,
+    handle_is_valid(handle) ? "valid" : "invalid", errstring ? errstring : "(no error)");
 
   free(full_library_path);
   return handle;
