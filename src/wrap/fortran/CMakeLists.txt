@@ -13,7 +13,7 @@ target_link_libraries(catalyst_fortran
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
   # link catalyst::catalyst to the catalyst_conduit namespace for fortran API
-  add_library(catalyst_conduit_fortran OBJECT 
+  add_library(catalyst_conduit_fortran OBJECT
      catalyst_conduit_external_api.f90)
 
   target_link_libraries(catalyst_conduit_fortran
@@ -24,7 +24,6 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
     PUBLIC
       catalyst_conduit_fortran)
 endif()
-  
 
 # set include directories for fortran module `.mod` files
 target_include_directories(catalyst_fortran PUBLIC
@@ -37,7 +36,7 @@ if (NOT CATALYST_WITH_EXTERNAL_CONDUIT)
 endif()
 
 
-set(catalyst_fortran_modules 
+set(catalyst_fortran_modules
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>/catalyst_api.mod)
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
