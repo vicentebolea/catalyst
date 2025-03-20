@@ -27,21 +27,21 @@ endif()
 
 # set include directories for fortran module `.mod` files
 target_include_directories(catalyst_fortran PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>)
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+  "$<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>")
 
 if (NOT CATALYST_WITH_EXTERNAL_CONDUIT)
   target_include_directories(catalyst_fortran PUBLIC
-    $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}/conduit>)
+    "$<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}/conduit>")
 endif()
 
 
 set(catalyst_fortran_modules
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>/catalyst_api.mod)
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>/catalyst_api.mod")
 
 if (CATALYST_WITH_EXTERNAL_CONDUIT)
   list(APPEND catalyst_fortran_modules
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>/catalyst_conduit.mod)
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>/catalyst_conduit.mod")
 endif ()
 
 set_property(TARGET catalyst_fortran APPEND
