@@ -50,6 +50,14 @@
     variables:
         CMAKE_CONFIGURATION: fedora36_x86_64
 
+.fedora36_aarch64:
+    extends:
+        - .fedora36
+
+    image: "kitware/paraview:ci-catalyst-fedora36-aarch64-20250502"
+    variables:
+        CMAKE_CONFIGURATION: fedora36_aarch64
+
 .fedora36_x86_64_replay:
     extends:
         - .fedora36_x86_64
@@ -237,6 +245,13 @@
         - paraview
         - docker
         - linux-x86_64
+
+.linux_aarch64_builder_tags:
+    tags:
+        - build
+        - paraview
+        - docker
+        - linux-aarch64
 
 .linux_x86_64_oneapi_builder_tags:
     tags:

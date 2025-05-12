@@ -6,9 +6,21 @@ readonly version="3.29.8"
 
 case "$( uname -s )" in
     Linux)
+        case "$( uname -i )" in
+            x86_64)
+                sha256sum="0ed430e41059eab130010e74c6a779b651340f3755eb9525e2a573a989f0994e"
+                platform="linux-x86_64"
+                ;;
+            aarch64)
+                sha256sum="d8e9f789253c75aabc565d3702759c17c1c2f57e8deb639a8f4ffe4b89aefc2e"
+                platform="linux-aarch64"
+                ;;
+            *)
+                echo "Unrecognized architecture $( uname -i )"
+                exit 1
+                ;;
+        esac
         shatool="sha256sum"
-        sha256sum="0ed430e41059eab130010e74c6a779b651340f3755eb9525e2a573a989f0994e"
-        platform="linux-x86_64"
         ;;
     Darwin)
         shatool="shasum -a 256"
