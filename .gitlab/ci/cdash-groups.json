@@ -1,6 +1,7 @@
 {
     "latest-catalyst-master": [
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[fedora36_aarch64]" },
+        { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[fedora36_ppc64le]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[fedora36_x86_64]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[fedora36_x86_64_asan]" },
         { "group": "catalyst-master", "site": "gitlab-ci", "buildname": "catalyst-branch-master-[fedora36_x86_64_asan_mpi_replay]" },

@@ -60,6 +60,14 @@
         CTEST_EXCLUSIONS: >-
           t_conduit_node_set
 
+.fedora36_ppc64le:
+    image: "kitware/paraview:ci-catalyst-fedora36-ppc64le-20250502"
+    variables:
+      CMAKE_CONFIGURATION: fedora36_ppc64le
+      CTEST_SITE: "UO Frank cluster"
+      GIT_CLONE_PATH: null
+      SYSTEM_BUILDTOOLS: "true"
+
 .fedora36_x86_64_replay:
     extends:
         - .fedora36_x86_64
@@ -263,6 +271,11 @@
         - linux-x86_64
         - linux-x86_64-v3
 
+.linux_ppc64le_builder_tags:
+    tags:
+        - hpsf
+        - hpsf-ppc64le
+
 .linux_x86_64_sanitizer_tags:
     tags:
         - privileged
@@ -273,9 +286,9 @@
 ## Linux-specific scripts
 
 .before_script_linux: &before_script_linux
-    - .gitlab/ci/cmake.sh
-    - .gitlab/ci/ninja.sh
-    - export PATH=$PWD/.gitlab:$PWD/.gitlab/cmake/bin:$PATH
+    - '[ -z "$SYSTEM_BUILDTOOLS" ] && .gitlab/ci/cmake.sh'
+    - '[ -z "$SYSTEM_BUILDTOOLS" ] && .gitlab/ci/ninja.sh'
+    - '[ -z "$SYSTEM_BUILDTOOLS" ] && export PATH=$PWD/.gitlab:$PWD/.gitlab/cmake/bin:$PATH'
     - cmake --version
     - ninja --version
     # Enable Intel compiler if required
