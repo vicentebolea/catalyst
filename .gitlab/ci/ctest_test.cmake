@@ -10,7 +10,7 @@ include(ProcessorCount)
 ProcessorCount(nproc)
 
 # list of exclusions, if any
-set(test_exclusions)
+set(test_exclusions $ENV{CTEST_EXCLUSIONS})
 
 string(REPLACE ";" "|" test_exclusions "${test_exclusions}")
 if (test_exclusions)

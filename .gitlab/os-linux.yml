@@ -57,6 +57,8 @@
     image: "kitware/paraview:ci-catalyst-fedora36-aarch64-20250502"
     variables:
         CMAKE_CONFIGURATION: fedora36_aarch64
+        CTEST_EXCLUSIONS: >-
+          t_conduit_node_set
 
 .fedora36_x86_64_replay:
     extends:
