@@ -111,6 +111,14 @@ build-test:fedora36-aarch64:
         - .linux_aarch64_builder_tags
         - .run_automatically
 
+build-test:fedora36-ppc64le:
+    extends:
+        - .fedora36_ppc64le
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_ppc64le_builder_tags
+        - .run_automatically_spack
+
 build-test:fedora36-x86_64-replay:
     extends:
         - .fedora36_x86_64_replay
