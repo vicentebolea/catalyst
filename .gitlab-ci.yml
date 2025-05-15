@@ -55,6 +55,8 @@ upload:source:
           artifacts: false
         - job: build-test:fedora36-x86_64
           artifacts: false
+        - job: build-test:fedora36-aarch64
+          artifacts: false
         - job: build-test:fedora36-x86_64-replay
           artifacts: false
         - job: build-test:fedora36-x86_64-mpi-replay
@@ -99,6 +101,14 @@ build-test:fedora36-x86_64:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
+        - .run_automatically
+
+build-test:fedora36-aarch64:
+    extends:
+        - .fedora36_aarch64
+        - .cmake_build_test_linux
+        - .cmake_build_artifacts
+        - .linux_aarch64_builder_tags
         - .run_automatically
 
 build-test:fedora36-x86_64-replay:
