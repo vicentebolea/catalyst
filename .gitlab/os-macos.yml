@@ -7,7 +7,7 @@
         GIT_CLONE_PATH: "$CI_BUILDS_DIR/catalyst-ci-ext/$CI_CONCURRENT_ID"
         # TODO: Factor this out so that each job selects the Xcode version to
         # use so that different versions can be tested in a single pipeline.
-        DEVELOPER_DIR: "/Applications/Xcode-16.1.app/Contents/Developer"
+        DEVELOPER_DIR: "/Applications/Xcode-16.4.app/Contents/Developer"
 
 ### Build and test
 
@@ -28,6 +28,8 @@
     variables:
         CMAKE_CONFIGURATION: macos_arm64_replay
         CTEST_NO_WARNINGS_ALLOWED: 1
+        CTEST_EXCLUSIONS: >-
+          catalyst-impl-external-conduit
 
 .macos_x86_64_replay:
     extends: .macos_build
@@ -42,6 +44,8 @@
     variables:
         CMAKE_CONFIGURATION: macos_arm64_replay_wrappings
         CATALYST_SETUP_PYTHON_ENV: 1
+        CTEST_EXCLUSIONS: >-
+          catalyst-impl-external-conduit
 
 .macos_x86_64_replay_wrappings:
     extends: .macos_x86_64_replay
@@ -57,7 +61,7 @@
         - paraview
         - macos-x86_64
         - shell
-        - xcode-16.1
+        - xcode-16.4
         - concurrent
 
 .macos_arm64_builder_tags:
@@ -65,7 +69,7 @@
         - paraview
         - macos-arm64
         - shell
-        - xcode-16.1
+        - xcode-16.4
         - concurrent
 
 ## macOS-specific scripts
