@@ -11,9 +11,11 @@
 
 variables:
     CATALYST_CI_INSTANCE: "gitlab.kitware.com"
+    CATALYST_CI_PIPELINE_NAME: "Catalyst $CI_COMMIT_REF_NAME Pipeline"
 
 # When to even consider running a pipeline
 workflow:
+    name: "$CATALYST_CI_PIPELINE_NAME"
     rules:
         # Run for merge requests.
         - if: '$CI_MERGE_REQUEST_ID'
@@ -21,6 +23,8 @@ workflow:
           auto_cancel:
               # Cancel all pipeline jobs if a new commit comes in on the branch/tag.
               on_new_commit: interruptible
+          variables:
+              CATALYST_CI_PIPELINE_NAME: "Catalyst MR !$CI_MERGE_REQUEST_IID Pipeline"
         # If this is not a MR, do not run for other projects.
         - if: '$CI_PROJECT_PATH != "paraview/catalyst"'
           when: never
@@ -30,15 +34,21 @@ workflow:
           auto_cancel:
               # Never cancel scheduled pipelines because of new commits
               on_new_commit: none
+          variables:
+              CATALYST_CI_PIPELINE_NAME: "Catalyst $CI_PIPELINE_SCHEDULE_DESCRIPTION Scheduled Pipeline"
         # Run for protected branches.
         - if: '$CI_COMMIT_REF_PROTECTED == "true"'
           when: always
           auto_cancel:
               # Cancel all pipeline jobs if a new commit comes in on the branch.
               on_new_commit: interruptible
+          variables:
+              CATALYST_CI_PIPELINE_NAME: "Catalyst Protected Pipeline for $CI_COMMIT_REF_NAME"
         # Run for tags.
         - if: '$CI_COMMIT_TAG'
           when: always
+          variables:
+              CATALYST_CI_PIPELINE_NAME: "Catalyst Pipeline for tag $CI_COMMIT_TAG"
         # Skip pipelines in all other cases
         - when: never
 
