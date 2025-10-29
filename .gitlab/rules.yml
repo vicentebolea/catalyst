@@ -42,12 +42,6 @@ workflow:
         # Skip pipelines in all other cases
         - when: never
 
-.run_automatically_spack:
-    rules:
-        - if: '$CI_SERVER_HOST == "gitlab.spack.io"'
-          when: on_success
-        - when: never
-
 # Generic rules block to apply if the pipeline would be run
 .rules:
     rules:

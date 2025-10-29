@@ -120,7 +120,9 @@ build-test:fedora36-ppc64le:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_ppc64le_builder_tags
-        - .run_automatically_spack
+        - .rules
+    variables:
+        CATALYST_CI_INSTANCE: "gitlab.spack.io"
 
 build-test:fedora36-x86_64-replay:
     extends:
