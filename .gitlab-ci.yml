@@ -43,7 +43,10 @@ build-test:source:
 upload:source:
     extends:
         - .upload_job
-        - .release_only
+        - .rules
+    variables:
+        CATALYST_CI_RELEASE_ONLY: "true"
+        UPLOAD_FILES: catalyst-*
     needs:
         - build-test:source
         # Ensure all builds and tests pass.
@@ -81,13 +84,13 @@ upload:source:
           artifacts: false
         - job: build-test:windows-vs2022-replay
           artifacts: false
-    variables:
-        UPLOAD_FILES: catalyst-*
 
 release:source:
     extends:
         - .release_job
-        - .release_only
+        - .rules
+    variables:
+        CATALYST_CI_RELEASE_ONLY: "true"
     needs:
         - build-test:source
         - job: upload:source
