@@ -38,7 +38,7 @@ build-test:source:
         - .create_source_archives
         - .release_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 upload:source:
     extends:
@@ -101,7 +101,7 @@ build-test:fedora36-x86_64:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-aarch64:
     extends:
@@ -109,7 +109,7 @@ build-test:fedora36-aarch64:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_aarch64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-ppc64le:
     extends:
@@ -125,7 +125,7 @@ build-test:fedora36-x86_64-replay:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-extdeps-replay:
     extends:
@@ -133,7 +133,7 @@ build-test:fedora36-x86_64-extdeps-replay:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-mpi-replay:
     extends:
@@ -141,7 +141,7 @@ build-test:fedora36-x86_64-mpi-replay:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-extdeps-mpi-replay:
     extends:
@@ -149,7 +149,7 @@ build-test:fedora36-x86_64-extdeps-mpi-replay:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build:fedora36-x86_64-tidy:
     extends:
@@ -157,7 +157,7 @@ build:fedora36-x86_64-tidy:
         - .cmake_build_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
     timeout: 15 minutes
 
 build-test:fedora36-x86_64-asan:
@@ -166,7 +166,7 @@ build-test:fedora36-x86_64-asan:
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
         - .linux_x86_64_sanitizer_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-ubsan:
     extends:
@@ -174,7 +174,7 @@ build-test:fedora36-x86_64-ubsan:
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
         - .linux_x86_64_sanitizer_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-asan-mpi-replay:
     extends:
@@ -182,7 +182,7 @@ build-test:fedora36-x86_64-asan-mpi-replay:
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
         - .linux_x86_64_sanitizer_tags
-        - .run_automatically
+        - .rules
 
 build:fedora36-x86_64-mpi-replay-tidy:
     extends:
@@ -190,7 +190,7 @@ build:fedora36-x86_64-mpi-replay-tidy:
         - .cmake_build_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
     timeout: 15 minutes
 
 build:fedora36-x86_64-extdeps-mpi-replay-tidy:
@@ -199,7 +199,7 @@ build:fedora36-x86_64-extdeps-mpi-replay-tidy:
         - .cmake_build_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
     timeout: 15 minutes
 
 build-test:fedora36-x86_64-mpi-replay-ubsan:
@@ -208,7 +208,7 @@ build-test:fedora36-x86_64-mpi-replay-ubsan:
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
         - .linux_x86_64_sanitizer_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-wrappings:
     extends:
@@ -216,7 +216,7 @@ build-test:fedora36-x86_64-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-replay-wrappings:
     extends:
@@ -224,7 +224,7 @@ build-test:fedora36-x86_64-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-mpi-replay-wrappings:
     extends:
@@ -232,7 +232,7 @@ build-test:fedora36-x86_64-mpi-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-extdeps-replay-wrappings:
     extends:
@@ -240,7 +240,7 @@ build-test:fedora36-x86_64-extdeps-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:fedora36-x86_64-extdeps-mpi-replay-wrappings:
     extends:
@@ -248,7 +248,7 @@ build-test:fedora36-x86_64-extdeps-mpi-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:el8-x86_64-icc-replay-wrappings:
     extends:
@@ -256,7 +256,7 @@ build-test:el8-x86_64-icc-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:el8-x86_64-icc-extdeps-replay-wrappings:
     extends:
@@ -264,7 +264,7 @@ build-test:el8-x86_64-icc-extdeps-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:el8-x86_64-icx-replay-wrappings:
     extends:
@@ -272,7 +272,7 @@ build-test:el8-x86_64-icx-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_oneapi_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:el8-x86_64-icx-extdeps-replay-wrappings:
     extends:
@@ -280,7 +280,7 @@ build-test:el8-x86_64-icx-extdeps-replay-wrappings:
         - .cmake_build_test_linux
         - .cmake_build_artifacts
         - .linux_x86_64_oneapi_builder_tags
-        - .run_automatically
+        - .rules
 
 # macOS
 
@@ -290,7 +290,7 @@ build-test:macos-arm64-replay:
         - .cmake_build_test_macos
         - .cmake_build_artifacts
         - .macos_arm64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:macos-x86_64-replay:
     extends:
@@ -298,7 +298,7 @@ build-test:macos-x86_64-replay:
         - .cmake_build_test_macos
         - .cmake_build_artifacts
         - .macos_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:macos-arm64-replay-wrappings:
     extends:
@@ -306,7 +306,7 @@ build-test:macos-arm64-replay-wrappings:
         - .cmake_build_test_macos
         - .cmake_build_artifacts
         - .macos_arm64_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:macos-x86_64-replay-wrappings:
     extends:
@@ -314,7 +314,7 @@ build-test:macos-x86_64-replay-wrappings:
         - .cmake_build_test_macos
         - .cmake_build_artifacts
         - .macos_x86_64_builder_tags
-        - .run_automatically
+        - .rules
 
 # Windows
 
@@ -324,7 +324,7 @@ build-test:windows-vs2022-debug-mpi-replay:
         - .cmake_build_test_windows
         - .cmake_build_artifacts
         - .windows_mpi_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:windows-vs2022-mpi-replay:
     extends:
@@ -332,7 +332,7 @@ build-test:windows-vs2022-mpi-replay:
         - .cmake_build_test_windows
         - .cmake_build_artifacts
         - .windows_mpi_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:windows-vs2022-mpi-replay-wrappings:
     extends:
@@ -340,7 +340,7 @@ build-test:windows-vs2022-mpi-replay-wrappings:
         - .cmake_build_test_windows
         - .cmake_build_artifacts
         - .windows_mpi_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:windows-vs2022-replay:
     extends:
@@ -348,7 +348,7 @@ build-test:windows-vs2022-replay:
         - .cmake_build_test_windows
         - .cmake_build_artifacts
         - .windows_builder_tags
-        - .run_automatically
+        - .rules
 
 build-test:windows-vs2022-replay-wrappings:
     extends:
@@ -356,4 +356,4 @@ build-test:windows-vs2022-replay-wrappings:
         - .cmake_build_test_windows
         - .cmake_build_artifacts
         - .windows_builder_tags
-        - .run_automatically
+        - .rules
