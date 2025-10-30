@@ -14,5 +14,9 @@ upload_file () {
 }
 
 for file_to_upload in $UPLOAD_FILES; do
+    if ! [ -f "$file_to_upload" ]; then
+        echo >&2 "Could not find file: '$file_to_upload'"
+        exit 1
+    fi
     upload_file "$file_to_upload"
 done
