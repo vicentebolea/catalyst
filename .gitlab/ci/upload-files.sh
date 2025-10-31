@@ -2,6 +2,11 @@
 
 set -e
 
+if [ -z "$CI_COMMIT_TAG" ]; then
+    echo >&2 'This script is only meant to run for tag pipelines'
+    exit 1
+fi
+
 readonly urlbase="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}"
 
 upload_file () {
