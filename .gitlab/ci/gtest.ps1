@@ -21,8 +21,14 @@ cd "$filename"
 New-Item -Path "build" -Type Directory
 cd build
 
+if ($env:CMAKE_BUILD_TYPE -eq "") {
+    $build_type = "Release"
+} else {
+    $build_type = "$env:CMAKE_BUILD_TYPE"
+}
+
 cmake -GNinja `
-    -DCMAKE_BUILD_TYPE=Release `
+    -DCMAKE_BUILD_TYPE="$build_type" `
     -DCMAKE_INSTALL_PREFIX="$env:CI_PROJECT_DIR/.gitlab/gtest" `
     -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
     -DBUILD_GMOCK=OFF `
