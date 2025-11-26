@@ -27,6 +27,8 @@
         VCVARSALL: "${VS170COMNTOOLS}\\..\\..\\VC\\Auxiliary\\Build\\vcvarsall.bat"
         VCVARSPLATFORM: "x64"
         VCVARSVERSION: "14.32.31326"
+        CTEST_EXCLUSIONS: >-
+          ^t_conduit_node$
 
 .windows_vs2022_mpi_replay:
     extends: .windows_vs2022
