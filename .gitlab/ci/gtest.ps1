@@ -31,6 +31,7 @@ cmake -GNinja `
     -DCMAKE_BUILD_TYPE="$build_type" `
     -DCMAKE_INSTALL_PREFIX="$env:CI_PROJECT_DIR/.gitlab/gtest" `
     -DBUILD_GMOCK=OFF `
+    -Dgtest_force_shared_crt=ON `
     ..
 cmake --build .
 cmake --build . --target install
