@@ -102,6 +102,7 @@ static int test_cpp_node_copy()
   const int ret = EXIT_SUCCESS;
 
   const conduit_cpp::Node n;
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization): test copy ctor
   const conduit_cpp::Node clone = n;
   (void)clone;
 
