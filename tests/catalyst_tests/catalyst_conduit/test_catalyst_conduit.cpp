@@ -30,7 +30,7 @@ int test_cpp_node_wrapping_data()
     }
     else
     {
-      int value = child_node.as_int();
+      const int value = child_node.as_int();
       if (value != 2)
       {
         ret = EXIT_FAILURE;
@@ -65,7 +65,7 @@ int test_cpp_node_wrapping_on_child_node()
     }
     else
     {
-      int value = sub_node.as_int();
+      const int value = sub_node.as_int();
       if (value != 5)
       {
         ret = EXIT_FAILURE;
@@ -78,7 +78,7 @@ int test_cpp_node_wrapping_on_child_node()
 
 int test_cpp_node_wrapping_destructor()
 {
-  int ret = EXIT_SUCCESS;
+  const int ret = EXIT_SUCCESS;
 
   auto* first_node = new conduit_cpp::Node();
   conduit_node* first_node_c_node = conduit_cpp::c_node(first_node);
@@ -99,10 +99,10 @@ int test_cpp_node_wrapping_destructor()
 
 int test_cpp_node_copy()
 {
-  int ret = EXIT_SUCCESS;
+  const int ret = EXIT_SUCCESS;
 
-  conduit_cpp::Node n;
-  conduit_cpp::Node clone = n;
+  const conduit_cpp::Node n;
+  const conduit_cpp::Node clone = n;
   (void)clone;
 
   return ret;

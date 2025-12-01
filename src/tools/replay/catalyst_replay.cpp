@@ -35,7 +35,8 @@ try
   }
   else if (depth == 0) // for now, we'll only go 1 deep in the tree.
   {
-    for (conduit_index_t max = params.number_of_children(), cc = 0; cc < max; ++cc)
+    const conduit_index_t max = params.number_of_children();
+    for (conduit_index_t cc = 0; cc < max; ++cc)
     {
       auto child = params[cc];
       replace_mpi_comm(child, communicator, depth + 1);
@@ -70,7 +71,7 @@ void replay_catalyst_execute(
 {
   for (unsigned long i = 0; i < num_execute_invoc_per_rank; i++)
   {
-    conduit_cpp::Node params;
+    const conduit_cpp::Node params;
     std::stringstream node_path;
     node_path << node_dir << "execute_invc" << i << "_params.conduit_bin"
               << "." << num_ranks << "." << rank;
@@ -83,7 +84,7 @@ void replay_catalyst_execute(
 
 void replay_catalyst_finalize(const std::string& node_dir, int num_ranks, int rank)
 {
-  conduit_cpp::Node params;
+  const conduit_cpp::Node params;
   std::stringstream node_path;
   node_path << node_dir << "finalize_params.conduit_bin"
             << "." << num_ranks << "." << rank;
@@ -151,7 +152,7 @@ int parse_fname(const std::regex& fname_patterns, const std::string& fname, int 
     }
   }
 
-  std::string stage = matches[1];
+  const std::string stage = matches[1];
 
   if (stage == "initialize")
   {
@@ -226,8 +227,8 @@ int parse_directory(const std::string& catalyst_data_dump_directory,
 
   for (dirent* item = readdir(dir); item; item = readdir(dir))
   {
-    int status = parse_fname(fname_patterns, item->d_name, num_ranks, num_initialize, num_execute,
-      num_finalize, num_execute_invoc_per_rank);
+    const int status = parse_fname(fname_patterns, item->d_name, num_ranks, num_initialize,
+      num_execute, num_finalize, num_execute_invoc_per_rank);
 
     if (status != 0)
     {
@@ -315,7 +316,7 @@ int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_
 // and that it ends with a slash.
 int validate_data_dump_str(std::string& catalyst_data_dump_directory)
 {
-  size_t path_len = catalyst_data_dump_directory.size();
+  const size_t path_len = catalyst_data_dump_directory.size();
   if (!path_len)
   {
     std::cerr << "ERROR: Empty data_dump_directory path detected." << std::endl;
@@ -328,7 +329,7 @@ int validate_data_dump_str(std::string& catalyst_data_dump_directory)
 // Format the data_dump_directory for consistency
 void clean_data_dump_str(std::string& catalyst_data_dump_directory)
 {
-  size_t path_len = catalyst_data_dump_directory.size();
+  const size_t path_len = catalyst_data_dump_directory.size();
 
   if (catalyst_data_dump_directory[path_len - 1] != PATH_SEP)
   {
@@ -361,18 +362,20 @@ int main(int argc, char** argv)
   (void)argv;
 #endif
 
-  int num_ranks = 1;
-  int rank = 0;
   int status = 0;
   unsigned long num_execute_invoc_per_rank = 0;
   std::string catalyst_data_dump_directory;
 
 #ifdef CATALYST_USE_MPI
+  int num_ranks = 1;
+  int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &num_ranks);
 
   auto communicator = static_cast<std::uint64_t>(MPI_Comm_c2f(MPI_COMM_WORLD));
 #else
+  const int num_ranks = 1;
+  const int rank = 0;
   const std::uint64_t communicator = 0;
 #endif
 

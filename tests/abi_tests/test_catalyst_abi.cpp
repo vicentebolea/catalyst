@@ -268,7 +268,7 @@ static int test_catalyst_impl()
 
 static int test_catalyst_stub()
 {
-  int ret = EXIT_SUCCESS;
+  const int ret = EXIT_SUCCESS;
 
   // Only add assertions to this list; removal or modification of any
   // checks constitutes an ABI break.

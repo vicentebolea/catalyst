@@ -58,7 +58,7 @@ enum catalyst_status catalyst_finalize_double(const conduit_node* params)
 //-----------------------------------------------------------------------------
 enum catalyst_status catalyst_about_double(conduit_node* params)
 {
-  enum catalyst_status err = catalyst_stub_about(params);
+  const enum catalyst_status err = catalyst_stub_about(params);
 
   conduit_node_set_path_char8_str(params, "catalyst/implementation", "test");
   conduit_node_set_path_double(params, "data", data);
@@ -69,7 +69,7 @@ enum catalyst_status catalyst_about_double(conduit_node* params)
 //-----------------------------------------------------------------------------
 enum catalyst_status catalyst_results_double(conduit_node* params)
 {
-  enum catalyst_status err = catalyst_stub_results(params);
+  const enum catalyst_status err = catalyst_stub_results(params);
 
   conduit_node_set_path_char8_str(params, "catalyst/implementation", "test");
   conduit_node_set_path_double(params, "data", data);
