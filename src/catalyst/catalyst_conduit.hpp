@@ -1435,7 +1435,7 @@ public:
 
   void reset() { conduit_node_reset(this->c_node); }
   void move(Node& other) { conduit_node_move(this->c_node, other.c_node); }
-  void swap(Node& other) { conduit_node_swap(this->c_node, other.c_node); }
+  void swap(Node& other) noexcept { conduit_node_swap(this->c_node, other.c_node); }
 
   // conduit_node_name uses strdup, which allocates memory
   // on the heap. Must free the result here after copying.
