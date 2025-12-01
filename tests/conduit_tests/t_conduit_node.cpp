@@ -548,10 +548,10 @@ TEST(conduit_node, check_invalid_index_error_with_const)
 {
   const Node n;
 
-  EXPECT_THROW(n.child(0), conduit_cpp::Error);
-  EXPECT_THROW(n[0], conduit_cpp::Error);
-  EXPECT_THROW(n.child(1), conduit_cpp::Error);
-  EXPECT_THROW(n[1], conduit_cpp::Error);
+  EXPECT_THROW((void)n.child(0), conduit_cpp::Error);
+  EXPECT_THROW((void)n[0], conduit_cpp::Error);
+  EXPECT_THROW((void)n.child(1), conduit_cpp::Error);
+  EXPECT_THROW((void)n[1], conduit_cpp::Error);
 }
 
 //-----------------------------------------------------------------------------
@@ -1057,45 +1057,45 @@ TEST(conduit_node, check_as_native_and_native_ptr_throw)
   n_float = (float)3.14;
 
   // Check non-pointer methods
-  EXPECT_THROW(n_int.as_char(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_short(), conduit_cpp::Error);
-  EXPECT_THROW(n_float.as_int(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_long(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_char(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_short(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float.as_int(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_long(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_signed_char(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_signed_short(), conduit_cpp::Error);
-  EXPECT_THROW(n_float.as_signed_int(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_signed_long(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_signed_char(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_signed_short(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float.as_signed_int(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_signed_long(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_unsigned_char(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_unsigned_short(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_unsigned_int(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_unsigned_long(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_char(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_short(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_int(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_long(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_float(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_double(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_float(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_double(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_char8_str(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_string(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_char8_str(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_string(), conduit_cpp::Error);
 
   // Check pointer methods
-  EXPECT_THROW(n_int.as_char_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_short_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_float.as_int_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_long_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_char_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_short_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float.as_int_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_long_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_signed_char_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_signed_short_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_float.as_signed_int_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_signed_long_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_signed_char_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_signed_short_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float.as_signed_int_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_signed_long_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_unsigned_char_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_unsigned_short_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_unsigned_int_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_unsigned_long_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_char_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_short_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_int_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_unsigned_long_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int.as_float_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int.as_double_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_float_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int.as_double_ptr(), conduit_cpp::Error);
 }
 
 // -----------------------------------------------------------------------------
@@ -1110,23 +1110,23 @@ TEST(conduit_node, check_as_native_ptr_const_throw)
   const Node n_int_const(n_int);
   const Node n_float_const(n_float);
 
-  EXPECT_THROW(n_int_const.as_char_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_short_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_float_const.as_int_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_long_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_char_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_short_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float_const.as_int_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_long_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int_const.as_signed_char_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_signed_short_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_float_const.as_signed_int_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_signed_long_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_signed_char_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_signed_short_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float_const.as_signed_int_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_signed_long_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int_const.as_unsigned_char_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_unsigned_short_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_unsigned_int_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_unsigned_long_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_unsigned_char_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_unsigned_short_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_unsigned_int_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_unsigned_long_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int_const.as_float_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int_const.as_double_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_float_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int_const.as_double_ptr(), conduit_cpp::Error);
 }
 
 // -----------------------------------------------------------------------------
@@ -1138,32 +1138,32 @@ TEST(conduit_node, check_as_bitwidth_and_as_bitwidth_ptr_throw)
   n_float32 = (float32)3.14;
 
   // Check non-pointer methods
-  EXPECT_THROW(n_int32.as_int8(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_int16(), conduit_cpp::Error);
-  EXPECT_THROW(n_float32.as_int32(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_int64(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_int8(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_int16(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float32.as_int32(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_int64(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int32.as_uint8(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_uint16(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_uint32(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_uint64(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint8(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint16(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint32(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint64(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int32.as_float32(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_float64(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_float32(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_float64(), conduit_cpp::Error);
 
   // Check pointer methods
-  EXPECT_THROW(n_int32.as_int8_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_int16_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_float32.as_int32_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_int64_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_int8_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_int16_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float32.as_int32_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_int64_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int32.as_uint8_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_uint16_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_uint32_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_uint64_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint8_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint16_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint32_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_uint64_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int32.as_float32_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32.as_float64_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_float32_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32.as_float64_ptr(), conduit_cpp::Error);
 }
 
 //-----------------------------------------------------------------------------
@@ -1178,18 +1178,18 @@ TEST(conduit_node, check_as_bitwidth_ptr_const_throw)
   const Node n_int32_const(n_int32);
   const Node n_float32_const(n_float32);
 
-  EXPECT_THROW(n_int32_const.as_int8_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32_const.as_int16_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_float32_const.as_int32_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32_const.as_int64_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_int8_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_int16_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_float32_const.as_int32_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_int64_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int32_const.as_uint8_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32_const.as_uint16_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32_const.as_uint32_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32_const.as_uint64_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_uint8_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_uint16_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_uint32_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_uint64_ptr(), conduit_cpp::Error);
 
-  EXPECT_THROW(n_int32_const.as_float32_ptr(), conduit_cpp::Error);
-  EXPECT_THROW(n_int32_const.as_float64_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_float32_ptr(), conduit_cpp::Error);
+  EXPECT_THROW((void)n_int32_const.as_float64_ptr(), conduit_cpp::Error);
 }
 
 //-----------------------------------------------------------------------------
