@@ -1053,8 +1053,8 @@ TEST(conduit_node, check_as_native_and_native_ptr_throw)
 {
   Node n_int;
   Node n_float;
-  n_int = (int)3;
-  n_float = (float)3.14;
+  n_int = 3;
+  n_float = 3.14F;
 
   // Check non-pointer methods
   EXPECT_THROW((void)n_int.as_char(), conduit_cpp::Error);
@@ -1103,8 +1103,8 @@ TEST(conduit_node, check_as_native_ptr_const_throw)
 {
   Node n_int;
   Node n_float;
-  n_int = (int)3;
-  n_float = (float)3.14;
+  n_int = 3;
+  n_float = 3.14F;
 
   // Construct const equivalents
   const Node n_int_const(n_int);
