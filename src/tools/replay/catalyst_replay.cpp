@@ -5,6 +5,9 @@
 #endif
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include "windows.h"
 #define PATH_SEP '\\'
 #else
@@ -12,6 +15,7 @@
 #define PATH_SEP '/'
 #endif
 
+#include <algorithm>
 #include <iostream>
 #include <regex>
 #include <sstream>
@@ -151,10 +155,7 @@ static int parse_fname(const std::regex& fname_patterns, const std::string& fnam
     unsigned long execute_invc_num;
     std::stringstream(matches[3]) >> execute_invc_num;
 
-    if (execute_invc_num + 1 > num_execute_invoc_per_rank)
-    {
-      num_execute_invoc_per_rank = execute_invc_num + 1;
-    }
+    num_execute_invoc_per_rank = std::max(execute_invc_num + 1, num_execute_invoc_per_rank);
   }
 
   const std::string stage = matches[1];
