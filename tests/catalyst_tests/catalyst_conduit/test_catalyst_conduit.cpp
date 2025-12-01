@@ -8,7 +8,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-int test_cpp_node_wrapping_data()
+static int test_cpp_node_wrapping_data()
 {
   int ret = EXIT_SUCCESS;
 
@@ -41,7 +41,7 @@ int test_cpp_node_wrapping_data()
   return ret;
 }
 
-int test_cpp_node_wrapping_on_child_node()
+static int test_cpp_node_wrapping_on_child_node()
 {
   int ret = EXIT_SUCCESS;
 
@@ -76,7 +76,7 @@ int test_cpp_node_wrapping_on_child_node()
   return ret;
 }
 
-int test_cpp_node_wrapping_destructor()
+static int test_cpp_node_wrapping_destructor()
 {
   const int ret = EXIT_SUCCESS;
 
@@ -97,7 +97,7 @@ int test_cpp_node_wrapping_destructor()
   return ret;
 }
 
-int test_cpp_node_copy()
+static int test_cpp_node_copy()
 {
   const int ret = EXIT_SUCCESS;
 

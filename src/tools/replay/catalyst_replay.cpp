@@ -21,7 +21,7 @@
 #include <cstdlib>
 
 // NOLINTNEXTLINE(misc-no-recursion)
-void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int depth = 0)
+static void replace_mpi_comm(conduit_cpp::Node& params, std::uint64_t communicator, int depth = 0)
 try
 {
   if (params.has_path("mpi_comm"))
@@ -49,7 +49,7 @@ catch (conduit_cpp::Error const& e)
   abort();
 }
 
-void replay_catalyst_initialize(
+static void replay_catalyst_initialize(
   const std::string& node_dir, int num_ranks, int rank, std::uint64_t communicator)
 {
   conduit_cpp::Node params;
@@ -66,7 +66,7 @@ void replay_catalyst_initialize(
   catalyst_initialize(c_node(&params));
 }
 
-void replay_catalyst_execute(
+static void replay_catalyst_execute(
   const std::string& node_dir, int num_ranks, int rank, unsigned long num_execute_invoc_per_rank)
 {
   for (unsigned long i = 0; i < num_execute_invoc_per_rank; i++)
@@ -82,7 +82,7 @@ void replay_catalyst_execute(
   }
 }
 
-void replay_catalyst_finalize(const std::string& node_dir, int num_ranks, int rank)
+static void replay_catalyst_finalize(const std::string& node_dir, int num_ranks, int rank)
 {
   const conduit_cpp::Node params;
   std::stringstream node_path;
@@ -97,7 +97,7 @@ void replay_catalyst_finalize(const std::string& node_dir, int num_ranks, int ra
 // Write out the number of node files for the
 // initialize, execute, and finalize stages to a stringstream.
 // These values are included when we error out.
-void write_num_nodes_per_stage(
+static void write_num_nodes_per_stage(
   std::ostream& ss, unsigned num_initialize, unsigned num_execute, unsigned num_finalize)
 {
   ss << "Number of node files for initialization stage: " << num_initialize << std::endl
@@ -105,13 +105,14 @@ void write_num_nodes_per_stage(
      << "Number of node files for finalize stage: " << num_finalize << std::endl;
 }
 
-void write_catalyst_data_dump_dir(std::ostream& ss, const std::string& catalyst_data_dump_directory)
+static void write_catalyst_data_dump_dir(
+  std::ostream& ss, const std::string& catalyst_data_dump_directory)
 {
   ss << "catalyst_data_dump_directory: " << catalyst_data_dump_directory << std::endl;
 }
 
 // Parses relevant data from the filename passed in using regex matching.
-int parse_fname(const std::regex& fname_patterns, const std::string& fname, int num_ranks,
+static int parse_fname(const std::regex& fname_patterns, const std::string& fname, int num_ranks,
   unsigned& num_initialize, unsigned& num_execute, unsigned& num_finalize,
   unsigned long& num_execute_invoc_per_rank)
 {
@@ -177,7 +178,7 @@ int parse_fname(const std::regex& fname_patterns, const std::string& fname, int 
 // and calls parse_fname to extract the relevant data from the filename. This
 // includes things like the number of ranks that were used, which stage the
 // data is from, etc.
-int parse_directory(const std::string& catalyst_data_dump_directory,
+static int parse_directory(const std::string& catalyst_data_dump_directory,
   const std::regex& fname_patterns, int num_ranks, unsigned& num_initialize, unsigned& num_execute,
   unsigned& num_finalize, unsigned long& num_execute_invoc_per_rank)
 {
@@ -214,7 +215,7 @@ int parse_directory(const std::string& catalyst_data_dump_directory,
 
 #else
 // POSIX implementation. See above for documentation.
-int parse_directory(const std::string& catalyst_data_dump_directory,
+static int parse_directory(const std::string& catalyst_data_dump_directory,
   const std::regex& fname_patterns, int num_ranks, unsigned& num_initialize, unsigned& num_execute,
   unsigned& num_finalize, unsigned long& num_execute_invoc_per_rank)
 {
@@ -246,7 +247,7 @@ int parse_directory(const std::string& catalyst_data_dump_directory,
 // Opens the data dump directory and makes sure that the data
 // was output correctly. This includes things like making sure that
 // there was the correct number of files written out for each stage.
-int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_ranks,
+static int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_ranks,
   unsigned long& num_execute_invoc_per_rank)
 {
   // First check that all files in this directory were generated
@@ -314,7 +315,7 @@ int validate_data_dump(const std::string& catalyst_data_dump_directory, int num_
 // Makes sure that the catalyst_data_dump_directory string is formatted
 // correctly. This includes things like making sure that it isn't empty,
 // and that it ends with a slash.
-int validate_data_dump_str(std::string& catalyst_data_dump_directory)
+static int validate_data_dump_str(std::string& catalyst_data_dump_directory)
 {
   const size_t path_len = catalyst_data_dump_directory.size();
   if (!path_len)
@@ -327,7 +328,7 @@ int validate_data_dump_str(std::string& catalyst_data_dump_directory)
 }
 
 // Format the data_dump_directory for consistency
-void clean_data_dump_str(std::string& catalyst_data_dump_directory)
+static void clean_data_dump_str(std::string& catalyst_data_dump_directory)
 {
   const size_t path_len = catalyst_data_dump_directory.size();
 
@@ -337,7 +338,7 @@ void clean_data_dump_str(std::string& catalyst_data_dump_directory)
   }
 }
 
-void exit_gracefully_if_needed(int /*rank*/, int status)
+static void exit_gracefully_if_needed(int /*rank*/, int status)
 {
 #ifdef CATALYST_USE_MPI
   MPI_Bcast(&status, 1, MPI_INT, 0, MPI_COMM_WORLD);
