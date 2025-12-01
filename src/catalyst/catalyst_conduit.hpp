@@ -67,6 +67,7 @@ Additional BSD Notice
 #ifndef catalyst_conduit_hpp
 #define catalyst_conduit_hpp
 
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <memory>
