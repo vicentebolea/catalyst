@@ -35,7 +35,7 @@ enum catalyst_status catalyst_stub_about(conduit_node* params)
   conduit_node_set_path_char8_str(params, "catalyst/version", CATALYST_VERSION);
   conduit_node_set_path_char8_str(params, "catalyst/abi_version", CATALYST_ABI_VERSION);
   conduit_node_set_path_char8_str(params, "catalyst/implementation", "stub");
-#if defined(CATALYST_USE_MPI)
+#ifdef CATALYST_USE_MPI
   conduit_node_set_path_int32(params, "catalyst/use_mpi", 1);
 #else
   conduit_node_set_path_int32(params, "catalyst/use_mpi", 0);
