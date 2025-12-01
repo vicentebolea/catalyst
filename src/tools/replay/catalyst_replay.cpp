@@ -100,15 +100,19 @@ static void replay_catalyst_finalize(const std::string& node_dir, int num_ranks,
 static void write_num_nodes_per_stage(
   std::ostream& ss, unsigned num_initialize, unsigned num_execute, unsigned num_finalize)
 {
-  ss << "Number of node files for initialization stage: " << num_initialize << std::endl
-     << "Number of node files for execute stage: " << num_execute << std::endl
-     << "Number of node files for finalize stage: " << num_finalize << std::endl;
+  ss << "Number of node files for initialization stage: " << num_initialize
+     << "\n"
+        "Number of node files for execute stage: "
+     << num_execute
+     << "\n"
+        "Number of node files for finalize stage: "
+     << num_finalize << '\n';
 }
 
 static void write_catalyst_data_dump_dir(
   std::ostream& ss, const std::string& catalyst_data_dump_directory)
 {
-  ss << "catalyst_data_dump_directory: " << catalyst_data_dump_directory << std::endl;
+  ss << "catalyst_data_dump_directory: " << catalyst_data_dump_directory << '\n';
 }
 
 // Parses relevant data from the filename passed in using regex matching.
@@ -280,7 +284,7 @@ static int validate_data_dump(const std::string& catalyst_data_dump_directory, i
   // Check that none are 0
   if (!(num_initialize && num_execute && num_finalize))
   {
-    std::cerr << "ERROR: Missing node data for at least one stage." << std::endl;
+    std::cerr << "ERROR: Missing node data for at least one stage.\n";
     write_num_nodes_per_stage(std::cerr, num_initialize, num_execute, num_finalize);
     write_catalyst_data_dump_dir(std::cerr, catalyst_data_dump_directory);
     return 1;
@@ -290,11 +294,18 @@ static int validate_data_dump(const std::string& catalyst_data_dump_directory, i
   // Initialize and finalize should be called once per rank
   if (!(num_ranks == num_initialize && num_ranks == num_finalize))
   {
-    std::cerr << "ERROR: Mismatch in the number of calls to initialize or finalize." << std::endl
-              << "Number of calls to initialize: " << num_initialize << std::endl
-              << "Number of calls to finalize: " << num_finalize << std::endl
-              << "Number of ranks: " << num_ranks << std::endl
-              << "These should all match." << std::endl;
+    std::cerr << "ERROR: Mismatch in the number of calls to initialize or finalize."
+              << "\n"
+                 "Number of calls to initialize: "
+              << num_initialize
+              << "\n"
+                 "Number of calls to finalize: "
+              << num_finalize
+              << "\n"
+                 "Number of ranks: "
+              << num_ranks
+              << "\n"
+                 "These should all match.\n";
     write_catalyst_data_dump_dir(std::cerr, catalyst_data_dump_directory);
     return 1;
   }
@@ -302,9 +313,13 @@ static int validate_data_dump(const std::string& catalyst_data_dump_directory, i
   // Execute is different since there are timesteps.
   if (num_execute != num_ranks * num_execute_invoc_per_rank)
   {
-    std::cerr << "ERROR: Unexpected number of calls to execute." << std::endl
-              << "Expected: " << num_ranks * num_execute_invoc_per_rank << std::endl
-              << "Got: " << num_execute << std::endl;
+    std::cerr << "ERROR: Unexpected number of calls to execute."
+              << "\n"
+                 "Expected: "
+              << num_ranks * num_execute_invoc_per_rank
+              << "\n"
+                 "Got: "
+              << num_execute << '\n';
     write_catalyst_data_dump_dir(std::cerr, catalyst_data_dump_directory);
     return 1;
   }
@@ -320,7 +335,7 @@ static int validate_data_dump_str(std::string& catalyst_data_dump_directory)
   const size_t path_len = catalyst_data_dump_directory.size();
   if (!path_len)
   {
-    std::cerr << "ERROR: Empty data_dump_directory path detected." << std::endl;
+    std::cerr << "ERROR: Empty data_dump_directory path detected.\n";
     return 1;
   }
 
@@ -382,7 +397,7 @@ int main(int argc, char** argv)
 
   if (rank == 0 && argc != 2)
   {
-    std::cerr << "ERROR: Expected 1 argument, the data dump directory." << std::endl;
+    std::cerr << "ERROR: Expected 1 argument, the data dump directory.\n";
     status = 1;
   }
   exit_gracefully_if_needed(rank, status);
