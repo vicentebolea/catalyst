@@ -293,7 +293,7 @@ static int validate_data_dump(const std::string& catalyst_data_dump_directory, i
 
   // Check that they're called the correct number of times.
   // Initialize and finalize should be called once per rank
-  if (!(num_ranks == num_initialize && num_ranks == num_finalize))
+  if (num_ranks != num_initialize || num_ranks != num_finalize)
   {
     std::cerr << "ERROR: Mismatch in the number of calls to initialize or finalize."
               << "\n"
