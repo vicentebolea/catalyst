@@ -6,6 +6,8 @@ bugprone-*,\
 clang-analyzer-*,\
 -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,\
 misc-*,\
+-misc-include-cleaner,\
+-misc-use-anonymous-namespace,\
 modernize-*,\
 -modernize-use-trailing-return-type,\
 mpi-*,\
