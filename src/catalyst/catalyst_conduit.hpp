@@ -78,6 +78,12 @@ Additional BSD Notice
 #include <catalyst_conduit_error.hpp>
 #include <conduit.h>
 
+#if __cplusplus >= 201703L
+#define CATALYST_CONDUIT_NODISCARD [[nodiscard]]
+#else
+#define CATALYST_CONDUIT_NODISCARD
+#endif
+
 namespace conduit_cpp
 {
 
@@ -122,9 +128,9 @@ public:
 
   static int size_of_index_t() { return conduit_datatype_sizeof_index_t(); }
 
-  [[nodiscard]] bool is_valid() const { return this->c_dtype != nullptr; }
+  CATALYST_CONDUIT_NODISCARD bool is_valid() const { return this->c_dtype != nullptr; }
 
-  [[nodiscard]] Id id() const
+  CATALYST_CONDUIT_NODISCARD Id id() const
   {
     if (!this->is_valid())
     {
@@ -177,12 +183,24 @@ public:
     return Id::unknown;
   }
 
-  [[nodiscard]] bool is_empty() const { return conduit_datatype_is_empty(this->c_dtype); }
-  [[nodiscard]] bool is_object() const { return conduit_datatype_is_object(this->c_dtype); }
-  [[nodiscard]] bool is_list() const { return conduit_datatype_is_list(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_empty() const
+  {
+    return conduit_datatype_is_empty(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_object() const
+  {
+    return conduit_datatype_is_object(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_list() const
+  {
+    return conduit_datatype_is_list(this->c_dtype);
+  }
 
-  [[nodiscard]] conduit_index_t type_id() const { return conduit_datatype_id(this->c_dtype); }
-  [[nodiscard]] std::string name() const
+  CATALYST_CONDUIT_NODISCARD conduit_index_t type_id() const
+  {
+    return conduit_datatype_id(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD std::string name() const
   {
     char* c_name = conduit_datatype_name(this->c_dtype);
     std::string name = c_name;
@@ -190,84 +208,153 @@ public:
     return name;
   }
 
-  [[nodiscard]] conduit_index_t number_of_elements() const
+  CATALYST_CONDUIT_NODISCARD conduit_index_t number_of_elements() const
   {
     return conduit_datatype_number_of_elements(this->c_dtype);
   }
-  [[nodiscard]] conduit_index_t offset() const { return conduit_datatype_offset(this->c_dtype); }
-  [[nodiscard]] conduit_index_t stride() const { return conduit_datatype_stride(this->c_dtype); }
-  [[nodiscard]] conduit_index_t element_bytes() const
+  CATALYST_CONDUIT_NODISCARD conduit_index_t offset() const
+  {
+    return conduit_datatype_offset(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD conduit_index_t stride() const
+  {
+    return conduit_datatype_stride(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD conduit_index_t element_bytes() const
   {
     return conduit_datatype_element_bytes(this->c_dtype);
   }
-  conduit_index_t endianness() const { return conduit_datatype_endianness(this->c_dtype); }
-  [[nodiscard]] conduit_index_t element_index(conduit_index_t idx) const
+  CATALYST_CONDUIT_NODISCARD conduit_index_t endianness() const
+  {
+    return conduit_datatype_endianness(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD conduit_index_t element_index(conduit_index_t idx) const
   {
     return conduit_datatype_element_index(this->c_dtype, idx);
   }
 
-  [[nodiscard]] bool is_number() const { return conduit_datatype_is_number(this->c_dtype); }
-  [[nodiscard]] bool is_floating_point() const
+  CATALYST_CONDUIT_NODISCARD bool is_number() const
+  {
+    return conduit_datatype_is_number(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_floating_point() const
   {
     return conduit_datatype_is_floating_point(this->c_dtype);
   }
-  [[nodiscard]] bool is_integer() const { return conduit_datatype_is_integer(this->c_dtype); }
-  [[nodiscard]] bool is_signed_integer() const
+  CATALYST_CONDUIT_NODISCARD bool is_integer() const
+  {
+    return conduit_datatype_is_integer(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_signed_integer() const
   {
     return conduit_datatype_is_signed_integer(this->c_dtype);
   }
-  [[nodiscard]] bool is_unsigned_integer() const
+  CATALYST_CONDUIT_NODISCARD bool is_unsigned_integer() const
   {
     return conduit_datatype_is_unsigned_integer(this->c_dtype);
   }
 
-  [[nodiscard]] bool is_int8() const { return conduit_datatype_is_int8(this->c_dtype); }
-  [[nodiscard]] bool is_int16() const { return conduit_datatype_is_int16(this->c_dtype); }
-  [[nodiscard]] bool is_int32() const { return conduit_datatype_is_int32(this->c_dtype); }
-  [[nodiscard]] bool is_int64() const { return conduit_datatype_is_int64(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_int8() const
+  {
+    return conduit_datatype_is_int8(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_int16() const
+  {
+    return conduit_datatype_is_int16(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_int32() const
+  {
+    return conduit_datatype_is_int32(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_int64() const
+  {
+    return conduit_datatype_is_int64(this->c_dtype);
+  }
 
-  [[nodiscard]] bool is_uint8() const { return conduit_datatype_is_uint8(this->c_dtype); }
-  [[nodiscard]] bool is_uint16() const { return conduit_datatype_is_uint16(this->c_dtype); }
-  [[nodiscard]] bool is_uint32() const { return conduit_datatype_is_uint32(this->c_dtype); }
-  [[nodiscard]] bool is_uint64() const { return conduit_datatype_is_uint64(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_uint8() const
+  {
+    return conduit_datatype_is_uint8(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_uint16() const
+  {
+    return conduit_datatype_is_uint16(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_uint32() const
+  {
+    return conduit_datatype_is_uint32(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_uint64() const
+  {
+    return conduit_datatype_is_uint64(this->c_dtype);
+  }
 
-  [[nodiscard]] bool is_float32() const { return conduit_datatype_is_float32(this->c_dtype); }
-  [[nodiscard]] bool is_float64() const { return conduit_datatype_is_float64(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_float32() const
+  {
+    return conduit_datatype_is_float32(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_float64() const
+  {
+    return conduit_datatype_is_float64(this->c_dtype);
+  }
 
-  [[nodiscard]] bool is_char() const { return conduit_datatype_is_char(this->c_dtype); }
-  [[nodiscard]] bool is_short() const { return conduit_datatype_is_short(this->c_dtype); }
-  [[nodiscard]] bool is_int() const { return conduit_datatype_is_int(this->c_dtype); }
-  [[nodiscard]] bool is_long() const { return conduit_datatype_is_long(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_char() const
+  {
+    return conduit_datatype_is_char(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_short() const
+  {
+    return conduit_datatype_is_short(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_int() const { return conduit_datatype_is_int(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_long() const
+  {
+    return conduit_datatype_is_long(this->c_dtype);
+  }
 
-  [[nodiscard]] bool is_unsigned_char() const
+  CATALYST_CONDUIT_NODISCARD bool is_unsigned_char() const
   {
     return conduit_datatype_is_unsigned_char(this->c_dtype);
   }
-  [[nodiscard]] bool is_unsigned_short() const
+  CATALYST_CONDUIT_NODISCARD bool is_unsigned_short() const
   {
     return conduit_datatype_is_unsigned_short(this->c_dtype);
   }
-  [[nodiscard]] bool is_unsigned_int() const
+  CATALYST_CONDUIT_NODISCARD bool is_unsigned_int() const
   {
     return conduit_datatype_is_unsigned_int(this->c_dtype);
   }
-  [[nodiscard]] bool is_unsigned_long() const
+  CATALYST_CONDUIT_NODISCARD bool is_unsigned_long() const
   {
     return conduit_datatype_is_unsigned_long(this->c_dtype);
   }
 
-  [[nodiscard]] bool is_float() const { return conduit_datatype_is_float(this->c_dtype); }
-  [[nodiscard]] bool is_double() const { return conduit_datatype_is_double(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_float() const
+  {
+    return conduit_datatype_is_float(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_double() const
+  {
+    return conduit_datatype_is_double(this->c_dtype);
+  }
 
-  [[nodiscard]] bool is_string() const { return conduit_datatype_is_string(this->c_dtype); }
-  [[nodiscard]] bool is_char8_str() const { return conduit_datatype_is_char8_str(this->c_dtype); }
+  CATALYST_CONDUIT_NODISCARD bool is_string() const
+  {
+    return conduit_datatype_is_string(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool is_char8_str() const
+  {
+    return conduit_datatype_is_char8_str(this->c_dtype);
+  }
 
-  [[nodiscard]] bool is_little_endian() const
+  CATALYST_CONDUIT_NODISCARD bool is_little_endian() const
   {
     return conduit_datatype_is_little_endian(this->c_dtype);
   }
-  [[nodiscard]] bool is_big_endian() const { return conduit_datatype_is_big_endian(this->c_dtype); }
-  [[nodiscard]] bool endianness_matches_machine() const
+  CATALYST_CONDUIT_NODISCARD bool is_big_endian() const
+  {
+    return conduit_datatype_is_big_endian(this->c_dtype);
+  }
+  CATALYST_CONDUIT_NODISCARD bool endianness_matches_machine() const
   {
     return conduit_datatype_endianness_matches_machine(this->c_dtype);
   }
@@ -1191,70 +1278,115 @@ public:
   /// scalar coercion
 
   /// convert to a signed integer types
-  [[nodiscard]] conduit_int8 to_int8() const
+  CATALYST_CONDUIT_NODISCARD conduit_int8 to_int8() const
   {
     return this->to_type<conduit_int8, conduit_int16>();
   }
 
-  [[nodiscard]] conduit_int16 to_int16() const { return this->to_type<conduit_int16>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_int16 to_int16() const
+  {
+    return this->to_type<conduit_int16>();
+  }
 
-  [[nodiscard]] conduit_int32 to_int32() const { return this->to_type<conduit_int32>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_int32 to_int32() const
+  {
+    return this->to_type<conduit_int32>();
+  }
 
-  [[nodiscard]] conduit_int64 to_int64() const { return this->to_type<conduit_int64>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_int64 to_int64() const
+  {
+    return this->to_type<conduit_int64>();
+  }
 
   /// convert to a unsigned integer types
-  [[nodiscard]] conduit_uint8 to_uint8() const
+  CATALYST_CONDUIT_NODISCARD conduit_uint8 to_uint8() const
   {
     return this->to_type<conduit_uint8, conduit_uint16>();
   }
 
-  [[nodiscard]] conduit_uint16 to_uint16() const { return this->to_type<conduit_uint16>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_uint16 to_uint16() const
+  {
+    return this->to_type<conduit_uint16>();
+  }
 
-  [[nodiscard]] conduit_uint32 to_uint32() const { return this->to_type<conduit_uint32>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_uint32 to_uint32() const
+  {
+    return this->to_type<conduit_uint32>();
+  }
 
-  [[nodiscard]] conduit_uint64 to_uint64() const { return this->to_type<conduit_uint64>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_uint64 to_uint64() const
+  {
+    return this->to_type<conduit_uint64>();
+  }
 
   /// convert to a floating point type
-  [[nodiscard]] conduit_float32 to_float32() const { return this->to_type<conduit_float32>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_float32 to_float32() const
+  {
+    return this->to_type<conduit_float32>();
+  }
 
-  [[nodiscard]] conduit_float64 to_float64() const { return this->to_type<conduit_float64>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_float64 to_float64() const
+  {
+    return this->to_type<conduit_float64>();
+  }
 
-  [[nodiscard]] conduit_index_t to_index_t() const { return this->to_type<conduit_index_t>(); }
+  CATALYST_CONDUIT_NODISCARD conduit_index_t to_index_t() const
+  {
+    return this->to_type<conduit_index_t>();
+  }
 
   /// convert to c integer types
-  [[nodiscard]] char to_char() const { return this->to_type<char, conduit_int16>(); }
+  CATALYST_CONDUIT_NODISCARD char to_char() const { return this->to_type<char, conduit_int16>(); }
 
-  [[nodiscard]] short to_short() const { return this->to_type<short>(); }
+  CATALYST_CONDUIT_NODISCARD short to_short() const { return this->to_type<short>(); }
 
-  [[nodiscard]] int to_int() const { return this->to_type<int>(); }
+  CATALYST_CONDUIT_NODISCARD int to_int() const { return this->to_type<int>(); }
 
-  [[nodiscard]] long to_long() const { return this->to_type<long>(); }
+  CATALYST_CONDUIT_NODISCARD long to_long() const { return this->to_type<long>(); }
 
   /// convert to c signed integer types
-  [[nodiscard]] signed char to_signed_char() const
+  CATALYST_CONDUIT_NODISCARD signed char to_signed_char() const
   {
     return this->to_type<signed char, conduit_int16>();
   }
 
-  [[nodiscard]] signed short to_signed_short() const { return this->to_type<signed short>(); }
+  CATALYST_CONDUIT_NODISCARD signed short to_signed_short() const
+  {
+    return this->to_type<signed short>();
+  }
 
-  [[nodiscard]] signed int to_signed_int() const { return this->to_type<signed int>(); }
+  CATALYST_CONDUIT_NODISCARD signed int to_signed_int() const
+  {
+    return this->to_type<signed int>();
+  }
 
-  [[nodiscard]] signed long to_signed_long() const { return this->to_type<signed long>(); }
+  CATALYST_CONDUIT_NODISCARD signed long to_signed_long() const
+  {
+    return this->to_type<signed long>();
+  }
 
   /// convert to c unsigned integer types
-  [[nodiscard]] unsigned char to_unsigned_char() const
+  CATALYST_CONDUIT_NODISCARD unsigned char to_unsigned_char() const
   {
     return this->to_type<unsigned char, conduit_uint16>();
   }
-  [[nodiscard]] unsigned short to_unsigned_short() const { return this->to_type<unsigned short>(); }
-  [[nodiscard]] unsigned int to_unsigned_int() const { return this->to_type<unsigned int>(); }
-  [[nodiscard]] unsigned long to_unsigned_long() const { return this->to_type<unsigned long>(); }
+  CATALYST_CONDUIT_NODISCARD unsigned short to_unsigned_short() const
+  {
+    return this->to_type<unsigned short>();
+  }
+  CATALYST_CONDUIT_NODISCARD unsigned int to_unsigned_int() const
+  {
+    return this->to_type<unsigned int>();
+  }
+  CATALYST_CONDUIT_NODISCARD unsigned long to_unsigned_long() const
+  {
+    return this->to_type<unsigned long>();
+  }
 
   /// convert to c floating point types
-  [[nodiscard]] float to_float() const { return this->to_type<float>(); }
+  CATALYST_CONDUIT_NODISCARD float to_float() const { return this->to_type<float>(); }
 
-  [[nodiscard]] double to_double() const { return this->to_type<double>(); }
+  CATALYST_CONDUIT_NODISCARD double to_double() const { return this->to_type<double>(); }
 
   //-----------------------------------------------------------------------------
   //
@@ -1269,19 +1401,25 @@ public:
   ///  These methods provide general info about the node.
   //-----------------------------------------------------------------------------
 
-  [[nodiscard]] DataType dtype() const { return { this->c_dtype() }; }
-  [[nodiscard]] const conduit_datatype* c_dtype() const { return conduit_node_dtype(this->c_node); }
+  CATALYST_CONDUIT_NODISCARD DataType dtype() const { return { this->c_dtype() }; }
+  CATALYST_CONDUIT_NODISCARD const conduit_datatype* c_dtype() const
+  {
+    return conduit_node_dtype(this->c_node);
+  }
 
   //-------------------------------------------------------------------------
   /// contiguous checks
   //-------------------------------------------------------------------------
 
   /// Does this node has a contiguous data layout?
-  [[nodiscard]] bool is_contiguous() const { return conduit_node_is_contiguous(this->c_node); }
+  CATALYST_CONDUIT_NODISCARD bool is_contiguous() const
+  {
+    return conduit_node_is_contiguous(this->c_node);
+  }
 
   /// true if node hierarchy's memory contiguously follows
   /// the given node's memory
-  [[nodiscard]] bool contiguous_with(const Node& n) const
+  CATALYST_CONDUIT_NODISCARD bool contiguous_with(const Node& n) const
   {
     return conduit_node_contiguous_with_node(this->c_node, n.c_node);
   }
@@ -1294,7 +1432,7 @@ public:
   }
 
   /// is this node compatible with given node
-  [[nodiscard]] bool compatible(const Node& n) const
+  CATALYST_CONDUIT_NODISCARD bool compatible(const Node& n) const
   {
     return conduit_node_compatible(this->c_node, n.c_node);
   }
@@ -1321,7 +1459,7 @@ public:
   /// node's memory properties
   void info(Node& nres) const { conduit_node_info(this->c_node, nres.c_node); }
 
-  [[nodiscard]] Node info() const
+  CATALYST_CONDUIT_NODISCARD Node info() const
   {
     Node ret;
     this->info(ret);
@@ -1341,29 +1479,38 @@ public:
   //-----------------------------------------------------------------------------
   // -- data structure print methods ---
   //-----------------------------------------------------------------------------
-  [[nodiscard]] std::string to_json() const { return conduit_node_to_json(this->c_node); }
-  [[nodiscard]] std::string to_json_with_options(const Node& options) const
+  CATALYST_CONDUIT_NODISCARD std::string to_json() const
+  {
+    return conduit_node_to_json(this->c_node);
+  }
+  CATALYST_CONDUIT_NODISCARD std::string to_json_with_options(const Node& options) const
   {
     return conduit_node_to_json_with_options(this->c_node, options.c_node);
   }
 
-  [[nodiscard]] std::string to_string() const { return conduit_node_to_string(this->c_node); }
-  [[nodiscard]] std::string to_string_with_options(const Node& options) const
+  CATALYST_CONDUIT_NODISCARD std::string to_string() const
+  {
+    return conduit_node_to_string(this->c_node);
+  }
+  CATALYST_CONDUIT_NODISCARD std::string to_string_with_options(const Node& options) const
   {
     return conduit_node_to_string_with_options(this->c_node, options.c_node);
   }
 
-  [[nodiscard]] std::string to_summary_string() const
+  CATALYST_CONDUIT_NODISCARD std::string to_summary_string() const
   {
     return conduit_node_to_summary_string(this->c_node);
   }
-  [[nodiscard]] std::string to_summary_string_with_options(const Node& options) const
+  CATALYST_CONDUIT_NODISCARD std::string to_summary_string_with_options(const Node& options) const
   {
     return conduit_node_to_summary_string_with_options(this->c_node, options.c_node);
   }
 
-  [[nodiscard]] std::string to_yaml() const { return conduit_node_to_yaml(this->c_node); }
-  [[nodiscard]] std::string to_yaml_with_options(const Node& options) const
+  CATALYST_CONDUIT_NODISCARD std::string to_yaml() const
+  {
+    return conduit_node_to_yaml(this->c_node);
+  }
+  CATALYST_CONDUIT_NODISCARD std::string to_yaml_with_options(const Node& options) const
   {
     return conduit_node_to_yaml_with_options(this->c_node, options.c_node);
   }
@@ -1396,7 +1543,7 @@ public:
   }
 
   // NOLINTNEXTLINE(readability-const-return-type)
-  [[nodiscard]] const Node child(conduit_index_t idx) const
+  CATALYST_CONDUIT_NODISCARD const Node child(conduit_index_t idx) const
   {
     CATALYST_CONDUIT_WRAP_EXCEP(return Node(conduit_node_child(this->c_node, idx)));
   }
@@ -1424,11 +1571,11 @@ public:
   const Node operator[](conduit_index_t idx) const { return child(idx); }
 
   /// returns the number of children (list and object interfaces)
-  [[nodiscard]] conduit_index_t number_of_children() const
+  CATALYST_CONDUIT_NODISCARD conduit_index_t number_of_children() const
   {
     return conduit_node_number_of_children(this->c_node);
   }
-  [[nodiscard]] conduit_index_t number_of_elements() const
+  CATALYST_CONDUIT_NODISCARD conduit_index_t number_of_elements() const
   {
     return conduit_node_number_of_elements(this->c_node);
   }
@@ -1439,7 +1586,7 @@ public:
 
   // conduit_node_name uses strdup, which allocates memory
   // on the heap. Must free the result here after copying.
-  [[nodiscard]] std::string name() const
+  CATALYST_CONDUIT_NODISCARD std::string name() const
   {
     char* name = conduit_node_name(this->c_node);
     if (!name)
@@ -1454,7 +1601,7 @@ public:
 
   // conduit_node_path uses strdup, which allocates memory
   // on the heap. Must free the result here after copying.
-  [[nodiscard]] std::string path() const
+  CATALYST_CONDUIT_NODISCARD std::string path() const
   {
     char* path = conduit_node_path(this->c_node);
     if (!path)
@@ -1469,12 +1616,12 @@ public:
   }
 
   /// checks if a node has a direct child with given name
-  [[nodiscard]] bool has_child(const std::string& name) const
+  CATALYST_CONDUIT_NODISCARD bool has_child(const std::string& name) const
   {
     return conduit_node_has_child(this->c_node, name.c_str());
   }
   /// checks if given path exists in the Node hierarchy
-  [[nodiscard]] bool has_path(const std::string& path) const
+  CATALYST_CONDUIT_NODISCARD bool has_path(const std::string& path) const
   {
     return conduit_node_has_path(this->c_node, path.c_str());
   }
@@ -1522,7 +1669,7 @@ public:
   //-----------------------------------------------------------------------------
 
 #define catalyst_conduit_as(dname)                                                                 \
-  [[nodiscard]] conduit_##dname as_##dname() const                                                 \
+  CATALYST_CONDUIT_NODISCARD conduit_##dname as_##dname() const                                    \
   {                                                                                                \
     CATALYST_CONDUIT_WRAP_EXCEP(return conduit_node_as_##dname(this->c_node));                     \
   }
@@ -1546,11 +1693,11 @@ public:
 #undef catalyst_conduit_as
 
 #define catalyst_conduit_as_ptr(dname)                                                             \
-  [[nodiscard]] conduit_##dname* as_##dname##_ptr()                                                \
+  CATALYST_CONDUIT_NODISCARD conduit_##dname* as_##dname##_ptr()                                   \
   {                                                                                                \
     CATALYST_CONDUIT_WRAP_EXCEP(return conduit_node_as_##dname##_ptr(this->c_node));               \
   }                                                                                                \
-  [[nodiscard]] const conduit_##dname* as_##dname##_ptr() const                                    \
+  CATALYST_CONDUIT_NODISCARD const conduit_##dname* as_##dname##_ptr() const                       \
   {                                                                                                \
     CATALYST_CONDUIT_WRAP_EXCEP(return conduit_node_as_##dname##_ptr(this->c_node));               \
   }
@@ -1574,25 +1721,28 @@ public:
 #undef catalyst_conduit_as_ptr
 
   // char8_str cases
-  [[nodiscard]] char* as_char8_str()
+  CATALYST_CONDUIT_NODISCARD char* as_char8_str()
   {
     CATALYST_CONDUIT_WRAP_EXCEP(return conduit_node_as_char8_str(this->c_node));
   }
-  [[nodiscard]] const char* as_char8_str() const
+  CATALYST_CONDUIT_NODISCARD const char* as_char8_str() const
   {
     CATALYST_CONDUIT_WRAP_EXCEP(return conduit_node_as_char8_str(this->c_node));
   }
-  [[nodiscard]] std::string as_string() const
+  CATALYST_CONDUIT_NODISCARD std::string as_string() const
   {
     CATALYST_CONDUIT_WRAP_EXCEP(return std::string(conduit_node_as_char8_str(this->c_node)));
   }
 
   // direct data pointer access
   void* data_ptr() { return conduit_node_data_ptr(this->c_node); }
-  [[nodiscard]] const void* data_ptr() const { return conduit_node_data_ptr(this->c_node); }
+  CATALYST_CONDUIT_NODISCARD const void* data_ptr() const
+  {
+    return conduit_node_data_ptr(this->c_node);
+  }
 
   void* element_ptr(conduit_index_t idx) { return conduit_node_element_ptr(this->c_node, idx); }
-  [[nodiscard]] const void* element_ptr(conduit_index_t idx) const
+  CATALYST_CONDUIT_NODISCARD const void* element_ptr(conduit_index_t idx) const
   {
     return conduit_node_element_ptr(this->c_node, idx);
   }
@@ -1677,7 +1827,7 @@ private:
   }
 
   template <typename T, typename Deser = T>
-  T to_type() const
+  CATALYST_CONDUIT_NODISCARD T to_type() const
   {
     DataType const dtype = this->dtype();
     /* ints */

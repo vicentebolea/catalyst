@@ -51,6 +51,12 @@
 
 #include <conduit.h>
 
+#if __cplusplus >= 201703L
+#define CATALYST_CONDUIT_ERROR_NODISCARD [[nodiscard]]
+#else
+#define CATALYST_CONDUIT_ERROR_NODISCARD
+#endif
+
 namespace conduit_cpp
 {
 class Error : public std::exception
@@ -82,7 +88,7 @@ public:
 
   void print() const { std::cout << message() << std::endl; }
 
-  std::string message() const
+  CATALYST_CONDUIT_ERROR_NODISCARD std::string message() const
   {
     std::ostringstream oss;
     message(oss);
@@ -97,7 +103,10 @@ public:
     oss << "line: " << m_line << std::endl;
   }
 
-  const char* what() const noexcept override { return m_what.c_str(); }
+  CATALYST_CONDUIT_ERROR_NODISCARD const char* what() const noexcept override
+  {
+    return m_what.c_str();
+  }
 
 private:
   std::string m_msg;
