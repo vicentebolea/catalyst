@@ -82,7 +82,7 @@ public:
 
   void print() const { std::cout << message() << std::endl; }
 
-  std::string message() const
+  [[nodiscard]] std::string message() const
   {
     std::ostringstream oss;
     message(oss);
@@ -97,7 +97,7 @@ public:
     oss << "line: " << m_line << std::endl;
   }
 
-  const char* what() const noexcept override { return m_what.c_str(); }
+  [[nodiscard]] const char* what() const noexcept override { return m_what.c_str(); }
 
 private:
   std::string m_msg;

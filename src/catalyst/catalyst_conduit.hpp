@@ -200,7 +200,10 @@ public:
   {
     return conduit_datatype_element_bytes(this->c_dtype);
   }
-  conduit_index_t endianness() const { return conduit_datatype_endianness(this->c_dtype); }
+  [[nodiscard]] conduit_index_t endianness() const
+  {
+    return conduit_datatype_endianness(this->c_dtype);
+  }
   [[nodiscard]] conduit_index_t element_index(conduit_index_t idx) const
   {
     return conduit_datatype_element_index(this->c_dtype, idx);
@@ -1677,7 +1680,7 @@ private:
   }
 
   template <typename T, typename Deser = T>
-  T to_type() const
+  [[nodiscard]] T to_type() const
   {
     DataType const dtype = this->dtype();
     /* ints */
