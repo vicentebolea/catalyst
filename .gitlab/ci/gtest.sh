@@ -2,10 +2,10 @@
 
 set -e
 
-readonly version="1.10.0"
-readonly sha256sum="9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb"
-readonly tarball="release-$version.tar.gz"
-readonly target="googletest-release-$version"
+readonly version="1.17.0"
+readonly sha256sum="65fab701d9829d38cb77c14acdc431d2108bfdbf8979e40eb8ae567edf10b27c"
+readonly filename="googletest-$version"
+readonly tarball="$filename.tar.gz"
 
 case "$( uname -s )" in
     Linux)
@@ -24,11 +24,11 @@ readonly shatool
 cd .gitlab
 
 echo "$sha256sum  $tarball" > gtest.sha256sum
-curl -OL "https://github.com/google/googletest/archive/$tarball"
+curl -OL "https://github.com/google/googletest/releases/download/v$version/$tarball"
 $shatool --check gtest.sha256sum
 
 cmake -E tar xf "$tarball"
-cd "$target"
+cd "$filename"
 mkdir build
 cd build
 

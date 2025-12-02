@@ -1,14 +1,14 @@
 $erroractionpreference = "stop"
 
-$version = "1.10.0"
-$sha256sum = "9DC9157A9A1551EC7A7E43DAEA9A694A0BB5FB8BEC81235D8A1E6EF64C716DCB"
-$filename = "googletest-release-$version"
-$tarball = "release-$version.tar.gz"
+$version = "1.17.0"
+$sha256sum = "65FAB701D9829D38CB77C14ACDC431D2108BFDBF8979E40EB8AE567EDF10B27C"
+$filename = "googletest-$version"
+$tarball = "$filename.tar.gz"
 
 $outdir = $pwd.Path
 $outdir = "$outdir\.gitlab"
 $ProgressPreference = "SilentlyContinue"
-Invoke-WebRequest -Uri "https://github.com/google/googletest/archive/$tarball" -OutFile "$outdir\$tarball"
+Invoke-WebRequest -Uri "https://github.com/google/googletest/releases/download/v$version/$tarball" -OutFile "$outdir\$tarball"
 $hash = Get-FileHash "$outdir\$tarball" -Algorithm SHA256
 if ($hash.Hash -ne $sha256sum) {
     exit 1
@@ -21,11 +21,18 @@ cd "$filename"
 New-Item -Path "build" -Type Directory
 cd build
 
+if ($env:CMAKE_BUILD_TYPE -eq "") {
+    $build_type = "Release"
+} else {
+    $build_type = "$env:CMAKE_BUILD_TYPE"
+}
+
 cmake -GNinja `
-    -DCMAKE_BUILD_TYPE=Release `
+    -DCMAKE_BUILD_TYPE="$build_type" `
     -DCMAKE_INSTALL_PREFIX="$env:CI_PROJECT_DIR/.gitlab/gtest" `
-    -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL `
     -DBUILD_GMOCK=OFF `
+    -DBUILD_SHARED_LIBS=ON `
+    -Dgtest_force_shared_crt=ON `
     ..
 cmake --build .
 cmake --build . --target install

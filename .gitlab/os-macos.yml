@@ -29,7 +29,7 @@
         CMAKE_CONFIGURATION: macos_arm64_replay
         CTEST_NO_WARNINGS_ALLOWED: 1
         CTEST_EXCLUSIONS: >-
-          catalyst-impl-external-conduit
+          ^catalyst-impl-external-conduit$
 
 .macos_x86_64_replay:
     extends: .macos_build
@@ -45,7 +45,7 @@
         CMAKE_CONFIGURATION: macos_arm64_replay_wrappings
         CATALYST_SETUP_PYTHON_ENV: 1
         CTEST_EXCLUSIONS: >-
-          catalyst-impl-external-conduit
+          ^catalyst-impl-external-conduit$
 
 .macos_x86_64_replay_wrappings:
     extends: .macos_x86_64_replay
