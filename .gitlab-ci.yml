@@ -170,7 +170,7 @@ build-test:fedora36-x86_64-asan:
         - .fedora36_x86_64_asan
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
-        - .linux_x86_64_sanitizer_tags
+        - .linux_x86_64_builder_tags
         - .rules
 
 build-test:fedora36-x86_64-ubsan:
@@ -178,7 +178,7 @@ build-test:fedora36-x86_64-ubsan:
         - .fedora36_x86_64_ubsan
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
-        - .linux_x86_64_sanitizer_tags
+        - .linux_x86_64_builder_tags
         - .rules
 
 build-test:fedora36-x86_64-asan-mpi-replay:
@@ -186,7 +186,7 @@ build-test:fedora36-x86_64-asan-mpi-replay:
         - .fedora36_x86_64_asan_mpi_replay
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
-        - .linux_x86_64_sanitizer_tags
+        - .linux_x86_64_builder_tags
         - .rules
 
 build:fedora36-x86_64-mpi-replay-tidy:
@@ -212,7 +212,7 @@ build-test:fedora36-x86_64-mpi-replay-ubsan:
         - .fedora36_x86_64_mpi_replay_ubsan
         - .cmake_memcheck_linux
         - .cmake_build_artifacts
-        - .linux_x86_64_sanitizer_tags
+        - .linux_x86_64_builder_tags
         - .rules
 
 build-test:fedora36-x86_64-wrappings:
