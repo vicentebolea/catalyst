@@ -2,14 +2,14 @@
 
 ## Base images
 
-.fedora36:
+.fedora43:
+    image: "kitware/paraview:ci-catalyst-fedora43-20260304"
     variables:
         GIT_CLONE_PATH: $CI_BUILDS_DIR/gitlab-kitware-sciviz-ci
 
-.fedora36_x86_64:
+.fedora43_x86_64:
     extends:
-      .fedora36
-    image: "kitware/paraview:ci-catalyst-fedora36-x86_64-20250506"
+        - .fedora43
 
 ### intel "classic" compilers
 .el8_x86_64_icc:
@@ -34,6 +34,10 @@
         # network instead for reliability.
         # https://wiki.mpich.org/mpich/index.php/Frequently_Asked_Questions#Q:_Why_MPI_Put_raises_SIGBUS_error_inside_docker.3F
         MPIR_CVAR_NOLOCAL: 1
+        # Tell libfabric to NOT use psm3 (potentially use sockets) to adhere to the MPIR_CVAR_NOLOCAL
+        FI_PROVIDER: "^psm3"
+        # Fails inside of CI containers.
+        PSM3_KASSIST_MODE: none
 
 .fedora_extdeps_addon:
     variables:
@@ -43,92 +47,92 @@
     variables:
         CMAKE_PREFIX_PATH: "/opt/conduit/wrapped"
 
-.fedora36_x86_64_basic:
+.fedora43_x86_64_basic:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64
+        CMAKE_CONFIGURATION: fedora43_x86_64
 
-.fedora36_aarch64:
+.fedora43_aarch64:
     extends:
-        - .fedora36
+        - .fedora43
 
-    image: "kitware/paraview:ci-catalyst-fedora36-aarch64-20250502"
     variables:
-        CMAKE_CONFIGURATION: fedora36_aarch64
+        CMAKE_CONFIGURATION: fedora43_aarch64
         CTEST_EXCLUSIONS: >-
           ^t_conduit_node_set$
 
-.fedora36_ppc64le:
-    image: "kitware/paraview:ci-catalyst-fedora36-ppc64le-20250502"
+.fedora43_ppc64le:
+    extends:
+        - .fedora43
     variables:
-      CMAKE_CONFIGURATION: fedora36_ppc64le
+      CMAKE_CONFIGURATION: fedora43_ppc64le
       CTEST_SITE: "UO Frank cluster"
       GIT_CLONE_PATH: null
       SYSTEM_BUILDTOOLS: "true"
 
-.fedora36_x86_64_replay:
+.fedora43_x86_64_replay:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_replay
+        CMAKE_CONFIGURATION: fedora43_x86_64_replay
 
-.fedora36_x86_64_mpi_replay:
+.fedora43_x86_64_mpi_replay:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
         - .fedora_mpich_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_mpi_replay
+        CMAKE_CONFIGURATION: fedora43_x86_64_mpi_replay
 
-.fedora36_x86_64_extdeps_replay:
+.fedora43_x86_64_extdeps_replay:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
         - .fedora_extdeps_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_extdeps_replay
+        CMAKE_CONFIGURATION: fedora43_x86_64_extdeps_replay
 
-.fedora36_x86_64_extdeps_mpi_replay:
+.fedora43_x86_64_extdeps_mpi_replay:
     extends:
-        - .fedora36_x86_64
-        - .fedora_extdeps_addon
-        - .fedora_mpich_addon
-
-    variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_extdeps_mpi_replay
-
-.fedora36_x86_64_tidy:
-    extends:
-        - .fedora36_x86_64
-
-    variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_tidy
-        CTEST_NO_WARNINGS_ALLOWED: 1
-
-.fedora36_x86_64_mpi_replay_tidy:
-    extends:
-        - .fedora36_x86_64
-        - .fedora_mpich_addon
-
-    variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_mpi_replay_tidy
-        CTEST_NO_WARNINGS_ALLOWED: 1
-
-.fedora36_x86_64_extdeps_mpi_replay_tidy:
-    extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
         - .fedora_extdeps_addon
         - .fedora_mpich_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_extdeps_mpi_replay_tidy
+        CMAKE_CONFIGURATION: fedora43_x86_64_extdeps_mpi_replay
+
+.fedora43_x86_64_tidy:
+    extends:
+        - .fedora43_x86_64
+
+    variables:
+        CMAKE_CONFIGURATION: fedora43_x86_64_tidy
         CTEST_NO_WARNINGS_ALLOWED: 1
 
-.fedora36_x86_64_memcheck:
-    extends: .fedora36_x86_64
+.fedora43_x86_64_mpi_replay_tidy:
+    extends:
+        - .fedora43_x86_64
+        - .fedora_mpich_addon
+
+    variables:
+        CMAKE_CONFIGURATION: fedora43_x86_64_mpi_replay_tidy
+        CTEST_NO_WARNINGS_ALLOWED: 1
+
+.fedora43_x86_64_extdeps_mpi_replay_tidy:
+    extends:
+        - .fedora43_x86_64
+        - .fedora_extdeps_addon
+        - .fedora_mpich_addon
+
+    variables:
+        CMAKE_CONFIGURATION: fedora43_x86_64_extdeps_mpi_replay_tidy
+        CTEST_NO_WARNINGS_ALLOWED: 1
+
+.fedora43_x86_64_memcheck:
+    extends: .fedora43_x86_64
 
     variables:
         CMAKE_BUILD_TYPE: RelWithDebInfo
@@ -144,78 +148,78 @@
     variables:
         CTEST_MEMORYCHECK_TYPE: UndefinedBehaviorSanitizer
 
-.fedora36_x86_64_asan:
+.fedora43_x86_64_asan:
     extends:
-        - .fedora36_x86_64_memcheck
+        - .fedora43_x86_64_memcheck
         - .fedora_asan_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_asan
+        CMAKE_CONFIGURATION: fedora43_x86_64_asan
 
-.fedora36_x86_64_ubsan:
+.fedora43_x86_64_ubsan:
     extends:
-        - .fedora36_x86_64_memcheck
+        - .fedora43_x86_64_memcheck
         - .fedora_ubsan_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_ubsan
+        CMAKE_CONFIGURATION: fedora43_x86_64_ubsan
 
-.fedora36_x86_64_asan_mpi_replay:
+.fedora43_x86_64_asan_mpi_replay:
     extends:
-        - .fedora36_x86_64_memcheck
+        - .fedora43_x86_64_memcheck
         - .fedora_asan_addon
         - .fedora_mpich_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_asan_mpi_replay
+        CMAKE_CONFIGURATION: fedora43_x86_64_asan_mpi_replay
 
-.fedora36_x86_64_mpi_replay_ubsan:
+.fedora43_x86_64_mpi_replay_ubsan:
     extends:
-        - .fedora36_x86_64_memcheck
+        - .fedora43_x86_64_memcheck
         - .fedora_ubsan_addon
         - .fedora_mpich_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_mpi_replay_ubsan
+        CMAKE_CONFIGURATION: fedora43_x86_64_mpi_replay_ubsan
 
-.fedora36_x86_64_wrappings:
+.fedora43_x86_64_wrappings:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_wrappings
+        CMAKE_CONFIGURATION: fedora43_x86_64_wrappings
 
-.fedora36_x86_64_replay_wrappings:
+.fedora43_x86_64_replay_wrappings:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_replay_wrappings
+        CMAKE_CONFIGURATION: fedora43_x86_64_replay_wrappings
 
-.fedora36_x86_64_mpi_replay_wrappings:
+.fedora43_x86_64_mpi_replay_wrappings:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
         - .fedora_mpich_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_mpi_replay_wrappings
+        CMAKE_CONFIGURATION: fedora43_x86_64_mpi_replay_wrappings
 
-.fedora36_x86_64_extdeps_replay_wrappings:
+.fedora43_x86_64_extdeps_replay_wrappings:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
         - .fedora_extdeps_wrappings_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_extdeps_replay_wrappings
+        CMAKE_CONFIGURATION: fedora43_x86_64_extdeps_replay_wrappings
 
-.fedora36_x86_64_extdeps_mpi_replay_wrappings:
+.fedora43_x86_64_extdeps_mpi_replay_wrappings:
     extends:
-        - .fedora36_x86_64
+        - .fedora43_x86_64
         - .fedora_extdeps_wrappings_addon
         - .fedora_mpich_addon
 
     variables:
-        CMAKE_CONFIGURATION: fedora36_x86_64_extdeps_mpi_replay_wrappings
+        CMAKE_CONFIGURATION: fedora43_x86_64_extdeps_mpi_replay_wrappings
 
 .el8_x86_64_icc_replay_wrappings:
     extends:
