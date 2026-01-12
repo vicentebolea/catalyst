@@ -276,13 +276,6 @@
         - hpsf
         - hpsf-ppc64le
 
-.linux_x86_64_sanitizer_tags:
-    tags:
-        - privileged
-        - paraview
-        - docker
-        - linux-x86_64
-
 ## Linux-specific scripts
 
 .before_script_linux: &before_script_linux
