@@ -18,7 +18,7 @@ dnf install -y --setopt=install_weak_deps=False \
 
 # Python dependencies
 dnf install -y --setopt=install_weak_deps=False \
-  python-devel python-numpy python3-mpi4py-mpich
+  python3-devel python-numpy python3-mpi4py-mpich
 
 # This is needed for archs other than x86_64 and aarch64 since cmake does not
 # provide upstream binary distributions.
