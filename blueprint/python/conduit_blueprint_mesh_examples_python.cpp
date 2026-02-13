@@ -43,6 +43,134 @@ using namespace conduit;
 
 
 //---------------------------------------------------------------------------//
+// conduit::blueprint::mesh::examples::generate
+//---------------------------------------------------------------------------//
+
+// doc string
+const char *PyBlueprint_mesh_examples_generate_doc_str =
+"generate(example_name, dest)\n"
+"generate(example_name, dest, opts)\n"
+"\n"
+"Driver to generates mesh blueprint example meshes by name.\n";
+
+// python func
+static PyObject * 
+PyBlueprint_mesh_examples_generate(PyObject *, //self
+                                   PyObject *args,
+                                   PyObject *kwargs)
+{
+    const char *example_name = NULL;
+    PyObject   *py_node_res  = NULL;
+    PyObject   *py_node_opts = NULL;
+
+    static const char *kwlist[] = {"example_name",
+                                   "dest",
+                                   "opts",
+                                   NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args,
+                                    kwargs,
+                                    "sO|O",
+                                    const_cast<char**>(kwlist),
+                                    &example_name,
+                                    &py_node_res,
+                                    &py_node_opts))
+    {
+        return (NULL);
+    }
+
+    if(!PyConduit_Node_Check(py_node_res))
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "'dest' argument must be a "
+                        "conduit.Node instance");
+        return NULL;
+    }
+
+    if(py_node_opts != NULL && !PyConduit_Node_Check(py_node_opts))
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "'opts' argument must be a "
+                        "conduit.Node instance");
+        return NULL;
+    }
+
+    Node &node_res  = *PyConduit_Node_Get_Node_Ptr(py_node_res);
+    // w/o opts 
+    if(py_node_opts == NULL)
+    {
+        blueprint::mesh::examples::generate(std::string(example_name),
+                                            node_res);
+    }
+    else // w/ opts
+    {
+        Node &node_opts = *PyConduit_Node_Get_Node_Ptr(py_node_opts);
+        blueprint::mesh::examples::generate(std::string(example_name),
+                                            node_opts,
+                                            node_res);
+    }
+
+    Py_RETURN_NONE;
+}
+
+//---------------------------------------------------------------------------//
+// conduit::blueprint::mesh::examples::generate_default_options
+//---------------------------------------------------------------------------//
+
+// doc string
+const char *PyBlueprint_mesh_examples_generate_default_options_doc_str =
+"generate(opts) # default options for all examples\n"
+"generate(opts,example_name) # default options for specific example\n"
+"\n"
+"Populates default options for mesh blueprint examples generate.\n";
+
+// python func
+static PyObject * 
+PyBlueprint_mesh_examples_generate_default_options(PyObject *, //self
+                                                   PyObject *args,
+                                                   PyObject *kwargs)
+{
+    const char *example_name = NULL;
+    PyObject   *py_node_res  = NULL;
+
+    static const char *kwlist[] = {"dest",
+                                   "example_name",
+                                   NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args,
+                                    kwargs,
+                                    "O|s",
+                                    const_cast<char**>(kwlist),
+                                    &py_node_res,
+                                    &example_name))
+    {
+        return (NULL);
+    }
+
+    if(!PyConduit_Node_Check(py_node_res))
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "'dest' argument must be a "
+                        "conduit.Node instance");
+        return NULL;
+    }
+
+    Node &node_res  = *PyConduit_Node_Get_Node_Ptr(py_node_res);
+
+    if(example_name != NULL)
+    {
+        blueprint::mesh::examples::generate_default_options(std::string(example_name),
+                                                            node_res);
+    }
+    else
+    {
+        blueprint::mesh::examples::generate_default_options(node_res);
+    }
+    Py_RETURN_NONE;
+}
+
+
+//---------------------------------------------------------------------------//
 // conduit::blueprint::mesh::examples::basic
 //---------------------------------------------------------------------------//
 
@@ -747,13 +875,112 @@ PyBlueprint_mesh_examples_polystar(PyObject *, //self
     Py_RETURN_NONE;
 }
 
+//---------------------------------------------------------------------------//
+// conduit::blueprint::mesh::examples::strided_structured
+//---------------------------------------------------------------------------//
 
+// doc string
+const char *PyBlueprint_mesh_examples_strided_structured_doc_str =
+"strided_structured(desc,npts_x,npts_y,npts_z,dest)\n"
+"\n"
+"Generates a strided structured grid with an element field and a vertex "
+"field, each element of which contains a sequentially increasing value. "
+"Calling code can specify the shape of the storage array for the fields "
+"and the location of the field values within the array.\n"
+"\n"
+"Pass the extra specifications with a conduit Node desc:\n"
+"\n"
+"vertex_data:\n"
+"  shape: [vx, vy, vz]\n"
+"  origin: [wx, wy, wz]\n"
+"element_data:\n"
+"   shape: [ex, ey, ez]\n"
+"   origin: [fx, fy, fz]\n";
+
+
+// python func
+static PyObject * 
+PyBlueprint_mesh_examples_strided_structured(PyObject *, //self
+                                             PyObject *args,
+                                             PyObject *kwargs)
+{
+
+  // Wraps:
+  // void CONDUIT_BLUEPRINT_API strided_structured(conduit::Node &desc,
+  //                                               conduit::index_t npts_x,
+  //                                               conduit::index_t npts_y,
+  //                                               conduit::index_t npts_z,
+  //                                               conduit::Node &res);
+
+    PyObject   *py_node_desc = NULL;
+    Py_ssize_t  npts_x       = 0;
+    Py_ssize_t  npts_y       = 0;
+    Py_ssize_t  npts_z       = 0;
+    PyObject   *py_node_dest = NULL;
+
+    static const char *kwlist[] = {"desc",
+                                   "npts_x",
+                                   "npts_y",
+                                   "npts_z",
+                                   "dest",
+                                   NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args,
+                                     kwargs,
+                                     "OnnnO",
+                                     const_cast<char**>(kwlist),
+                                     &py_node_desc,
+                                     &npts_x,
+                                     &npts_y,
+                                     &npts_z,
+                                     &py_node_dest))
+    {
+        return (NULL);
+    }
+
+    if(!PyConduit_Node_Check(py_node_desc))
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "'desc' argument must be a "
+                        "conduit.Node instance");
+        return NULL;
+    }
+
+    if(!PyConduit_Node_Check(py_node_dest))
+    {
+        PyErr_SetString(PyExc_TypeError,
+                        "'dest' argument must be a "
+                        "conduit.Node instance");
+        return NULL;
+    }
+
+    Node &node_desc = *PyConduit_Node_Get_Node_Ptr(py_node_desc);
+    Node &node_dest = *PyConduit_Node_Get_Node_Ptr(py_node_dest);
+
+    blueprint::mesh::examples::strided_structured(node_desc,
+                                                  npts_x,
+                                                  npts_y,
+                                                  npts_z,
+                                                  node_dest);
+
+    Py_RETURN_NONE;
+}
 
 //---------------------------------------------------------------------------//
 // Python Module Method Defs
 //---------------------------------------------------------------------------//
 static PyMethodDef blueprint_mesh_examples_python_funcs[] =
 {
+    //-----------------------------------------------------------------------//
+    {"generate",
+     (PyCFunction)PyBlueprint_mesh_examples_generate,
+      METH_VARARGS | METH_KEYWORDS,
+      PyBlueprint_mesh_examples_generate_doc_str},
+    //-----------------------------------------------------------------------//
+    {"generate_default_options",
+     (PyCFunction)PyBlueprint_mesh_examples_generate_default_options,
+      METH_VARARGS | METH_KEYWORDS,
+      PyBlueprint_mesh_examples_generate_default_options_doc_str},
     //-----------------------------------------------------------------------//
     {"basic",
      (PyCFunction)PyBlueprint_mesh_examples_basic,
@@ -804,7 +1031,11 @@ static PyMethodDef blueprint_mesh_examples_python_funcs[] =
      (PyCFunction)PyBlueprint_mesh_examples_polystar,
       METH_VARARGS | METH_KEYWORDS,
       PyBlueprint_mesh_examples_polystar_doc_str},
-
+    //-----------------------------------------------------------------------//
+    {"strided_structured",
+     (PyCFunction)PyBlueprint_mesh_examples_strided_structured,
+      METH_VARARGS | METH_KEYWORDS,
+      PyBlueprint_mesh_examples_strided_structured_doc_str},
     //-----------------------------------------------------------------------//
     // end methods table
     //-----------------------------------------------------------------------//

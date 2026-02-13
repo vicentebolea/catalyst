@@ -25,6 +25,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 message(STATUS "CMake build tool name: ${CMAKE_BUILD_TOOL}")
+endif() # end if(FALSE) - Kitware: enable ENABLE_WARNINGS macro
 
 macro(ENABLE_WARNINGS)
     # set the warning levels we want to abide by
@@ -40,8 +41,8 @@ macro(ENABLE_WARNINGS)
     endif()
 endmacro()
 
-
-################################
+if(FALSE) # Kitware: continue disabled block
+###############################
 # Shared vs Static Libs
 ################################
 if(BUILD_SHARED_LIBS)
@@ -84,11 +85,21 @@ if(NOT BUILD_SHARED_LIBS)
 endif()
 
 if( BLT_CXX_STD STREQUAL "c++98" )
-    message(FATAL_ERROR "Conduit now requires C++11 support."
-                        "\nPlease set BLT_CXX_STD to c++11 or newer.")
+    message(FATAL_ERROR "Conduit requires C++14 support."
+                        "\nPlease set BLT_CXX_STD to c++14 or newer.")
+elseif( BLT_CXX_STD STREQUAL "c++11" )
+    message(FATAL_ERROR "Conduit requires C++14 support."
+                        "\nPlease set BLT_CXX_STD to c++14 or newer.")
 else()
+    # keep CONDUIT_USE_CXX11 to support old install logic
     set(CONDUIT_USE_CXX11 TRUE)
-    message(STATUS "C++11 support enabled (CONDUIT_USE_CXX11 == TRUE)")
+    set(CONDUIT_USE_CXX14 TRUE)
+    message(STATUS "C++14 support enabled (CONDUIT_USE_CXX14 == TRUE)")
+endif()
+
+if(ENABLE_OPENMP)
+    set(CONDUIT_USE_OPENMP TRUE)
+    message(STATUS "OpenMP support enabled (CONDUIT_USE_OPENMP == TRUE)")
 endif()
 
 ################################
@@ -205,6 +216,8 @@ if(GIT_FOUND)
   
 endif()
 
+endif() # end if(FALSE) - Kitware: enable add_compiled_library macro
+
 
 ###############################################################################
 # Provide macros to simplify creating libs
@@ -291,7 +304,6 @@ macro(add_compiled_library)
     endif()
 
 endmacro()
-endif ()
 
 
 ###############################################################################
@@ -307,10 +319,14 @@ endmacro()
 # XXX(kitware) this variable is not set in Conduit, adding it to
 # remove dependence on PROJECT_VERSION in conduit_config.h
 set(CONDUIT_VERSION_MAJOR 0)
-set(CONDUIT_VERSION_MINOR 8)
-set(CONDUIT_VERSION_PATCH 3)
+set(CONDUIT_VERSION_MINOR 9)
+set(CONDUIT_VERSION_PATCH 5)
 set(CONDUIT_VERSION "${CONDUIT_VERSION_MAJOR}.${CONDUIT_VERSION_MINOR}.${CONDUIT_VERSION_PATCH}")
+# keep CONDUIT_USE_CXX11 to support old install logic
 set(CONDUIT_USE_CXX11 1)
+set(CONDUIT_USE_CXX14 1)
+# XXX(kitware) use yyjson as the default JSON parser (as of v0.9.5)
+set(CONDUIT_USE_YYJSON 1)
 set(CONDUIT_INSTALL_PREFIX "")
 set(CONDUIT_MAKE_EXTRA_LIBS "")
-set(CONDUIT_GIT_SHA1 "d8000c2d46b8ea968c2b7551cd0ce2af5b75b6da")
+set(CONDUIT_GIT_SHA1 "8543892a582737eb5941b1e90df068a75543df92")

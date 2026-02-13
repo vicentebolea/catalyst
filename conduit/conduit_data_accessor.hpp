@@ -70,24 +70,66 @@ public:
     /// counts number of occurrences of given value
     index_t         count(T value) const;
 
+    /// Assignment operator
+    DataAccessor<T>   &operator=(const DataAccessor<T> &accessor);
+
 //-----------------------------------------------------------------------------
 // Data and Info Access
 //-----------------------------------------------------------------------------
     T              operator[](index_t idx) const
                     {return element(idx);}
+
     T              element(index_t idx) const;
+
+    void           set(index_t idx, T value);
+
+    void            fill(T value);
 
     const void     *element_ptr(index_t idx) const
                     {
                          return static_cast<const char*>(m_data) +
                                   m_dtype.element_index(idx);
-                    };
+                    }
 
     index_t         number_of_elements() const 
                         {return m_dtype.number_of_elements();}
 
     const DataType &dtype()    const 
                         { return m_dtype;}
+
+
+
+//-----------------------------------------------------------------------------
+// Transforms
+//-----------------------------------------------------------------------------
+    std::string     to_string(const std::string &protocol="json") const;
+    void            to_string_stream(std::ostream &os,
+                                     const std::string &protocol="json") const;
+
+    // NOTE(cyrush): The primary reason this function exists is to enable
+    // easier compatibility with debugging tools (e.g. totalview, gdb) that
+    // have difficulty allocating default string parameters.
+    std::string     to_string_default() const;
+
+    std::string     to_json() const;
+    void            to_json_stream(std::ostream &os) const;
+
+    std::string     to_yaml() const;
+    void            to_yaml_stream(std::ostream &os) const;
+
+    /// Creates a string repression for printing that limits
+    /// the number of elements shown to a max number
+    std::string     to_summary_string_default() const;
+    std::string     to_summary_string(index_t threshold=5) const;
+    void            to_summary_string_stream(std::ostream &os,
+                                             index_t threshold=5) const;
+
+//-----------------------------------------------------------------------------
+// -- stdout print methods ---
+//-----------------------------------------------------------------------------
+    /// print a simplified json representation of the this node to std out
+    void            print() const
+                      {std::cout << to_summary_string() << std::endl;}
 
 private:
 

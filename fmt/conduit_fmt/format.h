@@ -1141,8 +1141,16 @@ template <typename T = void> struct null {};
 template <typename Char> struct fill_t {
  private:
   enum { max_size = 4 };
-  Char data_[max_size];
-  unsigned char size_;
+  // 2024-01-23 Conduit Change
+  // fix for mixing c++ stds
+  // https://github.com/fmtlib/fmt/issues/2017
+  // https://github.com/fmtlib/fmt/commit/f81c14aa1edd48919d452da872b425c9368cf782
+  Char data_[max_size] = {Char(' '), Char(0), Char(0), Char(0)};
+  unsigned char size_ = 1;
+  // !--- begin old code
+  // Char data_[max_size];
+  // unsigned char size_;
+  // !--- end old code
 
  public:
   FMT_CONSTEXPR void operator=(basic_string_view<Char> s) {
@@ -1200,9 +1208,17 @@ template <typename Char> struct basic_format_specs {
         type(0),
         align(align::none),
         sign(sign::none),
-        alt(false),
-        fill(detail::fill_t<Char>::make()) {}
+ // 2024-01-23 Conduit Change
+ // fix for mixing c++ stds 
+ // https://github.com/fmtlib/fmt/issues/2017
+ // https://github.com/fmtlib/fmt/commit/f81c14aa1edd48919d452da872b425c9368cf782
+         alt(false) {}
+        // !---- begin old code
+        // alt(false),
+        // fill(detail::fill_t<Char>::make()) {}
+        // !---- end old code
 };
+
 
 using format_specs = basic_format_specs<char>;
 
@@ -3924,11 +3940,11 @@ FMT_CONSTEXPR detail::udl_formatter<Char, CHARS...> operator""_format() {
     std::string message = "The answer is {}"_format(42);
   \endrst
  */
-FMT_CONSTEXPR detail::udl_formatter<char> operator"" _format(const char* s,
+FMT_CONSTEXPR detail::udl_formatter<char> operator""_format(const char* s,
                                                              size_t n) {
   return {{s, n}};
 }
-FMT_CONSTEXPR detail::udl_formatter<wchar_t> operator"" _format(
+FMT_CONSTEXPR detail::udl_formatter<wchar_t> operator""_format(
     const wchar_t* s, size_t n) {
   return {{s, n}};
 }
@@ -3944,10 +3960,10 @@ FMT_CONSTEXPR detail::udl_formatter<wchar_t> operator"" _format(
     FMT_NAMESPACE::print("Elapsed time: {s:.2f} seconds", "s"_a=1.23);
   \endrst
  */
-FMT_CONSTEXPR detail::udl_arg<char> operator"" _a(const char* s, size_t) {
+FMT_CONSTEXPR detail::udl_arg<char> operator""_a(const char* s, size_t) {
   return {s};
 }
-FMT_CONSTEXPR detail::udl_arg<wchar_t> operator"" _a(const wchar_t* s, size_t) {
+FMT_CONSTEXPR detail::udl_arg<wchar_t> operator""_a(const wchar_t* s, size_t) {
   return {s};
 }
 }  // namespace literals

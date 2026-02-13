@@ -20,6 +20,8 @@
 #include <iomanip>
 #include <sstream>
 #include <chrono>
+#include <cstdlib>
+#include <functional>
 
 //-----------------------------------------------------------------------------
 // -- conduit includes --
@@ -97,7 +99,7 @@
 //-----------------------------------------------------------------------------
 #define CONDUIT_ASSERT( cond, msg )                                  \
 {                                                                    \
-    if(!cond)                                                        \
+    if(!(cond))                                                      \
     {                                                                \
         std::ostringstream conduit_oss_assert;                       \
         conduit_oss_assert << msg;                                   \
@@ -120,7 +122,7 @@
 //-----------------------------------------------------------------------------
 #define CONDUIT_CHECK( cond, msg )                                   \
 {                                                                    \
-    if(!cond)                                                        \
+    if(!(cond))                                                      \
     {                                                                \
         std::ostringstream conduit_oss_check;                        \
         conduit_oss_check << msg;                                    \
@@ -268,6 +270,14 @@ namespace utils
 /// Primary interface used by the conduit API to move memory.
 //-----------------------------------------------------------------------------
 
+    //-----------------------------------------------------------------------------
+    /// Function types for memory handlers
+    //-----------------------------------------------------------------------------
+    typedef std::function<void(void*, const void*, size_t)> handle_memcpy_type;
+    typedef std::function<void(void*, int, size_t)> handle_memset_type;
+    typedef std::function<void*(size_t, size_t)> handle_alloc_type;
+    typedef std::function<void(void*)> handle_free_type;
+
     // conduit uses a single pair of memset and memcpy functions to
     // manage data movement.
 
@@ -278,12 +288,8 @@ namespace utils
     // won't be tied into all of the places where source and dest pointers
     // need to be located.
     //
-    void CONDUIT_API set_memcpy_handler(void(*conduit_hnd_copy)(void*,
-                                                                const void *,
-                                                                size_t));
-    void CONDUIT_API set_memset_handler(void(*conduit_hnd_memset)(void*,
-                                                                  int,
-                                                                  size_t));
+    void CONDUIT_API set_memcpy_handler(handle_memcpy_type);
+    void CONDUIT_API set_memset_handler(handle_memset_type);
 
     void CONDUIT_API default_memset_handler(void *ptr,
                                             int value,
@@ -293,7 +299,7 @@ namespace utils
                                             const void *source,
                                             size_t num);
 
-    // general memcpy interface used by conduit 
+    // general memcpy interface used by conduit
     void CONDUIT_API conduit_memcpy(void *destination,
                                     const void *source,
                                     size_t num);
@@ -318,8 +324,8 @@ namespace utils
 //-----------------------------------------------------------------------------
 
     // register a custom allocator
-    index_t CONDUIT_API register_allocator(void*(*conduit_hnd_allocate) (size_t, size_t),
-                                           void(*conduit_hnd_free)(void *));
+    index_t CONDUIT_API register_allocator(handle_alloc_type,
+                                           handle_free_type);
 
     // generic allocate interface
     // allocator_id 0 is the default
@@ -482,6 +488,10 @@ namespace utils
     std::string CONDUIT_API escape_special_chars(const std::string &input);
     std::string CONDUIT_API unescape_special_chars(const std::string &input);
 
+//-----------------------------------------------------------------------------
+     std::string CONDUIT_API strip_quoted_strings(const std::string &input,
+                                                  const std::string &quote_char);
+
 
 //-----------------------------------------------------------------------------
 /// fmt style string formatting helpers
@@ -521,13 +531,13 @@ namespace utils
      template< typename T >
      std::string to_hex_string(T value)
      {
-           std::stringstream oss;
-           oss << std::hex << value;
-           return  oss.str();
+        std::stringstream oss;
+        oss << std::hex << value;
+        return oss.str();
      }
 
 //-----------------------------------------------------------------------------
-// Helpers to identify value cast consequences 
+// Helpers to identify value cast consequences
 //-----------------------------------------------------------------------------
      // adapted from: https://stackoverflow.com/a/17225324/203071
     template< typename T_SRC, typename T_DEST>
@@ -537,8 +547,8 @@ namespace utils
         {
             return true;
         }
-        
-        return ( (value > static_cast<T_SRC>(0) ) == 
+
+        return ( (value > static_cast<T_SRC>(0) ) ==
                  (static_cast<T_DEST>(value) > static_cast<T_DEST>(0))
                ) && static_cast<T_SRC>(static_cast<T_DEST>(value)) == value;
 
@@ -565,7 +575,20 @@ namespace utils
         T res;
         std::istringstream iss(s);
         iss >> res;
-        return  res;
+        return res;
+    }
+
+    // declare then define to avoid icc warnings
+    template< typename T >
+    T hex_string_to_value(const std::string &s);
+
+    template< typename T >
+    T hex_string_to_value(const std::string &s)
+    {
+        T res;
+        std::istringstream iss(s);
+        iss >> std::hex >> res;
+        return res;
     }
 
 
@@ -576,19 +599,18 @@ namespace utils
     std::string CONDUIT_API float64_to_string(float64 value);
 
 //-----------------------------------------------------------------------------
-     void CONDUIT_API indent(std::ostream &os,
-                             index_t indent,
-                             index_t depth,
-                             const std::string &pad);
+    void CONDUIT_API indent(std::ostream &os,
+                            index_t indent,
+                            index_t depth,
+                            const std::string &pad);
 
 //-----------------------------------------------------------------------------
-     void CONDUIT_API sleep(index_t milliseconds);
-
+    void CONDUIT_API sleep(index_t milliseconds);
 
 //-----------------------------------------------------------------------------
 /// Simple timer class
 //-----------------------------------------------------------------------------
-    class CONDUIT_API Timer 
+    class CONDUIT_API Timer
     {
         typedef std::chrono::high_resolution_clock high_resolution_clock;
         typedef std::chrono::duration<float> fsec;
@@ -614,11 +636,34 @@ namespace utils
                                    unsigned int initval = 0);
 
 //-----------------------------------------------------------------------------
-// index_t hash functions
+// Other hash functions
 //-----------------------------------------------------------------------------
      uint64       CONDUIT_API hash(const index_t *k,
                                    unsigned int length);
+     uint64       CONDUIT_API hash(const float64 *k,
+                                   unsigned int length);
+     uint64       CONDUIT_API hash(const uint64 *k,
+                                   unsigned int length);
 
+//-----------------------------------------------------------------------------
+// Math utility functions
+//-----------------------------------------------------------------------------
+    /**
+     \brief Factor an integer and return a vector of its factors. If the number
+            is not prime, we omit 1, num from the vector.
+
+     \param num The number to factor.
+
+     \return A vector containing the factors of the number. The product of these
+             values will equal the original number.
+     */
+    std::vector<conduit::index_t> CONDUIT_API factor(conduit::index_t num);
+
+//-----------------------------------------------------------------------------
+// Memory usage helper
+//-----------------------------------------------------------------------------
+    /// returns process memory usage in kB, or zero if unable to read usage
+    uint64 CONDUIT_API memory_usage();
 
 }
 //-----------------------------------------------------------------------------

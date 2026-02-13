@@ -221,6 +221,8 @@ protected:
 class CONDUIT_BLUEPRINT_API Partitioner
 {
 public:
+    static constexpr int INVALID_NODE = -1;
+
     /**
      @brief This struct is a Conduit/Blueprint mesh plus an ownership bool.
             The mesh pointer is always assumed to be external by default
@@ -431,10 +433,6 @@ protected:
                     const std::vector<index_t> &ids,
                     Node &n_output_fields) const;
 
-    void slice_array(const conduit::Node &n_src_values,
-                     const std::vector<index_t> &ids,
-                     Node &n_dest_values) const;
-
     void get_vertex_ids_for_element_ids(const conduit::Node &n_topo,
              const std::vector<index_t> &element_ids,
              std::set<index_t> &vertex_ids) const;
@@ -490,12 +488,14 @@ protected:
 
      @param n_topo A Conduit node containing source topology.
      @param csname The name of the coordset to use in the new topology.
+     @param originalCoordsetLength The original coordset length.
      @param element_ids The element ids to include from the source topology.
      @param vertex_ids The vertex ids that are used from the source topology's coordset.
      @param n_new_topo A Conduit node that will contain the new topology.
      */
     void create_new_unstructured_topo(const conduit::Node &n_topo,
              const std::string &csname,
+             index_t originalCoordsetLength,
              const std::vector<index_t> &element_ids,
              const std::vector<index_t> &vertex_ids,
              conduit::Node &n_new_topo) const;
@@ -506,14 +506,72 @@ protected:
 
      @param n_topo A Conduit node containing source topology.
      @param csname The name of the coordset to use in the new topology.
+     @param originalCoordsetLength The original coordset length.
      @param element_ids The element ids to include from the source topology.
      @param vertex_ids The vertex ids that are used from the source topology's coordset.
      @param n_new_topo A Conduit node that will contain the new topology.
      */
     void unstructured_topo_from_unstructured(const conduit::Node &n_topo,
              const std::string &csname,
+             index_t originalCoordsetLength,
              const std::vector<index_t> &element_ids,
              const std::vector<index_t> &vertex_ids,
+             conduit::Node &n_new_topo) const;
+
+    /**
+     @brief Creates a new unstructured topology from a subset of the 
+            input unstructured topology.
+
+     @param n_topo A Conduit node containing source topology.
+     @param element_ids The element ids to include from the source topology.
+     @param old2new A map of old vertex ids to new vertex ids.
+     @param n_new_topo A Conduit node that will contain the new topology.
+     */
+    void unstructured_topo_from_polygonal(const conduit::Node &n_topo,
+             const std::vector<index_t> &element_ids,
+             const std::vector<index_t> &old2new,
+             conduit::Node &n_new_topo) const;
+
+    /**
+     @brief Creates a new unstructured topology from a subset of the 
+            input unstructured topology.
+
+     @param n_topo A Conduit node containing source topology.
+     @param element_ids The element ids to include from the source topology.
+     @param old2new A map of old vertex ids to new vertex ids.
+     @param n_new_topo A Conduit node that will contain the new topology.
+     */
+    void unstructured_topo_from_polyhedral(const conduit::Node &n_topo,
+             const std::vector<index_t> &element_ids,
+             const std::vector<index_t> &old2new,
+             conduit::Node &n_new_topo) const;
+
+    /**
+     @brief Creates a new unstructured topology from a subset of the 
+            input unstructured topology.
+
+     @param n_topo A Conduit node containing source topology.
+     @param element_ids The element ids to include from the source topology.
+     @param old2new A map of old vertex ids to new vertex ids.
+     @param n_new_topo A Conduit node that will contain the new topology.
+     */
+    void unstructured_topo_from_stream(const conduit::Node &n_topo,
+             const std::vector<index_t> &element_ids,
+             const std::vector<index_t> &old2new,
+             conduit::Node &n_new_topo) const;
+
+    /**
+     @brief Creates a new unstructured topology from a subset of the 
+            input unstructured topology.
+
+     @param n_topo A Conduit node containing source topology.
+     @param element_ids The element ids to include from the source topology.
+     @param old2new A map of old vertex ids to new vertex ids.
+     @param n_new_topo A Conduit node that will contain the new topology.
+     */
+    void unstructured_topo_from_mixed(const conduit::Node &n_topo,
+             const std::vector<index_t> &element_ids,
+             const std::vector<index_t> &old2new,
              conduit::Node &n_new_topo) const;
 
     /**
@@ -738,13 +796,36 @@ protected:
         const std::vector<std::vector<index_t>>& remap_to_local_doms,
         std::map<index_t, std::vector<index_t>>& orig_dom_gvids);
 
+    /**
+     @brief Return the name of the field that contains original vertex ids.
+
+     @return The name of the field to use for original vertex ids.
+     */
+    const std::string &original_vertex_ids_name() const
+    {
+        return original_vertex_ids;
+    }
+
+    /**
+     @brief Return the name of the field that contains original element ids.
+
+     @return The name of the field to use for original element ids.
+     */
+    const std::string &original_element_ids_name() const
+    {
+        return original_element_ids;
+    }
+
     int rank, size;
     unsigned int target;
     std::vector<const Node *>                meshes;
     std::vector<std::shared_ptr<Selection> > selections;
     std::vector<std::string>                 selected_fields;
     bool                                     mapping;
+    bool                                     build_adjsets;
     double                                   merge_tolerance;
+    std::string                              original_vertex_ids;
+    std::string                              original_element_ids;
 };
 
 }
