@@ -60,7 +60,7 @@ namespace mpi
 // -- begin conduit::blueprint::mesh --
 //-----------------------------------------------------------------------------
 
-namespace mesh 
+namespace mesh
 {
 //---------------------------------------------------------------------------
 ParallelPartitioner::ParallelPartitioner(MPI_Comm c)
@@ -186,16 +186,16 @@ ParallelPartitioner::count_targets() const
     for(size_t i = 0; i < selections.size(); i++)
         local_dd[i] = selections[i]->get_destination_domain();
 
-    // Allgather the destination domains so each rank knows all the 
+    // Allgather the destination domains so each rank knows all the
     // destination domains.
     std::vector<int> global_dd(ntotal_sel);
     MPI_Allgatherv(&local_dd[0],
                    static_cast<int>(local_dd.size()),
-                   MPI_UNSIGNED,
+                   MPI_INT,
                    &global_dd[0],
                    &nglobal_sel[0],
                    &offsets[0],
-                   MPI_UNSIGNED,
+                   MPI_INT,
                    comm);
 
     // Now we know where each domain wants to go, determine the target count.
@@ -249,7 +249,7 @@ ParallelPartitioner::get_largest_selection(int &sel_rank, int &sel_index) const
         }
     }
 
-    // What's the largest selection across ranks? We use MPI_MAXLOC to 
+    // What's the largest selection across ranks? We use MPI_MAXLOC to
     // get the max size and the rank where it occurs.
     long_int global_largest_selection;
     MPI_Allreduce(&largest_selection, &global_largest_selection,
@@ -346,7 +346,7 @@ ParallelPartitioner::map_chunks(const std::vector<Partitioner::Chunk> &chunks,
     {
         cout << "------------------------ map_chunks ------------------------" << endl;
         cout << "ntotal_chunks = " << ntotal_chunks << endl;
-    } 
+    }
     MPI_Barrier(comm);
 #endif
 
@@ -369,6 +369,13 @@ ParallelPartitioner::map_chunks(const std::vector<Partitioner::Chunk> &chunks,
             len += conduit::blueprint::mesh::topology::length(n_topos[j]);
         local_chunk_info[i].num_elements = len;
         local_chunk_info[i].destination_rank   = chunks[i].destination_rank;
+        // If the destination rank is not Selection::FREE_RANK_ID then we
+        // should make sure that the rank is not out of bounds (in case the
+        // user set it to an out of bounds value).
+        if(local_chunk_info[i].destination_rank != Selection::FREE_RANK_ID)
+        {
+            local_chunk_info[i].destination_rank = local_chunk_info[i].destination_rank % size;
+        }
         local_chunk_info[i].destination_domain = chunks[i].destination_domain;
     }
     std::vector<chunk_info> global_chunk_info(ntotal_chunks);
@@ -397,14 +404,23 @@ ParallelPartitioner::map_chunks(const std::vector<Partitioner::Chunk> &chunks,
     // Determine how many ranks are free to move to various domains.
     // Also determine the domain ids that are reserved.
     std::set<int> reserved_dd;
+#ifdef CONDUIT_DEBUG_MAP_CHUNKS
     int free_to_move = 0;
+#endif
     for(int i = 0; i < ntotal_chunks; i++)
     {
         int domid = global_chunk_info[i].destination_domain;
-        if(domid == Selection::FREE_DOMAIN_ID)
-            free_to_move++;
-        else
+        if(domid != Selection::FREE_DOMAIN_ID)
+        {
             reserved_dd.insert(domid);
+
+        }
+#ifdef CONDUIT_DEBUG_MAP_CHUNKS
+        else
+        {
+            free_to_move++;
+        }
+#endif
     }
 
 #ifdef CONDUIT_DEBUG_MAP_CHUNKS
@@ -508,7 +524,7 @@ ParallelPartitioner::map_chunks(const std::vector<Partitioner::Chunk> &chunks,
     {
         if(dest_rank[i] == Selection::FREE_RANK_ID)
         {
-            // This domain is not assigned to a rank.                
+            // This domain is not assigned to a rank.
             domains_to_assign.insert(dest_domain[i]);
         }
         else
@@ -765,7 +781,7 @@ ParallelPartitioner::get_prelb_adjset_maps(const std::vector<int>& chunk_offsets
     }
 
     conduit::relay::mpi::communicate_using_schema C(comm);
-    C.set_logging(true);
+    //C.set_logging(true);
 
     // 2. Setup nonblocking sends.
     for (const auto& send_dom : send_rank)
@@ -861,7 +877,7 @@ ParallelPartitioner::communicate_mapback(std::unordered_map<index_t, Node>& pack
     }
 
     conduit::relay::mpi::communicate_using_schema C(comm);
-    C.set_logging(true);
+    //C.set_logging(true);
 
     constexpr int MAPBACK_TAG_BASE = 16000;
 

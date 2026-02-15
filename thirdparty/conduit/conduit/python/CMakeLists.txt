@@ -58,6 +58,7 @@ target_link_libraries(conduit_python
     catalyst::conduit_libyaml
     catalyst::conduit_b64
     catalyst::conduit_rapidjson
+    catalyst::conduit_yyjson
     conduit_python_flags
     )
 
@@ -88,6 +89,7 @@ target_link_libraries(conduit_utils_python
     catalyst::conduit 
     catalyst::conduit_b64
     catalyst::conduit_libyaml
+    catalyst::conduit_yyjson
     conduit_python_flags)
 
 target_include_directories(conduit_utils_python

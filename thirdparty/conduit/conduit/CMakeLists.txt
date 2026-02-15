@@ -41,6 +41,7 @@ set(conduit_headers
     conduit_utils.hpp
     conduit_vector_view.hpp
     conduit_config.hpp
+    conduit_data_accessor.hpp
     )
 
 #
@@ -120,6 +121,7 @@ target_include_directories(catalyst_conduit_headers
     $<INSTALL_INTERFACE:${CATALYST_INSTALL_INCLUDE_DIR}>)
 c_install_headers(
   HEADERS ${conduit_c_headers}
+          ${conduit_headers}
           ${conduit_fortran_headers})
 
 #-------------------------------------------------------------------------
@@ -128,6 +130,12 @@ add_library(catalyst_conduit OBJECT
     ${conduit_sources}
     ${conduit_c_sources}
     ${conduit_fortran_sources})
+# Hide internal symbols (like std::function RTTI) while CONDUIT_API symbols
+# remain exported. This prevents ABI leakage across compilers.
+set_target_properties(catalyst_conduit PROPERTIES
+  CXX_VISIBILITY_PRESET hidden
+  C_VISIBILITY_PRESET hidden
+  VISIBILITY_INLINES_HIDDEN ON)
 target_include_directories(catalyst_conduit
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
@@ -138,7 +146,7 @@ target_link_libraries(catalyst_conduit
     catalyst::conduit_fmt
     catalyst::conduit_libyaml
     catalyst::conduit_b64
-    catalyst::conduit_rapidjson)
+    catalyst::conduit_yyjson)
 if (BUILD_SHARED_LIBS)
   target_compile_definitions(catalyst_conduit
     PRIVATE
