@@ -62,7 +62,11 @@ namespace utils
 
 // We may tag certain algorithms as ParallelExec if it is safe to do so.
 using SerialExec = conduit::execution::SerialExec;
+#if defined(CONDUIT_USE_OPENMP)
 using ParallelExec = conduit::execution::OpenMPExec;
+#else
+using ParallelExec = conduit::execution::SerialExec;
+#endif
 
 //---------------------------------------------------------------------------
 void
@@ -942,7 +946,8 @@ private:
                 uint64 element_face = facestart + face;
 
                 std::sort(face_pts_start, face_pts_end);
-                uint64 faceid = conduit::utils::hash(face_pts_start, points_per_face);
+                uint64 faceid = conduit::utils::hash(face_pts_start,
+                                    static_cast<unsigned int>(points_per_face));
 
                 // Store the faceid and ef values.
                 faceid_to_ef[element_face] = std::make_pair(faceid, element_face);
@@ -1047,8 +1052,8 @@ private:
 
                     // Emit the face definition (as defined by the first element
                     // that referenced it.
-                    int faceelem = ef / faces_per_elem;
-                    int facecase = ef % faces_per_elem;
+                    index_t faceelem = ef / faces_per_elem;
+                    index_t facecase = ef % faces_per_elem;
                     index_t elemstart = faceelem * points_per_elem;
                     index_t *embed = &shape.embedding[facecase * points_per_face];
                     for(index_t i = 0; i < points_per_face; i++)
@@ -1081,8 +1086,8 @@ private:
 
                     // Emit the face definition (as defined by the first element
                     // that referenced it.
-                    int faceelem = ef / faces_per_elem;
-                    int facecase = ef % faces_per_elem;
+                    index_t faceelem = ef / faces_per_elem;
+                    index_t facecase = ef % faces_per_elem;
                     index_t elemstart = faceelem * points_per_elem;
                     index_t *embed = &shape.embedding[facecase * points_per_face];
                     for(index_t i = 0; i < points_per_face; i++)
@@ -3642,7 +3647,6 @@ TopologyMetadata::TopologyMetadata(const conduit::Node &topology,
     const Node &topo_elem_offsets = dim_topos[topo_shape.dim]["elements/offsets"];
     const auto elem_conn_access = topo_elem_conn.as_index_t_accessor();
     const auto elem_offsets_access = topo_elem_offsets.as_index_t_accessor();
-    index_t topo_conn_len = 0;
     for(index_t ei = 0; ei < topo_num_elems; ei++)
     {
         index_t bi = topo_num_coords + ei;
@@ -3651,7 +3655,6 @@ TopologyMetadata::TopologyMetadata(const conduit::Node &topology,
         index_t entity_end_index = (ei < topo_num_elems - 1) ? elem_offsets_access[ei + 1] : 
                                        topo_elem_conn.dtype().number_of_elements();
         index_t entity_size = entity_end_index - entity_start_index;
-        topo_conn_len += entity_size;
 
         // Get the vector we'll populate.
         std::vector<int64> &elem_indices = entity_index_bag[bi];

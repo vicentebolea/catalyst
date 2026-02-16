@@ -16,6 +16,7 @@
 //-----------------------------------------------------------------------------
 #include "conduit.hpp"
 #include "conduit_blueprint_exports.h"
+#include "conduit_blueprint_mesh_utils.hpp"
 
 //-----------------------------------------------------------------------------
 // -- begin conduit --
@@ -72,6 +73,14 @@ bool CONDUIT_BLUEPRINT_API is_multi_domain(const conduit::Node &mesh);
 //-------------------------------------------------------------------------
 index_t CONDUIT_BLUEPRINT_API number_of_domains(const conduit::Node &mesh);
 
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API state(const conduit::Node &mesh, Node &state);
+
+//-------------------------------------------------------------------------
+index_t CONDUIT_BLUEPRINT_API cycle(const conduit::Node &mesh);
+
+//-------------------------------------------------------------------------
+float64 CONDUIT_BLUEPRINT_API time(const conduit::Node &mesh);
 
 //-----------------------------------------------------------------------------
 std::vector<conduit::Node *>       CONDUIT_BLUEPRINT_API domains(Node &mesh);
@@ -161,7 +170,7 @@ void CONDUIT_BLUEPRINT_API paint_adjset(const std::string &adjset_name,
 /**
  @brief Partition an input mesh or set of mesh domains into a different decomposition,
         according to options. This is the serial implementation.
- @param n_mesh  A Conduit node containing a Blueprint mesh or set of mesh domains.
+ @param mesh    A Conduit node containing a Blueprint mesh or set of mesh domains.
  @param options A Conduit node containing options that govern the partitioning.
  @param[out]    A Conduit node to accept the repartitioned mesh(es).
  */
@@ -187,7 +196,24 @@ void CONDUIT_BLUEPRINT_API partition(const conduit::Node &mesh,
 void CONDUIT_BLUEPRINT_API partition_map_back(const conduit::Node& repart_mesh,
                                               const conduit::Node& options,
                                               conduit::Node& orig_mesh);
+//-------------------------------------------------------------------------
+/**
+ @brief Take a partition field on the source mesh and make a corresponding field
+        on the boundary mesh so it can be partitioned in a compatible way in
+        another call to partition.
 
+ @param topo       The source topology.
+ @param partField  The partition field.
+ @param btopo      The boundary topology.
+ @param bpartField The node that will contain the new field.
+
+ */
+void CONDUIT_BLUEPRINT_API generate_boundary_partition_field(const conduit::Node &topo,
+                                                             const conduit::Node &partField,
+                                                             const conduit::Node &btopo,
+                                                             conduit::Node &bpartField);
+
+//-------------------------------------------------------------------------
 /**
  @brief Convert the given blueprint mesh into a blueprint table.
  @param mesh    A Conduit node containing a blueprint mesh or set of mesh domains.
@@ -215,12 +241,23 @@ void CONDUIT_BLUEPRINT_API flatten(const conduit::Node &mesh,
                                    const conduit::Node &options,
                                    conduit::Node &output);
 
+void CONDUIT_BLUEPRINT_API generate_domain_ids(conduit::Node &domains);
 
 //-----------------------------------------------------------------------------
 /// blueprint mesh transform methods (these work on multi domain meshes)
 ///
 /// These methods can be called on specific verified blueprint mesh.
 //-----------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API generate_points(conduit::Node &mesh,
+                                           const std::string& src_adjset_name,
+                                           const std::string& dst_adjset_name,
+                                           const std::string& dst_topo_name,
+                                           conduit::Node& s2dmap,
+                                           conduit::Node& d2smap,
+                                           conduit::blueprint::mesh::utils::query::MatchQuery &query,
+                                           conduit::blueprint::mesh::utils::topology::MeshInfoCollection &mic);
 
 //-------------------------------------------------------------------------
 void CONDUIT_BLUEPRINT_API generate_points(conduit::Node &mesh,
@@ -236,6 +273,16 @@ void CONDUIT_BLUEPRINT_API generate_lines(conduit::Node &mesh,
                                           const std::string& dst_adjset_name,
                                           const std::string& dst_topo_name,
                                           conduit::Node& s2dmap,
+                                          conduit::Node& d2smap,
+                                          conduit::blueprint::mesh::utils::query::MatchQuery &query,
+                                          conduit::blueprint::mesh::utils::topology::MeshInfoCollection &mic);
+
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API generate_lines(conduit::Node &mesh,
+                                          const std::string& src_adjset_name,
+                                          const std::string& dst_adjset_name,
+                                          const std::string& dst_topo_name,
+                                          conduit::Node& s2dmap,
                                           conduit::Node& d2smap);
 
 //-------------------------------------------------------------------------
@@ -244,7 +291,28 @@ void CONDUIT_BLUEPRINT_API generate_faces(conduit::Node &mesh,
                                           const std::string& dst_adjset_name,
                                           const std::string& dst_topo_name,
                                           conduit::Node& s2dmap,
+                                          conduit::Node& d2smap,
+                                          conduit::blueprint::mesh::utils::query::MatchQuery &query,
+                                          conduit::blueprint::mesh::utils::topology::MeshInfoCollection &mic);
+
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API generate_faces(conduit::Node &mesh,
+                                          const std::string& src_adjset_name,
+                                          const std::string& dst_adjset_name,
+                                          const std::string& dst_topo_name,
+                                          conduit::Node& s2dmap,
                                           conduit::Node& d2smap);
+
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API generate_centroids(conduit::Node& mesh,
+                                              const std::string& src_adjset_name,
+                                              const std::string& dst_adjset_name,
+                                              const std::string& dst_topo_name,
+                                              const std::string& dst_cset_name,
+                                              conduit::Node& s2dmap,
+                                              conduit::Node& d2smap,
+                                              conduit::blueprint::mesh::utils::query::PointQueryBase &query,
+                                              conduit::blueprint::mesh::utils::topology::MeshInfoCollection &mic);
 
 //-------------------------------------------------------------------------
 void CONDUIT_BLUEPRINT_API generate_centroids(conduit::Node& mesh,
@@ -262,7 +330,29 @@ void CONDUIT_BLUEPRINT_API generate_sides(conduit::Node& mesh,
                                           const std::string& dst_topo_name,
                                           const std::string& dst_cset_name,
                                           conduit::Node& s2dmap,
+                                          conduit::Node& d2smap,
+                                          conduit::blueprint::mesh::utils::query::PointQueryBase &query,
+                                          conduit::blueprint::mesh::utils::topology::MeshInfoCollection &mic);
+
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API generate_sides(conduit::Node& mesh,
+                                          const std::string& src_adjset_name,
+                                          const std::string& dst_adjset_name,
+                                          const std::string& dst_topo_name,
+                                          const std::string& dst_cset_name,
+                                          conduit::Node& s2dmap,
                                           conduit::Node& d2smap);
+
+//-------------------------------------------------------------------------
+void CONDUIT_BLUEPRINT_API generate_corners(conduit::Node& mesh,
+                                            const std::string& src_adjset_name,
+                                            const std::string& dst_adjset_name,
+                                            const std::string& dst_topo_name,
+                                            const std::string& dst_cset_name,
+                                            conduit::Node& s2dmap,
+                                            conduit::Node& d2smap,
+                                            conduit::blueprint::mesh::utils::query::PointQueryBase &query,
+                                            conduit::blueprint::mesh::utils::topology::MeshInfoCollection &mic);
 
 //-------------------------------------------------------------------------
 void CONDUIT_BLUEPRINT_API generate_corners(conduit::Node& mesh,
@@ -311,6 +401,16 @@ namespace coordset
     //-------------------------------------------------------------------------
     void CONDUIT_BLUEPRINT_API generate_strip(const conduit::Node& coordset,
                                               conduit::Node& coordset_dest);
+
+    //-------------------------------------------------------------------------
+    /**
+     @brief Convert the coordset, no matter its type, to explicit.
+
+     @param coordset The input coordset.
+     @param[out] coordset_dest The output coordset.
+     */
+    void CONDUIT_BLUEPRINT_API to_explicit(const conduit::Node& coordset,
+                                           conduit::Node& coordset_dest);
 
     //-------------------------------------------------------------------------
     // blueprint::mesh::coordset::uniform protocol interface
@@ -673,15 +773,42 @@ namespace matset
     bool CONDUIT_BLUEPRINT_API is_material_dominant(const conduit::Node &matset);
 
     //-------------------------------------------------------------------------
+    void CONDUIT_BLUEPRINT_API to_multi_buffer_full(const conduit::Node &src_matset,
+                                                    conduit::Node &dest_matset);
+
+    //-------------------------------------------------------------------------
+    // creates a unibuffer case with 1st index into elements
+    void CONDUIT_BLUEPRINT_API to_uni_buffer_by_element(const conduit::Node &src_matset,
+                                                        conduit::Node &dest_matset,
+                                                        const float64 epsilon = CONDUIT_EPSILON);
+
+    //-------------------------------------------------------------------------
+    // covers both the sparse and non sparse case
+    void CONDUIT_BLUEPRINT_API to_multi_buffer_by_material(const conduit::Node &src_matset,
+                                                           conduit::Node &dest_matset,
+                                                           const float64 epsilon = CONDUIT_EPSILON);
+
+    //-------------------------------------------------------------------------
     // Converts a blueprint matset to the silo style sparse mixed slot 
     // representation.
     //
     // For details about the silo format, see documentation for 
     // 'DBPutMaterial' at:
-    // https://wci.llnl.gov/content/assets/docs/simulation/computer-codes/silo/LLNL-SM-654357.pdf
+    // https://silo.readthedocs.io/en/latest/
     void CONDUIT_BLUEPRINT_API to_silo(const conduit::Node &matset,
                                        conduit::Node &dest,
                                        const float64 epsilon = CONDUIT_EPSILON);
+
+    //-------------------------------------------------------------------------
+    index_t CONDUIT_BLUEPRINT_API count_zones_from_matset(const conduit::Node &matset);
+    //-------------------------------------------------------------------------
+    bool CONDUIT_BLUEPRINT_API is_material_in_zone(const conduit::Node &matset,
+                                                   const std::string &matname,
+                                                   const index_t zone_id,
+                                                   const float64 epsilon = CONDUIT_EPSILON);
+    //-----------------------------------------------------------------------------
+    std::map<int, std::string> CONDUIT_BLUEPRINT_API create_reverse_material_map(
+        const conduit::Node &src_matset);
 
     //-------------------------------------------------------------------------
     // blueprint::mesh::matset::index protocol interface
@@ -713,13 +840,35 @@ namespace field
                                               std::map<std::string, std::string>& matset_names);
 
     //-------------------------------------------------------------------------
+    void CONDUIT_BLUEPRINT_API to_multi_buffer_full(const conduit::Node &src_matset,
+                                                    const conduit::Node &src_field,
+                                                    const std::string &dest_matset_name,
+                                                    conduit::Node &dest_field);
+
+    //-------------------------------------------------------------------------
+    // creates a unibuffer case with 1st index into elements
+    void CONDUIT_BLUEPRINT_API to_uni_buffer_by_element(const conduit::Node &src_matset,
+                                                        const conduit::Node &src_field,
+                                                        const std::string &dest_matset_name,
+                                                        conduit::Node &dest_field,
+                                                        const float64 epsilon = CONDUIT_EPSILON);
+
+    //-------------------------------------------------------------------------
+    // covers both the sparse and non sparse case
+    void CONDUIT_BLUEPRINT_API to_multi_buffer_by_material(const conduit::Node &src_matset,
+                                                           const conduit::Node &src_field,
+                                                           const std::string &dest_matset_name,
+                                                           conduit::Node &dest_field,
+                                                           const float64 epsilon = CONDUIT_EPSILON);
+
+    //-------------------------------------------------------------------------
     // Given a blueprint field and matset, converts the matset and the field
     // values + matset_values to the silo style sparse mixed slot
     // representation.
     //
     // For details about the silo format, see documentation for 
     // 'DBPutZZZVar' methods `mixvar` / `mixlen` params at:
-    // https://wci.llnl.gov/content/assets/docs/simulation/computer-codes/silo/LLNL-SM-654357.pdf
+    // https://silo.readthedocs.io/en/latest/
     void CONDUIT_BLUEPRINT_API to_silo(const conduit::Node &field,
                                        const conduit::Node &matset,
                                        conduit::Node &dest,
@@ -759,6 +908,17 @@ namespace specset
                                       conduit::Node &info);
 
     //-------------------------------------------------------------------------
+    // Converts a blueprint specset to the silo style sparse mixed slot 
+    // representation.
+    //
+    // For details about the silo format, see documentation for 
+    // 'DBPutMatspecies' at:
+    // https://silo.readthedocs.io/en/latest/
+    void CONDUIT_BLUEPRINT_API to_silo(const conduit::Node &specset,
+                                       const conduit::Node &matset,
+                                       conduit::Node &dest);
+
+    //-------------------------------------------------------------------------
     // blueprint::mesh::specset::index protocol interface
     //-------------------------------------------------------------------------
     namespace index
@@ -794,6 +954,10 @@ namespace adjset
     //-------------------------------------------------------------------------
     void CONDUIT_BLUEPRINT_API to_maxshare(const conduit::Node &adjset,
                                            conduit::Node &dest);
+
+    //-------------------------------------------------------------------------
+    /// Return the canonical adjacency set group prefix used in group names.
+    std::string CONDUIT_BLUEPRINT_API group_prefix();
 
     //-------------------------------------------------------------------------
     // blueprint::mesh::adjset::index protocol interface

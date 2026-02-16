@@ -8,7 +8,7 @@ readonly name="conduit"
 readonly ownership="Conduit Upstream <kwrobot@kitware.com>"
 readonly subtree="thirdparty/$name"
 readonly repo="https://gitlab.kitware.com/third-party/conduit.git"
-readonly tag="for/catalyst-20231217-v0.8.7"
+readonly tag="for/catalyst-20260213-v0.9.5"
 readonly paths="
 .gitattributes
 COPYRIGHT
@@ -47,6 +47,7 @@ src/thirdparty_builtin/libb64-1.2.1/include
 src/thirdparty_builtin/libb64-1.2.1/src/*.cpp
 src/thirdparty_builtin/libyaml-690a781
 src/thirdparty_builtin/rapidjson
+src/thirdparty_builtin/yyjson
 "
 
 extract_source () {
@@ -63,6 +64,7 @@ extract_source () {
     mv "$extractdir/$name-reduced/src/thirdparty_builtin/libb64-1.2.1" "$extractdir/$name-reduced/libb64"
     mv "$extractdir/$name-reduced/src/thirdparty_builtin/libyaml-690a781" "$extractdir/$name-reduced/libyaml"
     mv "$extractdir/$name-reduced/src/thirdparty_builtin/rapidjson" "$extractdir/$name-reduced/rapidjson"
+    mv "$extractdir/$name-reduced/src/thirdparty_builtin/yyjson" "$extractdir/$name-reduced/yyjson"
     rm -v "$extractdir/$name-reduced/conduit/python/run_python_with_conduit.sh.in"
     mv "$extractdir/$name-reduced/conduit/python/py_src" "$extractdir/$name-reduced/conduit/python/catalyst_conduit"
 
@@ -77,6 +79,7 @@ extract_source () {
     mv "$extractdir/$name-reduced/libyaml/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/libyaml/CMakeLists.txt"
     mv "$extractdir/$name-reduced/libb64/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/libb64/CMakeLists.txt"
     mv "$extractdir/$name-reduced/rapidjson/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/rapidjson/CMakeLists.txt"
+    mv "$extractdir/$name-reduced/yyjson/CMakeLists.catalyst.txt" "$extractdir/$name-reduced/yyjson/CMakeLists.txt"
 }
 
 . "${BASH_SOURCE%/*}/update-common.sh"

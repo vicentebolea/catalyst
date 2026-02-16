@@ -94,7 +94,8 @@ else ()
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit>"
       "$<BUILD_LOCAL_INTERFACE:catalyst::blueprint>"
       "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_libyaml>"
-      "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>")
+      "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_b64>"
+      "$<BUILD_LOCAL_INTERFACE:catalyst::conduit_yyjson>")
   if(CATALYST_WRAP_PYTHON)
     set(conduit_private_libraries 
         ${conduit_private_libraries}

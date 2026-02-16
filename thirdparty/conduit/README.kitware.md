@@ -15,3 +15,9 @@ process.
   * Write CMake build system for python targets for use in Catalyst.
   * Remove `blueprint.{mcarray.mesh,table}.examples` and `relay` python modules from __init__ files.
   * Rename python package to `catalyst_conduit`
+  * Add harness for `CATALYST_WRAP_FORTRAN` that includes Fortran bindings.
+  * Mangle Fortran C-binding function names to use `c_catalyst_conduit_*` prefix.
+  * Hide internal C++ symbols from Catalyst ABI using visibility attributes.
+  * Hide yyjson symbols from Catalyst ABI (new dependency in v0.9.5).
+  * Add explicit `-fvisibility=hidden` compile flags for older compilers.
+  * Add validation scripts for Catalyst integration testing.

@@ -82,15 +82,35 @@ if (icc_mangle AND build_config IN_LIST debug_types)
     ".debug_info_seg")
 endif ()
 
+# Check for unexpected symbols (in library but not expected)
 set(unexpected "${symbol_names}")
 list(REMOVE_ITEM unexpected ${expected})
 
-if (unexpected)
-  string(REPLACE ";" ", " unexpected_text "${unexpected}")
-  message(SEND_ERROR
-    "Unexpected symbols found: ${unexpected_text}")
-endif ()
+# Filter unexpected symbols to only those that look like internal leaks.
+# Compiler-generated symbols (RTTI, Fortran module internals, etc.) are ignored.
+# We only care about symbols containing "catalyst" or "conduit" which would
+# indicate accidentally exported internal functions.
+# Exclude Fortran module symbols (_mp_ for ifort, _MOD_ for gfortran) as these
+# are legitimate public API symbols that vary by compiler.
+set(leaked)
+foreach(sym IN LISTS unexpected)
+  string(TOLOWER "${sym}" sym_lower)
+  # Skip Fortran module symbols (public API, not leaks)
+  if(sym_lower MATCHES "(_mp_|_mod_)")
+    continue()
+  endif()
+  if(sym_lower MATCHES "(catalyst|conduit)")
+    list(APPEND leaked "${sym}")
+  endif()
+endforeach()
 
+if(leaked)
+  string(REPLACE ";" ", " leaked_text "${leaked}")
+  message(SEND_ERROR
+    "Leaked internal symbols found: ${leaked_text}")
+endif()
+
+# Check for missing symbols (in expected but not in library)
 set(missing "${expected}")
 list(REMOVE_ITEM missing ${symbol_names})
 

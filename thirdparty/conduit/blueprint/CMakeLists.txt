@@ -97,6 +97,11 @@ target_include_directories(catalyst_blueprint_cpp_headers
 add_library(catalyst_blueprint OBJECT
   ${blueprint_sources}
   ${blueprint_c_sources})
+# Hide internal symbols while CONDUIT_BLUEPRINT_API symbols remain exported
+set_target_properties(catalyst_blueprint PROPERTIES
+  CXX_VISIBILITY_PRESET hidden
+  C_VISIBILITY_PRESET hidden
+  VISIBILITY_INLINES_HIDDEN ON)
 set_property(TARGET catalyst_blueprint PROPERTY
   EXPORT_NAME blueprint)
 target_include_directories(catalyst_blueprint

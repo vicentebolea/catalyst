@@ -18,6 +18,7 @@ target_link_libraries(conduit_blueprint_python
     catalyst::conduit 
     catalyst::conduit_b64
     catalyst::conduit_libyaml
+    catalyst::conduit_yyjson
     catalyst::conduit_python_cpp_headers
     conduit_python_flags)
 
@@ -41,6 +42,7 @@ target_link_libraries(conduit_blueprint_mcarray_python
     catalyst::conduit 
     catalyst::conduit_b64
     catalyst::conduit_libyaml
+    catalyst::conduit_yyjson
     catalyst::conduit_python_cpp_headers
     conduit_python_flags)
 
@@ -66,6 +68,7 @@ target_link_libraries(conduit_blueprint_mesh_python
     catalyst::conduit 
     catalyst::conduit_b64
     catalyst::conduit_libyaml
+    catalyst::conduit_yyjson
     catalyst::conduit_python_cpp_headers
     conduit_python_flags)
 
@@ -89,6 +92,7 @@ target_link_libraries(conduit_blueprint_table_python
     catalyst::conduit 
     catalyst::conduit_b64
     catalyst::conduit_libyaml
+    catalyst::conduit_yyjson
     catalyst::conduit_python_cpp_headers
     conduit_python_flags)
 

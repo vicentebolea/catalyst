@@ -21,6 +21,7 @@ else()
       catalyst::conduit 
       catalyst::conduit_b64
       catalyst::conduit_libyaml
+      catalyst::conduit_yyjson
       catalyst::conduit_python_cpp_headers 
       catalyst_python_flags
   )

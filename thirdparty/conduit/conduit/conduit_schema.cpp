@@ -501,7 +501,7 @@ Schema::to_string_stream(const std::string &stream_path,
     ofs.open(stream_path.c_str());
     if(!ofs.is_open())
     {
-        CONDUIT_ERROR("<Node::to_string_stream> failed to open file: "
+        CONDUIT_ERROR("<Schema::to_string_stream> failed to open file: "
                       << "\"" << stream_path << "\"");
     }
     to_string_stream(ofs,protocol,indent,depth,pad,eoe);
@@ -591,7 +591,7 @@ Schema::to_json_stream(const std::string &stream_path,
     ofs.open(stream_path.c_str());
     if(!ofs.is_open())
     {
-        CONDUIT_ERROR("<Node::to_json_stream> failed to open file: "
+        CONDUIT_ERROR("<Schema::to_json_stream> failed to open file: "
                       << "\"" << stream_path << "\"");
     }
     to_json_stream(ofs,indent,depth,pad,eoe);
@@ -632,16 +632,12 @@ Schema::to_yaml_stream(std::ostream &os,
         for(size_t i=0; i <  nchildren;i++)
         {
             utils::indent(os,indent,depth,pad);
-            // we always need eoe
-            os << object_order()[i] << ": " << eoe;
+            os << object_order()[i] << ": ";
             children()[i]->to_yaml_stream(os,
                                           indent,
                                           depth+1,
                                           pad,
                                           eoe);
-
-
-
         }
     }
     else if(m_dtype.id() == DataType::LIST_ID)
@@ -661,9 +657,10 @@ Schema::to_yaml_stream(std::ostream &os,
     }
     else // assume leaf data type
     {
+        os << eoe;
         m_dtype.to_yaml_stream(os,
                                indent,
-                               depth+1,
+                               depth,
                                pad,
                                eoe);
     }
@@ -681,7 +678,7 @@ Schema::to_yaml_stream(const std::string &stream_path,
     ofs.open(stream_path.c_str());
     if(!ofs.is_open())
     {
-        CONDUIT_ERROR("<Node::to_yaml_stream> failed to open file: "
+        CONDUIT_ERROR("<Schema::to_yaml_stream> failed to open file: "
                       << "\"" << stream_path << "\"");
     }
     to_yaml_stream(ofs,indent,depth,pad,eoe);
@@ -705,6 +702,7 @@ Schema::to_yaml_default() const
 //---------------------------------------------------------------------------//
 void
 Schema::save(const std::string &ofname,
+             const std::string &protocol,
              index_t indent,
              index_t depth,
              const std::string &pad,
@@ -712,13 +710,25 @@ Schema::save(const std::string &ofname,
 {
     // TODO: this is ineff, get base class rep correct?
     std::ostringstream oss;
-    to_json_stream(oss,indent,depth,pad,eoe);
+    if ("json" == protocol)
+    {
+        to_json_stream(oss,indent,depth,pad,eoe);
+    }
+    else if ("yaml" == protocol)
+    {
+        to_yaml_stream(oss,indent,depth,pad,eoe);
+    }
+    else
+    {
+        CONDUIT_ERROR("<Schema::save> unknown protocol: "
+                      << "\"" << protocol << "\"");
+    }
 
     std::ofstream ofile;
     ofile.open(ofname.c_str());
     if(!ofile.is_open())
     {
-        CONDUIT_ERROR("<Node::save> failed to open file: "
+        CONDUIT_ERROR("<Schema::save> failed to open file: "
                       << "\"" << ofname << "\"");
     }
     ofile << oss.str();
@@ -734,7 +744,7 @@ Schema::load(const std::string &ifname)
     ifile.open(ifname.c_str());
     if(!ifile.is_open())
     {
-        CONDUIT_ERROR("<Node::load> failed to open file: "
+        CONDUIT_ERROR("<Schema::load> failed to open file: "
                       << "\"" << ifname << "\"");
     }
     std::string res((std::istreambuf_iterator<char>(ifile)),

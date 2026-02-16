@@ -8,13 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Xcode 16.0 and 16.1 have a bug in the linker that optimizes out `main`.
+// Xcode 16.0+ has a bug in the linker that optimizes out `main`.
 // Experimentation shows that marking `test_external_conduit_impl` as noinline
 // prevents this optimization. Reported in person to Apple developers (who
 // managed to reproduce the problem as well).
 #if defined(__clang__) && defined(__apple_build_version__)
-#if (__clang_major__ == 16 && __clang_minor__ == 0) ||                                             \
-  (__clang_major__ == 16 && __clang_minor__ == 1)
+#if __clang_major__ >= 16
 #define catalyst_xcode16_fix __attribute__((noinline))
 #endif
 #endif
