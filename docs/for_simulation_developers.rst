@@ -149,6 +149,31 @@ catalyst_results
 This function fills up the ``params`` instance with updated parameters values
 from the Catalyst implementation side.
 
+Asynchronous Execution Control
+------------------------------
+
+Catalyst supports asynchronous execution, where ``catalyst_execute()`` returns
+immediately while work is processed in the background. Control is via params,
+with no new API functions (preserving ABI stability):
+
+**Query async status** via ``catalyst_about()``:
+
+.. code-block:: c
+
+   conduit_node* about = conduit_node_create();
+   catalyst_about(about);
+   int enabled = conduit_node_fetch_path_as_int64(about, "catalyst/async/enabled");
+
+**Flush pending work** via params to ``catalyst_execute()``:
+
+.. code-block:: c
+
+   conduit_node* params = conduit_node_create();
+   conduit_node_set_path_int64(params, "catalyst/async/flush", 1);
+   catalyst_execute(params);  // Waits for all pending work
+
+See :doc:`async_execution` for full details on async mode.
+
 All the above functions use a ``params`` object which is a `conduit_node`_. It is
 simply a hierarchical mechanism for describing data and/or metadata including
 simulation meshes and fields. Essentially, think of it as a map where keys are

@@ -11,6 +11,8 @@ ParaView 5.9. For earlier versions of Catalyst, please refer to earlier `docs`_.
    :titlesonly:
 
    introduction
+   architecture
+   async_execution
    build_and_install
    for_simulation_developers
    for_implementation_developers

@@ -87,3 +87,9 @@ macro(add_install_test)
       FIXTURES_REQUIRED "install-prepare"
       FIXTURES_SETUP    "install")
 endmacro()
+
+# Helper to ensure tests use the stub backend (no ParaView/MPI interference)
+function(catalyst_test_use_stub_backend test_name)
+  set_property(TEST ${test_name} APPEND PROPERTY
+    ENVIRONMENT_MODIFICATION "CATALYST_IMPLEMENTATION_PATHS=unset:;CATALYST_IMPLEMENTATION_NAME=unset:")
+endfunction()
