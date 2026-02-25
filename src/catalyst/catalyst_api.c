@@ -8,6 +8,7 @@
 
 #include "catalyst_api.h"
 #include "catalyst_impl.h"
+#include "catalyst_version.h"
 
 #include "conduit_node.h"
 
@@ -34,6 +35,10 @@ static int handle_is_valid(catalyst_handle_t handle);
 static struct catalyst_impl const* impl = NULL;
 static int debug_flag = -1;
 extern struct catalyst_impl const default_impl;
+
+// Store implementation metadata for catalyst_about
+static char* loaded_impl_path = NULL;
+static const char* loaded_impl_source = NULL; // "environment", "params", "default", "stub"
 
 #define catalyst_debug(fmt, ...)                                                                   \
   do                                                                                               \
@@ -74,6 +79,8 @@ static catalyst_handle_t handle_from_env(const char* impl_name)
           handle = handle_open(curpath, impl_name);
           if (handle_is_valid(handle))
           {
+            // Record that implementation was found via environment variable
+            loaded_impl_source = "environment";
             curpath = NULL;
             break;
           }
@@ -89,6 +96,10 @@ static catalyst_handle_t handle_from_env(const char* impl_name)
       if (!handle_is_valid(handle) && curpath)
       {
         handle = handle_open(curpath, impl_name);
+        if (handle_is_valid(handle))
+        {
+          loaded_impl_source = "environment";
+        }
       }
     }
 
@@ -162,6 +173,8 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
             handle = handle_open(search_path, impl_name);
             if (handle_is_valid(handle))
             {
+              // Record that implementation was found via params
+              loaded_impl_source = "params";
               break;
             }
           }
@@ -188,6 +201,8 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
         handle = handle_open(*search_path, impl_name);
         if (handle_is_valid(handle))
         {
+          // Record that implementation was found via default search path
+          loaded_impl_source = "default";
           break;
         }
       }
@@ -206,6 +221,10 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
   {
     impl = &default_impl;
     catalyst_debug("no implementation named; using the `stub` implementation: %p\n", impl);
+    // Record that we're using the built-in stub implementation
+    free(loaded_impl_path);
+    loaded_impl_path = strdup("(stub)");
+    loaded_impl_source = "stub";
   }
 
   if (!impl)
@@ -286,7 +305,53 @@ enum catalyst_status catalyst_finalize(const conduit_node* params)
 enum catalyst_status catalyst_about(conduit_node* params)
 {
   impl_check(about);
-  return (*impl->about)(params);
+  enum catalyst_status status = (*impl->about)(params);
+
+  // Add implementation info if not already populated by the backend
+  if (status == catalyst_status_ok)
+  {
+    // Add libcatalyst runtime version
+    if (!conduit_node_has_path(params, "catalyst/version"))
+    {
+      conduit_node_set_path_char8_str(params, "catalyst/version", CATALYST_VERSION);
+    }
+
+    // Add implementation path
+    if (loaded_impl_path)
+    {
+      if (conduit_node_has_path(params, "catalyst/implementation_path"))
+      {
+        catalyst_debug("warning: catalyst/implementation_path already set by backend\n");
+      }
+      else
+      {
+        conduit_node_set_path_char8_str(params, "catalyst/implementation_path", loaded_impl_path);
+      }
+    }
+
+    // Add implementation source
+    if (loaded_impl_source)
+    {
+      if (conduit_node_has_path(params, "catalyst/implementation_source"))
+      {
+        catalyst_debug("warning: catalyst/implementation_source already set by backend\n");
+      }
+      else
+      {
+        conduit_node_set_path_char8_str(
+          params, "catalyst/implementation_source", loaded_impl_source);
+      }
+    }
+
+    // Add implementation ABI version
+    if (impl && !conduit_node_has_path(params, "catalyst/implementation_abi_version"))
+    {
+      conduit_node_set_path_int32(
+        params, "catalyst/implementation_abi_version", (int)impl->version);
+    }
+  }
+
+  return status;
 }
 
 enum catalyst_status catalyst_results(conduit_node* params)
@@ -376,7 +441,16 @@ catalyst_handle_t handle_open(const char* directory, const char* libname)
     LocalFree(errstring);
   }
 
-  free(full_library_path);
+  // Store the path if loading succeeded
+  if (handle_is_valid(handle))
+  {
+    free(loaded_impl_path);
+    loaded_impl_path = full_library_path;
+  }
+  else
+  {
+    free(full_library_path);
+  }
   return handle;
 }
 
@@ -463,7 +537,16 @@ catalyst_handle_t handle_open(const char* directory, const char* libname)
   catalyst_debug("trying to load `%s`: %s (%s)\n", full_library_path,
     handle_is_valid(handle) ? "valid" : "invalid", errstring ? errstring : "(no error)");
 
-  free(full_library_path);
+  // Store the path if loading succeeded
+  if (handle_is_valid(handle))
+  {
+    free(loaded_impl_path);
+    loaded_impl_path = full_library_path;
+  }
+  else
+  {
+    free(full_library_path);
+  }
   return handle;
 }
 
