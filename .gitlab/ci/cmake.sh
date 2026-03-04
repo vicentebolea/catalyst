@@ -6,7 +6,7 @@ readonly version="3.29.8"
 
 case "$( uname -s )" in
     Linux)
-        case "$( uname -i )" in
+        case "$( uname -m )" in
             x86_64)
                 sha256sum="0ed430e41059eab130010e74c6a779b651340f3755eb9525e2a573a989f0994e"
                 platform="linux-x86_64"
@@ -16,7 +16,7 @@ case "$( uname -s )" in
                 platform="linux-aarch64"
                 ;;
             *)
-                echo "Unrecognized architecture $( uname -i )"
+                echo "Unrecognized architecture $( uname -m )"
                 exit 1
                 ;;
         esac
