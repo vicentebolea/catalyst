@@ -13,15 +13,15 @@
 #endif
 
 //---------------------------------------------------------------------------//
-static PyObject* CatalystError = NULL;
+static PyObject* CatalystError = nullptr;
 // Custom Exceptions matching catalyst_statuses
-static PyObject* NoImplementationError = NULL;
-static PyObject* AlreadyLoadedError = NULL;
-static PyObject* NotFoundError = NULL;
-static PyObject* NotCatalystError = NULL;
-static PyObject* IncompleteError = NULL;
-static PyObject* UnsupportedVersionError = NULL;
-static PyObject* ConduitMismatchError = NULL;
+static PyObject* NoImplementationError = nullptr;
+static PyObject* AlreadyLoadedError = nullptr;
+static PyObject* NotFoundError = nullptr;
+static PyObject* NotCatalystError = nullptr;
+static PyObject* IncompleteError = nullptr;
+static PyObject* UnsupportedVersionError = nullptr;
+static PyObject* ConduitMismatchError = nullptr;
 
 static PyObject* parse_status(enum catalyst_status status)
 {
@@ -56,13 +56,13 @@ static PyObject* parse_status(enum catalyst_status status)
     default:
       PyErr_Format(PyExc_ValueError, "Unknown catalyst status code %d", int(status));
   }
-  return NULL;
+  return nullptr;
 }
 
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_initialize(PyObject* /* self */, PyObject* args)
 {
-  PyObject* py_node = NULL;
+  PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
     Py_RETURN_NONE;
@@ -82,7 +82,7 @@ static PyObject* PyCatalyst_initialize(PyObject* /* self */, PyObject* args)
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_execute(PyObject* /* self */, PyObject* args)
 {
-  PyObject* py_node = NULL;
+  PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
     Py_RETURN_NONE;
@@ -102,7 +102,7 @@ static PyObject* PyCatalyst_execute(PyObject* /* self */, PyObject* args)
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_finalize(PyObject* /* self */, PyObject* args)
 {
-  PyObject* py_node = NULL;
+  PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
     Py_RETURN_NONE;
@@ -122,7 +122,7 @@ static PyObject* PyCatalyst_finalize(PyObject* /* self */, PyObject* args)
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_about(PyObject* /* self */, PyObject* args)
 {
-  PyObject* py_node = NULL;
+  PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
     Py_RETURN_NONE;
@@ -142,7 +142,7 @@ static PyObject* PyCatalyst_about(PyObject* /* self */, PyObject* args)
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_results(PyObject* /* self */, PyObject* args)
 {
-  PyObject* py_node = NULL;
+  PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
     Py_RETURN_NONE;
@@ -169,7 +169,7 @@ static PyMethodDef catalyst_python_methods[] =
  { "finalize", (PyCFunction)PyCatalyst_finalize, METH_VARARGS, "Finalize Catalyst" },
  { "about",    (PyCFunction)PyCatalyst_about, METH_VARARGS, "Returns information about the catalyst library" },
  { "results", (PyCFunction)PyCatalyst_results, METH_VARARGS, "Get results from the catalyst library" },
- { NULL, NULL, 0, NULL } 
+ { nullptr, nullptr, 0, nullptr }
 };
 // clang-format on
 
@@ -189,14 +189,14 @@ static struct PyModuleDef catalyst_module =
 #define CATALYST_CREATE_EXCEPTION(module, object, base)                                            \
   do                                                                                               \
   {                                                                                                \
-    object = PyErr_NewException("catalyst." CATALYST_TOSTRING(object), base, NULL);                \
+    object = PyErr_NewException("catalyst." CATALYST_TOSTRING(object), base, nullptr);             \
     Py_XINCREF(object);                                                                            \
     if (PyModule_AddObject(module, CATALYST_TOSTRING(object), object) < 0)                         \
     {                                                                                              \
       Py_XDECREF(object);                                                                          \
       Py_CLEAR(object);                                                                            \
       Py_DECREF(module);                                                                           \
-      return NULL;                                                                                 \
+      return nullptr;                                                                              \
     }                                                                                              \
   } while (0)
 
@@ -207,11 +207,11 @@ extern "C"
     PyObject* py_module = PyModule_Create(&catalyst_module);
     if (!py_module)
     {
-      return NULL;
+      return nullptr;
     }
 
     // base Exception class
-    CATALYST_CREATE_EXCEPTION(py_module, CatalystError, NULL);
+    CATALYST_CREATE_EXCEPTION(py_module, CatalystError, nullptr);
     CATALYST_CREATE_EXCEPTION(py_module, NoImplementationError, CatalystError);
     CATALYST_CREATE_EXCEPTION(py_module, AlreadyLoadedError, CatalystError);
     CATALYST_CREATE_EXCEPTION(py_module, NotFoundError, CatalystError);
@@ -223,7 +223,7 @@ extern "C"
     // setup for conduit python c api
     if (import_conduit() < 0)
     {
-      return NULL;
+      return nullptr;
     }
     return py_module;
   }
