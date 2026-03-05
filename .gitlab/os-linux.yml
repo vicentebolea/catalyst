@@ -13,7 +13,7 @@
 
 ### intel "classic" compilers
 .el8_x86_64_icc:
-    image: "kitware/paraview:ci-catalyst-el8-icc-x86_64-20250506"
+    image: "kitware/paraview:ci-catalyst-el8-icc-x86_64-20260305"
     variables:
         CC: icc
         CXX: icpc
@@ -21,7 +21,7 @@
 
 ### intel oneAPI compilers
 .el8_x86_64_icx:
-    image: "kitware/paraview:ci-catalyst-el8-icx-x86_64-20250506"
+    image: "kitware/paraview:ci-catalyst-el8-icx-x86_64-20260305"
     variables:
         CC: icx
         CXX: icpx
