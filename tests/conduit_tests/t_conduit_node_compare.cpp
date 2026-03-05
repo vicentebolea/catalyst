@@ -66,7 +66,7 @@ using namespace conduit_cpp;
 
 /// Helper Functions ///
 
-std::string to_string(index_t index)
+static std::string to_string(index_t index)
 {
   std::ostringstream oss;
   oss << index;
@@ -75,12 +75,12 @@ std::string to_string(index_t index)
 
 /// Wrapper Functions ///
 
-bool diff_nodes(const Node& lnode, const Node& rnode, Node& info)
+static bool diff_nodes(const Node& lnode, const Node& rnode, Node& info)
 {
   return lnode.diff(rnode, info, 0.0);
 }
 
-bool compatible_diff_nodes(const Node& lnode, const Node& rnode, Node& info)
+static bool compatible_diff_nodes(const Node& lnode, const Node& rnode, Node& info)
 {
   return lnode.diff_compatible(rnode, info, 0.0);
 }
@@ -134,7 +134,7 @@ TEST(conduit_node_compare, compare_basic)
     }
   }
 }
-void compare_leaf_numeric(
+static void compare_leaf_numeric(
   Node& n, Node& o, NodeDiffFun diff_nodes, CheckDatatypeFun is_correct_dtype)
 {
   { // Leaf Similarity Test //
