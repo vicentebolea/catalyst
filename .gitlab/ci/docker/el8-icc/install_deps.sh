@@ -17,6 +17,7 @@ dnf upgrade -y --setopt=install_weak_deps=False \
 dnf install -y --setopt=install_weak_deps=False \
   python3-devel python3-numpy
 
-pip3 install mpi4py
+pip3 install --upgrade pip
+pip3 install 'mpi4py<4'
 
 dnf clean all
