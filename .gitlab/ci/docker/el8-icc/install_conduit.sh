@@ -35,7 +35,6 @@ cmake_args=""
 update_cmake_args()
 {
     cmake_args="\
--GNinja \
 -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
 -DCMAKE_BUILD_TYPE=Release \
 -DBUILD_GTEST=OFF \
@@ -69,19 +68,19 @@ ENABLE_WRAPPERS="OFF"
 update_cmake_args
 
 cmake $cmake_args
-ninja
-ninja install
+make -j$(nproc)
+make install
 
 # install wrapped version of conduit
 INSTALL_PATH="/opt/conduit/wrapped"
 ENABLE_WRAPPERS="ON"
 update_cmake_args
 
-ninja clean
+make clean
 
 cmake $cmake_args
-ninja
-ninja install
+make -j$(nproc)
+make install
 
 cd
 
