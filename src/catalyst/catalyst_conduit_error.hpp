@@ -97,10 +97,14 @@ public:
 
   void message(std::ostringstream& oss) const
   {
-    oss << '\n';
-    oss << m_msg << '\n';
-    oss << "file: " << m_file << '\n';
-    oss << "line: " << m_line << '\n';
+    oss << '\n'
+        << m_msg
+        << "\n"
+           "file: "
+        << m_file
+        << "\n"
+           "line: "
+        << m_line << '\n';
   }
 
   CATALYST_CONDUIT_ERROR_NODISCARD const char* what() const noexcept override
