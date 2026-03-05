@@ -579,7 +579,7 @@ TEST(conduit_node_compare, compare_list_size_diff)
       EXPECT_FALSE(info["children"].has_child("missing"));
 
       const Node info_extra = info["children/extra"];
-      EXPECT_EQ(info_extra.number_of_children(), n_num_children / 2 + 1);
+      EXPECT_EQ(info_extra.number_of_children(), (n_num_children / 2) + 1);
 
       const Node info_diff = info["children/diff"];
       EXPECT_EQ(info_diff.number_of_children(), n_num_children / 2);
