@@ -62,6 +62,7 @@ static PyObject* parse_status(enum catalyst_status status)
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_initialize(PyObject* /* self */, PyObject* args)
 {
+  // NOLINTNEXTLINE(misc-const-correctness): clang bug? `const` fails to compile here.
   PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
@@ -74,14 +75,15 @@ static PyObject* PyCatalyst_initialize(PyObject* /* self */, PyObject* args)
   }
 
   conduit::Node& cpp_node = *PyConduit_Node_Get_Node_Ptr(py_node);
-  conduit_node* c_node = conduit::c_node(&cpp_node);
-  catalyst_status status = catalyst_initialize(c_node);
+  const conduit_node* c_node = conduit::c_node(&cpp_node);
+  const catalyst_status status = catalyst_initialize(c_node);
   return parse_status(status);
 }
 
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_execute(PyObject* /* self */, PyObject* args)
 {
+  // NOLINTNEXTLINE(misc-const-correctness): clang bug? `const` fails to compile here.
   PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
@@ -94,14 +96,15 @@ static PyObject* PyCatalyst_execute(PyObject* /* self */, PyObject* args)
   }
 
   conduit::Node& cpp_node = *PyConduit_Node_Get_Node_Ptr(py_node);
-  conduit_node* c_node = conduit::c_node(&cpp_node);
-  catalyst_status status = catalyst_execute(c_node);
+  const conduit_node* c_node = conduit::c_node(&cpp_node);
+  const catalyst_status status = catalyst_execute(c_node);
   return parse_status(status);
 }
 
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_finalize(PyObject* /* self */, PyObject* args)
 {
+  // NOLINTNEXTLINE(misc-const-correctness): clang bug? `const` fails to compile here.
   PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
@@ -114,14 +117,15 @@ static PyObject* PyCatalyst_finalize(PyObject* /* self */, PyObject* args)
   }
 
   conduit::Node& cpp_node = *PyConduit_Node_Get_Node_Ptr(py_node);
-  conduit_node* c_node = conduit::c_node(&cpp_node);
-  catalyst_status status = catalyst_finalize(c_node);
+  const conduit_node* c_node = conduit::c_node(&cpp_node);
+  const catalyst_status status = catalyst_finalize(c_node);
   return parse_status(status);
 }
 
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_about(PyObject* /* self */, PyObject* args)
 {
+  // NOLINTNEXTLINE(misc-const-correctness): clang bug? `const` fails to compile here.
   PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
@@ -135,13 +139,14 @@ static PyObject* PyCatalyst_about(PyObject* /* self */, PyObject* args)
 
   conduit::Node& cpp_node = *PyConduit_Node_Get_Node_Ptr(py_node);
   conduit_node* c_node = conduit::c_node(&cpp_node);
-  catalyst_status status = catalyst_about(c_node);
+  const catalyst_status status = catalyst_about(c_node);
   return parse_status(status);
 }
 
 //---------------------------------------------------------------------------//
 static PyObject* PyCatalyst_results(PyObject* /* self */, PyObject* args)
 {
+  // NOLINTNEXTLINE(misc-const-correctness): clang bug? `const` fails to compile here.
   PyObject* py_node = nullptr;
   if (!PyArg_ParseTuple(args, "O", &py_node))
   {
@@ -155,7 +160,7 @@ static PyObject* PyCatalyst_results(PyObject* /* self */, PyObject* args)
 
   conduit::Node& cpp_node = *PyConduit_Node_Get_Node_Ptr(py_node);
   conduit_node* c_node = conduit::c_node(&cpp_node);
-  catalyst_status status = catalyst_results(c_node);
+  const catalyst_status status = catalyst_results(c_node);
   return parse_status(status);
 }
 

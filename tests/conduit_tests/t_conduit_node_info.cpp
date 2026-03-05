@@ -60,8 +60,8 @@ using namespace conduit_cpp;
 TEST(conduit_node_info, simple_1)
 {
 
-  uint32 a_val = 10;
-  uint32 b_val = 20;
+  const uint32 a_val = 10;
+  const uint32 b_val = 20;
 
   Node n;
   n["a"] = a_val;
@@ -95,7 +95,7 @@ TEST(conduit_node_info, simple_2)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_info, simple_3)
 {
-  uint32 val = 42;
+  const uint32 val = 42;
   Node n2;
   n2["a"].set_external(&val);
 

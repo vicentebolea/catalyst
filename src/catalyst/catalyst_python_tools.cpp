@@ -44,6 +44,7 @@ catalyst_py_object* PyCatalystConduit_Node_Wrap(conduit_node* node, int owns)
 #if CATALYST_WRAP_PYTHON
   if (initialize_conduit())
   {
+    // NOLINTNEXTLINE(misc-const-correctness): clang bug? `const` fails to compile here.
     conduit::Node* cppNode = conduit::cpp_node(node);
     return PyConduit_Node_Python_Wrap(cppNode, owns);
   }

@@ -58,8 +58,8 @@ using namespace conduit_cpp;
 //-----------------------------------------------------------------------------
 TEST(conduit_node_parent, simple)
 {
-  conduit_uint32 val1 = 10;
-  conduit_uint32 val2 = 20;
+  const conduit_uint32 val1 = 10;
+  const conduit_uint32 val2 = 20;
 
   Node n;
   n["a"]["b"] = val1;

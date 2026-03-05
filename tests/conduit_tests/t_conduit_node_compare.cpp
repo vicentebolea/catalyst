@@ -148,7 +148,7 @@ static void compare_leaf_numeric(
     memset(o.element_ptr(4), 1, o.dtype().element_bytes());
     EXPECT_TRUE(diff_nodes(n, o, info));
 
-    Node info_diff = info["value"];
+    const Node info_diff = info["value"];
     EXPECT_EQ(is_correct_dtype(info_diff.c_dtype()), 1);
   }
 }
@@ -166,8 +166,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_int8);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_int8_ptr()[vi] != o.as_int8_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_int8_ptr()[vi] != o.as_int8_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -177,8 +177,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_int16);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_int16_ptr()[vi] != o.as_int16_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_int16_ptr()[vi] != o.as_int16_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -188,8 +188,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_int32);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_int32_ptr()[vi] != o.as_int32_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_int32_ptr()[vi] != o.as_int32_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -199,8 +199,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_int64);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_int64_ptr()[vi] != o.as_int64_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_int64_ptr()[vi] != o.as_int64_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -210,8 +210,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_uint8);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_uint8_ptr()[vi] != o.as_uint8_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_uint8_ptr()[vi] != o.as_uint8_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -221,8 +221,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_uint16);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_uint16_ptr()[vi] != o.as_uint16_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_uint16_ptr()[vi] != o.as_uint16_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -232,8 +232,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_uint32);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_uint32_ptr()[vi] != o.as_uint32_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_uint32_ptr()[vi] != o.as_uint32_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -243,8 +243,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_uint64);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_uint64_ptr()[vi] != o.as_uint64_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_uint64_ptr()[vi] != o.as_uint64_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -254,8 +254,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_float32);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_float32_ptr()[vi] != o.as_float32_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_float32_ptr()[vi] != o.as_float32_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
 
@@ -265,8 +265,8 @@ TEST(conduit_node_compare, compare_leaf_numeric)
     compare_leaf_numeric(n, o, diff_nodes, &conduit_datatype_is_float64);
     for (index_t vi = 0; vi < 5; vi++)
     {
-      bool should_uneq = vi == 0 || vi == 4;
-      bool are_uneq = n.as_float64_ptr()[vi] != o.as_float64_ptr()[vi];
+      const bool should_uneq = vi == 0 || vi == 4;
+      const bool are_uneq = n.as_float64_ptr()[vi] != o.as_float64_ptr()[vi];
       EXPECT_EQ(are_uneq, should_uneq);
     }
   }
@@ -294,7 +294,7 @@ TEST(conduit_node_compare, compare_leaf_string)
       auto& compare_buff = compare_buffs[ci];
       char* leaf_buff = compare_buff.data();
       memset(leaf_buff, 0, compare_buff.size());
-      size_t offset = compare_buff.size() - leaf_str.length() - 1;
+      const size_t offset = compare_buff.size() - leaf_str.length() - 1;
       char* leaf_cstr = compare_buff.data() + offset;
       snprintf(leaf_cstr, compare_buff.size() - offset, "%s", leaf_str.c_str());
 
@@ -375,7 +375,7 @@ TEST(conduit_node_compare, compare_object_item_diff)
   Node o_ref;
   for (index_t ci = 0; ci < n_num_children; ci++)
   {
-    std::string cs = to_string(ci);
+    const std::string cs = to_string(ci);
     n_ref[cs].set(ci);
     o_ref[cs].set(ci + (ci % 2));
   }
@@ -390,7 +390,7 @@ TEST(conduit_node_compare, compare_object_item_diff)
     Node info_children = info["children/diff"];
     for (index_t ci = 0; ci < n_num_children; ci++)
     {
-      std::string cs = to_string(ci);
+      const std::string cs = to_string(ci);
       EXPECT_TRUE(info_children.has_child(cs));
       EXPECT_EQ(info_children[cs]["valid"].as_string(), (ci % 2 == 0) ? "true" : "false");
     }
@@ -411,7 +411,7 @@ TEST(conduit_node_compare, compare_object_size_diff)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Full vs. Empty Node Test //
-      Node& n(n_ref);
+      const Node& n(n_ref);
       Node o;
       Node info;
       // Add a node then immediately remove to make an
@@ -426,13 +426,13 @@ TEST(conduit_node_compare, compare_object_size_diff)
       EXPECT_FALSE(info["children"].has_child("missing"));
       EXPECT_FALSE(info["children"].has_child("diff"));
 
-      Node info_extra = info["children/extra"];
+      const Node info_extra = info["children/extra"];
       EXPECT_EQ(info_extra.number_of_children(), n_num_children);
     }
 
     { // Equal Node Test //
-      Node& n(n_ref);
-      Node& o(n_ref);
+      const Node& n(n_ref);
+      const Node& o(n_ref);
       Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
@@ -441,18 +441,18 @@ TEST(conduit_node_compare, compare_object_size_diff)
       EXPECT_FALSE(info["children"].has_child("extra"));
       EXPECT_FALSE(info["children"].has_child("missing"));
 
-      Node info_diff = info["children/diff"];
+      const Node info_diff = info["children/diff"];
       EXPECT_EQ(info_diff.number_of_children(), n_num_children);
 
       for (index_t ci = 0; ci < n_num_children; ci++)
       {
-        std::string cs = to_string(ci);
+        const std::string cs = to_string(ci);
         EXPECT_TRUE(info_diff.has_child(cs));
       }
     }
 
     { // Half-Full Node Check //
-      Node& n(n_ref);
+      const Node& n(n_ref);
       Node o(n_ref);
       Node info;
       for (index_t ci = 0; ci < n_num_children; ci++)
@@ -470,10 +470,10 @@ TEST(conduit_node_compare, compare_object_size_diff)
       EXPECT_TRUE(info["children"].has_child("extra"));
       EXPECT_FALSE(info["children"].has_child("missing"));
 
-      Node info_extra = info["children/extra"];
+      const Node info_extra = info["children/extra"];
       EXPECT_EQ(info_extra.number_of_children(), n_num_children / 2);
 
-      Node info_diff = info["children/diff"];
+      const Node info_diff = info["children/diff"];
       for (index_t ci = 0; ci < n_num_children; ci++)
       {
         if (ci % 2 != 1)
@@ -492,7 +492,7 @@ TEST(conduit_node_compare, compare_list_item_diff)
 
   Node n_ref;
   Node o_ref;
-  Node info;
+  const Node info;
   for (index_t ci = 0; ci < n_num_children; ci++)
   {
     n_ref.append().set(ci);
@@ -528,7 +528,7 @@ TEST(conduit_node_compare, compare_list_size_diff)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Full vs. Empty Node Check //
-      Node& n(n_ref);
+      const Node& n(n_ref);
       Node o;
       Node info;
       // Add a node then immediately remove to make an
@@ -543,13 +543,13 @@ TEST(conduit_node_compare, compare_list_size_diff)
       EXPECT_FALSE(info["children"].has_child("missing"));
       EXPECT_FALSE(info["children"].has_child("diff"));
 
-      Node info_extra = info["children/extra"];
+      const Node info_extra = info["children/extra"];
       EXPECT_EQ(info_extra.number_of_children(), n_num_children);
     }
 
     { // Equal Node Check //
-      Node& n(n_ref);
-      Node& o(n_ref);
+      const Node& n(n_ref);
+      const Node& o(n_ref);
       Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
@@ -558,12 +558,12 @@ TEST(conduit_node_compare, compare_list_size_diff)
       EXPECT_FALSE(info["children"].has_child("extra"));
       EXPECT_FALSE(info["children"].has_child("missing"));
 
-      Node info_diff = info["children/diff"];
+      const Node info_diff = info["children/diff"];
       EXPECT_EQ(info_diff.number_of_children(), n_num_children);
     }
 
     { // Half-Full Node Check //
-      Node& n(n_ref);
+      const Node& n(n_ref);
       Node o(n_ref);
       Node info;
       for (index_t ci = n_num_children - 1; ci >= n_num_children / 2; ci--)
@@ -578,10 +578,10 @@ TEST(conduit_node_compare, compare_list_size_diff)
       EXPECT_TRUE(info["children"].has_child("extra"));
       EXPECT_FALSE(info["children"].has_child("missing"));
 
-      Node info_extra = info["children/extra"];
+      const Node info_extra = info["children/extra"];
       EXPECT_EQ(info_extra.number_of_children(), n_num_children / 2 + 1);
 
-      Node info_diff = info["children/diff"];
+      const Node info_diff = info["children/diff"];
       EXPECT_EQ(info_diff.number_of_children(), n_num_children / 2);
     }
   }

@@ -93,13 +93,13 @@ static conduit_node* make_test_mesh(int timestep)
 
 static void test_async_disabled_by_default()
 {
-  conduit_cpp::Node params;
+  const conduit_cpp::Node params;
   // No async config — should initialize in sync mode
   catalyst_initialize(conduit_cpp::c_node(&params));
 
   CHECK(is_async_enabled() == 0, "Async should be disabled by default");
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -119,7 +119,7 @@ static void test_async_enable_via_params()
 
   CHECK(is_async_enabled() == 1, "Async should be enabled via params");
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -149,7 +149,7 @@ static void test_async_execute_and_flush()
   // Flush and verify all work completed
   flush_async();
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -178,7 +178,7 @@ static void test_async_rapid_execute()
 
   flush_async();
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -226,7 +226,7 @@ static void test_async_is_concurrent()
 
   flush_async(); // Wait for worker to finish
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -254,7 +254,7 @@ static void test_async_slow_tracking()
   flush_async();
 
   // Test passes if no crash - slow count logged in verbose mode
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -291,7 +291,7 @@ static void test_async_error_tracking()
   flush_async();
 
   // Worker should have continued after error - test passes if no crash
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -322,7 +322,7 @@ static void test_sync_fallback()
   // Flush is a no-op when disabled
   flush_async();
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -369,7 +369,7 @@ static void test_finalize_drains_queue()
   // Release worker and finalize (which drains the queue)
   continue_signal.set_value();
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 
   // Verify stats via catalyst_about() AFTER finalize
@@ -403,7 +403,7 @@ static void test_reinitialize_cycle()
   conduit_node_destroy(mesh);
   flush_async();
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
   CHECK(is_async_enabled() == 0, "Async disabled after first finalize");
 
@@ -419,7 +419,7 @@ static void test_reinitialize_cycle()
   }
   flush_async();
 
-  conduit_cpp::Node fin2;
+  const conduit_cpp::Node fin2;
   catalyst_finalize(conduit_cpp::c_node(&fin2));
 }
 
@@ -454,7 +454,7 @@ static void test_async_affinity_auto()
   CHECK(info.has_path("catalyst/async/worker_pinned_core"), "Should report pinned core");
 
   // Check if pinning actually occurred
-  int pinned_core = info["catalyst/async/worker_pinned_core"].to_int();
+  const int pinned_core = info["catalyst/async/worker_pinned_core"].to_int();
 
   // On Linux/Windows, affinity should work. On macOS, it may fail even with hwloc.
 #if defined(__linux__) || defined(_WIN32)
@@ -465,7 +465,7 @@ static void test_async_affinity_auto()
   (void)pinned_core;
 #endif
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -499,7 +499,7 @@ static void test_async_affinity_manual()
     info["catalyst/async/affinity_mode"].as_string() == "manual", "Affinity mode should be manual");
 
   // Check if pinning occurred to core 0
-  int pinned_core = info["catalyst/async/worker_pinned_core"].to_int();
+  const int pinned_core = info["catalyst/async/worker_pinned_core"].to_int();
 
 #if defined(__linux__) || defined(_WIN32)
   CHECK(pinned_core == 0, "Worker should be pinned to core 0 on Linux/Windows");
@@ -509,7 +509,7 @@ static void test_async_affinity_manual()
   (void)pinned_core;
 #endif
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 
@@ -532,14 +532,14 @@ static void test_gpu_runtime_reporting()
 
   // gpu_runtime should be reported (none, cuda, or hip)
   CHECK(info.has_path("catalyst/async/gpu_runtime"), "gpu_runtime should be reported");
-  std::string gpu_runtime = info["catalyst/async/gpu_runtime"].as_string();
+  const std::string gpu_runtime = info["catalyst/async/gpu_runtime"].as_string();
 
   // On CI without GPU, should be "none"
   // On a system with CUDA/HIP, could be "cuda" or "hip"
   CHECK(gpu_runtime == "none" || gpu_runtime == "cuda" || gpu_runtime == "hip",
     "gpu_runtime should be none, cuda, or hip");
 
-  conduit_cpp::Node fin;
+  const conduit_cpp::Node fin;
   catalyst_finalize(conduit_cpp::c_node(&fin));
 }
 

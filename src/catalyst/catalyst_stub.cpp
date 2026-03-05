@@ -36,7 +36,7 @@ enum catalyst_status catalyst_stub_execute(const conduit_node* params)
   if (conduit_node_has_path(params, "catalyst/test/execute_delay_ms"))
   {
     const conduit_cpp::Node& node = conduit_cpp::cpp_node(const_cast<conduit_node*>(params));
-    int delay_ms = node["catalyst/test/execute_delay_ms"].to_int();
+    const int delay_ms = node["catalyst/test/execute_delay_ms"].to_int();
     std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
   }
 
