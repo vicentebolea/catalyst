@@ -2,6 +2,8 @@
 
 set -e
 
+rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux
+
 . /root/setup_intel_compilers.sh
 
 dnf install -y --setopt=install_weak_deps=False \
