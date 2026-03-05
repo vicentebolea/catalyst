@@ -382,8 +382,8 @@ TEST(conduit_node_compare, compare_object_item_diff)
 
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    const Node n(n_ref);
-    const Node o(o_ref);
+    const Node& n(n_ref);
+    const Node& o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
 
@@ -411,7 +411,7 @@ TEST(conduit_node_compare, compare_object_size_diff)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Full vs. Empty Node Test //
-      Node n(n_ref);
+      Node& n(n_ref);
       Node o;
       Node info;
       // Add a node then immediately remove to make an
@@ -431,8 +431,8 @@ TEST(conduit_node_compare, compare_object_size_diff)
     }
 
     { // Equal Node Test //
-      Node n(n_ref);
-      Node o(n_ref);
+      Node& n(n_ref);
+      Node& o(n_ref);
       Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
@@ -452,7 +452,7 @@ TEST(conduit_node_compare, compare_object_size_diff)
     }
 
     { // Half-Full Node Check //
-      Node n(n_ref);
+      Node& n(n_ref);
       Node o(n_ref);
       Node info;
       for (index_t ci = 0; ci < n_num_children; ci++)
@@ -501,8 +501,8 @@ TEST(conduit_node_compare, compare_list_item_diff)
 
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
-    const Node n(n_ref);
-    const Node o(o_ref);
+    const Node& n(n_ref);
+    const Node& o(o_ref);
     Node info;
     EXPECT_TRUE(diff_nodes(n, o, info));
 
@@ -528,7 +528,7 @@ TEST(conduit_node_compare, compare_list_size_diff)
   for (auto diff_nodes : NODE_DIFF_FUNS)
   {
     { // Full vs. Empty Node Check //
-      Node n(n_ref);
+      Node& n(n_ref);
       Node o;
       Node info;
       // Add a node then immediately remove to make an
@@ -548,8 +548,8 @@ TEST(conduit_node_compare, compare_list_size_diff)
     }
 
     { // Equal Node Check //
-      Node n(n_ref);
-      Node o(n_ref);
+      Node& n(n_ref);
+      Node& o(n_ref);
       Node info;
       EXPECT_FALSE(diff_nodes(n, o, info));
 
@@ -563,7 +563,7 @@ TEST(conduit_node_compare, compare_list_size_diff)
     }
 
     { // Half-Full Node Check //
-      Node n(n_ref);
+      Node& n(n_ref);
       Node o(n_ref);
       Node info;
       for (index_t ci = n_num_children - 1; ci >= n_num_children / 2; ci--)

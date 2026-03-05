@@ -1210,6 +1210,7 @@ TEST(conduit_node_set, check_data_ptr)
 
   // Set external. Do a copy first so we use
   // an entirely new address space
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
   std::vector<int32> vec_copy(vec);
   int32* vec_data_ptr = vec_copy.data();
   n.set_external_int32_ptr(vec_data_ptr, 4);
@@ -1240,6 +1241,7 @@ TEST(conduit_node_set, check_data_ptr_const)
 
   // Set external. Do a copy first so we use
   // an entirely new address space
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
   std::vector<int32> vec_copy(vec);
   int32* vec_data_ptr = vec_copy.data();
   n.set_external_int32_ptr(vec_data_ptr, 4);
@@ -1271,6 +1273,7 @@ TEST(conduit_node_set, check_element_ptr_const)
 
   // Set external. Do a copy first so we use
   // an entirely new address space
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
   std::vector<int32> vec_copy(vec);
   int32* vec_data_ptr = vec_copy.data();
   n.set_external_int32_ptr(vec_data_ptr, 4);
