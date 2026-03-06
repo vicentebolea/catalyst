@@ -39,11 +39,11 @@ if (BUILD_TESTING)
   # Add a test for writing out the conduit nodes to disk
   add_test(
     NAME replay_ranks_mismatch_write_out
-    COMMAND  ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CATALYST_PYTHONPATH}
-             ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${num_ranks_write_out}
+    COMMAND  ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${num_ranks_write_out}
              ${Python3_EXECUTABLE} ${replay_ranks_mismatch_driver}
             "$<TARGET_FILE_DIR:replay_ranks_mismatch_adaptor>" "--use-mpi"
   )
+  catalyst_apply_python_env(replay_ranks_mismatch_write_out)
 
   set_tests_properties(replay_ranks_mismatch_write_out
     PROPERTIES

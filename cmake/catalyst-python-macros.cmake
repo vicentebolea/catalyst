@@ -189,7 +189,6 @@ function (catalyst_module_add_python_package name)
       ${_catalyst_add_python_package_file_outputs})
 endfunction ()
 
-
 #[==[
 @brief Add a python test
 
@@ -226,19 +225,9 @@ function (catalyst_add_python_test)
      set(_catalyst_add_python_test_NAME ${_catalyst_add_python_test_SCRIPT})
   endif ()
 
-  set(_path)
-  catalyst_module_python_default_destination(_path)
-  set(paths "${CMAKE_BINARY_DIR}/${_path}"
-            ${CONDUIT_PYTHON_MODULE_DIR})
-  if(WIN32)
-    list(JOIN paths ";" _catalyst_pythonpath)
-  else()
-    list(JOIN paths ":" _catalyst_pythonpath)
-  endif()
-
   add_test(NAME ${_catalyst_add_python_test_NAME}
-    COMMAND ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${_catalyst_pythonpath}
-          ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${_catalyst_add_python_test_SCRIPT}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${_catalyst_add_python_test_SCRIPT}
   )
+  catalyst_apply_python_env("${_catalyst_add_python_test_NAME}")
   set_tests_properties(${_catalyst_add_python_test_NAME} PROPERTIES LABELS "Python")
 endfunction()
