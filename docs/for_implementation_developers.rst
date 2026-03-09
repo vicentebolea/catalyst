@@ -113,6 +113,28 @@ Catalyst implementation, all you need to do is to make sure your Catalyst
 library is found and loaded by ``catalyst_initialize``.
 
 
+Asynchronous Execution Considerations
+=====================================
+
+When async mode is enabled, your implementation's ``execute()`` function may be
+called from a background worker thread rather than the main simulation thread.
+This has several implications:
+
+- **Thread safety**: If your implementation uses VTK, ParaView, or other
+  libraries that are not thread-safe, Catalyst's async layer handles
+  serialization via a mutex. Your implementation does not need to add
+  additional locking.
+
+- **MPI collectives**: If your implementation uses MPI, be aware that all
+  ranks will make synchronized enqueue/skip decisions to prevent collective
+  deadlocks.
+
+- **No adaptor changes required**: The async layer operates entirely within
+  ``libcatalyst``; your implementation receives ``execute()`` calls as usual.
+
+See :doc:`async_execution` for full details on async mode architecture and
+configuration.
+
 
 .. _`Mesh Blueprint`: https://llnl-conduit.readthedocs.io/en/latest/blueprint_mesh.html#mesh-blueprint
 

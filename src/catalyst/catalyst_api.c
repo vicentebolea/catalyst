@@ -7,6 +7,7 @@
 #define _GNU_SOURCE
 
 #include "catalyst_api.h"
+#include "catalyst_async.h"
 #include "catalyst_impl.h"
 #include "catalyst_version.h"
 
@@ -287,17 +288,30 @@ enum catalyst_status catalyst_initialize(const conduit_node* params)
   }
 
   impl_check(initialize);
-  return (*impl->initialize)(params);
+  enum catalyst_status status = (*impl->initialize)(params);
+
+  if (status == catalyst_status_ok)
+  {
+    // Initialize async support (will check if enabled via params/env)
+    catalyst_async_initialize(params);
+  }
+
+  return status;
 }
 
 enum catalyst_status catalyst_execute(const conduit_node* params)
 {
   impl_check(execute);
-  return (*impl->execute)(params);
+
+  // Route through async if enabled (falls back to sync internally if not)
+  return catalyst_async_execute(params, impl->execute);
 }
 
 enum catalyst_status catalyst_finalize(const conduit_node* params)
 {
+  // Finalize async first (flushes pending work)
+  catalyst_async_finalize(params);
+
   impl_check(finalize);
   return (*impl->finalize)(params);
 }
@@ -305,7 +319,9 @@ enum catalyst_status catalyst_finalize(const conduit_node* params)
 enum catalyst_status catalyst_about(conduit_node* params)
 {
   impl_check(about);
+  catalyst_async_impl_lock();
   enum catalyst_status status = (*impl->about)(params);
+  catalyst_async_impl_unlock();
 
   // Add implementation info if not already populated by the backend
   if (status == catalyst_status_ok)
@@ -349,6 +365,9 @@ enum catalyst_status catalyst_about(conduit_node* params)
       conduit_node_set_path_int32(
         params, "catalyst/implementation_abi_version", (int)impl->version);
     }
+
+    // Add async execution info
+    catalyst_async_populate_about(params);
   }
 
   return status;
@@ -357,7 +376,10 @@ enum catalyst_status catalyst_about(conduit_node* params)
 enum catalyst_status catalyst_results(conduit_node* params)
 {
   impl_check(results);
-  return (*impl->results)(params);
+  catalyst_async_impl_lock();
+  enum catalyst_status status = (*impl->results)(params);
+  catalyst_async_impl_unlock();
+  return status;
 }
 
 #ifdef _WIN32

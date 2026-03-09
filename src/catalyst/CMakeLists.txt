@@ -1,3 +1,13 @@
+# Find threads for async support
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+# Optional hwloc for topology detection
+option(CATALYST_ASYNC_USE_HWLOC "Use hwloc for topology detection in async mode" OFF)
+if (CATALYST_ASYNC_USE_HWLOC)
+  find_package(HWLOC REQUIRED)
+endif ()
+
 set(headers
   catalyst.h
   catalyst_api.h
@@ -34,6 +44,7 @@ configure_file(
   COPYONLY)
 
 set(private_headers
+  catalyst_async.h
   catalyst_dump_node.hpp)
 
 #------------------------------------------------------------
@@ -55,6 +66,7 @@ endif ()
 add_library(catalyst
   catalyst_api.c
   catalyst_api_default.cpp
+  catalyst_async.cpp
   catalyst_stub.cpp
   catalyst_conduit_abi_${catalyst_conduit_state}.c
   catalyst_python_tools.cpp
@@ -73,7 +85,8 @@ target_link_libraries(catalyst
   PUBLIC
     catalyst::catalyst_headers
   PRIVATE
-    ${CMAKE_DL_LIBS})
+    ${CMAKE_DL_LIBS}
+    Threads::Threads)
 
 set(conduit_public_libraries)
 set(conduit_private_libraries)
@@ -126,6 +139,13 @@ set_property(TARGET catalyst APPEND
   PROPERTY EXPORT_PROPERTIES
     CATALYST_WITH_EXTERNAL_CONDUIT)
 
+# Async/hwloc support - set on source file only
+if (CATALYST_ASYNC_USE_HWLOC)
+  target_link_libraries(catalyst PRIVATE HWLOC::HWLOC)
+endif ()
+set_property(SOURCE catalyst_async.cpp APPEND PROPERTY
+  COMPILE_DEFINITIONS "CATALYST_ASYNC_USE_HWLOC=$<BOOL:${CATALYST_ASYNC_USE_HWLOC}>")
+
 if (WIN32)
   set_property(TARGET catalyst
     PROPERTY
@@ -141,7 +161,7 @@ endif ()
 
 target_compile_features(catalyst
   PUBLIC
-    cxx_std_11)
+    cxx_std_17)
 
 add_library(catalyst::catalyst ALIAS catalyst)
 

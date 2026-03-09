@@ -4,11 +4,15 @@
  */
 
 #include "catalyst_stub.h"
+#include "catalyst_conduit.hpp"
 #include "catalyst_dump_node.hpp"
 #include "catalyst_version.h"
 
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <future>
+#include <thread>
 
 enum catalyst_status catalyst_stub_initialize(const conduit_node* params)
 {
@@ -27,6 +31,40 @@ enum catalyst_status catalyst_stub_execute(const conduit_node* params)
   static unsigned long invocations = 0;
   dump_node(params, "execute", invocations, true);
   invocations++;
+
+  // Test support: delay execution if requested
+  if (conduit_node_has_path(params, "catalyst/test/execute_delay_ms"))
+  {
+    const conduit_cpp::Node& node = conduit_cpp::cpp_node(const_cast<conduit_node*>(params));
+    int delay_ms = node["catalyst/test/execute_delay_ms"].to_int();
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
+  }
+
+  // Test support: return error status if requested
+  if (conduit_node_has_path(params, "catalyst/test/return_error"))
+  {
+    return catalyst_status_error_no_implementation;
+  }
+
+  // Test support: synchronization for concurrency testing
+  if (conduit_node_has_path(params, "catalyst/test/sync/started_promise_ptr"))
+  {
+    const conduit_cpp::Node& node = conduit_cpp::cpp_node(const_cast<conduit_node*>(params));
+    auto ptr_val = node["catalyst/test/sync/started_promise_ptr"].to_int64();
+    auto fut_val = node["catalyst/test/sync/continue_future_ptr"].to_int64();
+
+    // NOLINTNEXTLINE(performance-no-int-to-ptr) - test-only code using pointer round-trip
+    auto* started = reinterpret_cast<std::promise<void>*>(ptr_val);
+    // NOLINTNEXTLINE(performance-no-int-to-ptr) - test-only code using pointer round-trip
+    auto* cont = reinterpret_cast<std::future<void>*>(fut_val);
+
+    if (started && cont)
+    {
+      started->set_value(); // Signal "I started"
+      cont->wait();         // Wait for "continue"
+    }
+  }
+
   return catalyst_status_ok;
 }
 
