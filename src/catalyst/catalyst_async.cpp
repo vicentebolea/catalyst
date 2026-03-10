@@ -1367,10 +1367,7 @@ extern "C"
       const std::scoped_lock lock(g_ctx.queue_mutex);
 
       auto new_depth = g_ctx.work_queue.size() + 1;
-      if (new_depth > g_ctx.stats.max_queue_depth_seen)
-      {
-        g_ctx.stats.max_queue_depth_seen = new_depth;
-      }
+      g_ctx.stats.max_queue_depth_seen = std::max(g_ctx.stats.max_queue_depth_seen, new_depth);
 
       g_ctx.work_queue.push(std::move(item));
     }
