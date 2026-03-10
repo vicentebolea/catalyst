@@ -167,6 +167,7 @@ static PyObject* PyCatalyst_results(PyObject* /* self */, PyObject* args)
 // Python Module Method Defs
 //---------------------------------------------------------------------------//
 // clang-format off
+// NOLINTNEXTLINE(modernize-avoid-c-arrays)
 static PyMethodDef catalyst_python_methods[] =
 {
  { "initialize",(PyCFunction)PyCatalyst_initialize, METH_VARARGS, "Intialize Catalyst" },
