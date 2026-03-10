@@ -194,7 +194,7 @@ static struct PyModuleDef catalyst_module =
 #define CATALYST_CREATE_EXCEPTION(module, object, base)                                            \
   do                                                                                               \
   {                                                                                                \
-    object = PyErr_NewException("catalyst." CATALYST_TOSTRING(object), base, nullptr);             \
+    (object) = PyErr_NewException("catalyst." CATALYST_TOSTRING(object), base, nullptr);           \
     Py_XINCREF(object);                                                                            \
     if (PyModule_AddObject(module, CATALYST_TOSTRING(object), object) < 0)                         \
     {                                                                                              \
