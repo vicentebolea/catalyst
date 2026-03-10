@@ -3,8 +3,6 @@
  * accompanying License.txt
  */
 
-// XXX(c++14): use `_t` and `_v`-suffixed type queries.
-
 #include <conduit.h>
 #include <conduit_blueprint.h>
 
@@ -39,7 +37,7 @@ static int test_conduit_bitwidth_types()
   int ret = EXIT_SUCCESS;
 
 #define CHECK_CONDUIT_TYPEDEF(conduit, c)                                                          \
-  static_assert(std::is_same<conduit, c>::value, #conduit " must be the same as '" #c "'")
+  static_assert(std::is_same_v<conduit, c>, #conduit " must be the same as '" #c "'")
 
   CHECK_CONDUIT_TYPEDEF(conduit_unsigned_char, unsigned char);
   CHECK_CONDUIT_TYPEDEF(conduit_unsigned_short, unsigned short);
@@ -81,47 +79,47 @@ static int test_conduit_bitwidth_types()
   abi_require(CONDUIT_CHAR8_STR_ID == 13, "CONDUIT_CHAR8_STR_ID must be 13");
 
   abi_require(sizeof(conduit_int8) == 1, "conduit_int8 must be 1 byte");
-  static_assert(std::is_integral<conduit_int8>::value, "conduit_int8 must be integral");
-  static_assert(std::is_signed<conduit_int8>::value, "conduit_int8 must be signed");
+  static_assert(std::is_integral_v<conduit_int8>, "conduit_int8 must be integral");
+  static_assert(std::is_signed_v<conduit_int8>, "conduit_int8 must be signed");
 
   abi_require(sizeof(conduit_int16) == 2, "conduit_int16 must be 2 byte");
-  static_assert(std::is_integral<conduit_int16>::value, "conduit_int16 must be integral");
-  static_assert(std::is_signed<conduit_int16>::value, "conduit_int16 must be signed");
+  static_assert(std::is_integral_v<conduit_int16>, "conduit_int16 must be integral");
+  static_assert(std::is_signed_v<conduit_int16>, "conduit_int16 must be signed");
 
   abi_require(sizeof(conduit_int32) == 4, "conduit_int32 must be 4 byte");
-  static_assert(std::is_integral<conduit_int32>::value, "conduit_int32 must be integral");
-  static_assert(std::is_signed<conduit_int32>::value, "conduit_int32 must be signed");
+  static_assert(std::is_integral_v<conduit_int32>, "conduit_int32 must be integral");
+  static_assert(std::is_signed_v<conduit_int32>, "conduit_int32 must be signed");
 
   abi_require(sizeof(conduit_int64) == 8, "conduit_int64 must be 8 byte");
-  static_assert(std::is_integral<conduit_int64>::value, "conduit_int64 must be integral");
-  static_assert(std::is_signed<conduit_int64>::value, "conduit_int64 must be signed");
+  static_assert(std::is_integral_v<conduit_int64>, "conduit_int64 must be integral");
+  static_assert(std::is_signed_v<conduit_int64>, "conduit_int64 must be signed");
 
   abi_require(sizeof(conduit_uint8) == 1, "conduit_uint8 must be 1 byte");
-  static_assert(std::is_integral<conduit_uint8>::value, "conduit_uint8 must be integral");
-  static_assert(std::is_unsigned<conduit_uint8>::value, "conduit_uint8 must be unsigned");
+  static_assert(std::is_integral_v<conduit_uint8>, "conduit_uint8 must be integral");
+  static_assert(std::is_unsigned_v<conduit_uint8>, "conduit_uint8 must be unsigned");
 
   abi_require(sizeof(conduit_uint16) == 2, "conduit_uint16 must be 2 byte");
-  static_assert(std::is_integral<conduit_uint16>::value, "conduit_uint16 must be integral");
-  static_assert(std::is_unsigned<conduit_uint16>::value, "conduit_uint16 must be unsigned");
+  static_assert(std::is_integral_v<conduit_uint16>, "conduit_uint16 must be integral");
+  static_assert(std::is_unsigned_v<conduit_uint16>, "conduit_uint16 must be unsigned");
 
   abi_require(sizeof(conduit_uint32) == 4, "conduit_uint32 must be 4 byte");
-  static_assert(std::is_integral<conduit_uint32>::value, "conduit_uint32 must be integral");
-  static_assert(std::is_unsigned<conduit_uint32>::value, "conduit_uint32 must be unsigned");
+  static_assert(std::is_integral_v<conduit_uint32>, "conduit_uint32 must be integral");
+  static_assert(std::is_unsigned_v<conduit_uint32>, "conduit_uint32 must be unsigned");
 
   abi_require(sizeof(conduit_uint64) == 8, "conduit_uint64 must be 8 byte");
-  static_assert(std::is_integral<conduit_uint64>::value, "conduit_uint64 must be integral");
-  static_assert(std::is_unsigned<conduit_uint64>::value, "conduit_uint64 must be unsigned");
+  static_assert(std::is_integral_v<conduit_uint64>, "conduit_uint64 must be integral");
+  static_assert(std::is_unsigned_v<conduit_uint64>, "conduit_uint64 must be unsigned");
 
   abi_require(sizeof(conduit_float32) == 4, "conduit_float32 must be 4 byte");
   static_assert(
-    std::is_floating_point<conduit_float32>::value, "conduit_float32 must be floating point");
+    std::is_floating_point_v<conduit_float32>, "conduit_float32 must be floating point");
 
   abi_require(sizeof(conduit_float64) == 8, "conduit_float64 must be 8 byte");
   static_assert(
-    std::is_floating_point<conduit_float64>::value, "conduit_float64 must be floating point");
+    std::is_floating_point_v<conduit_float64>, "conduit_float64 must be floating point");
 
-  static_assert(std::is_integral<conduit_index_t>::value, "conduit_index_t must be integral");
-  static_assert(std::is_signed<conduit_index_t>::value, "conduit_index_t must be signed");
+  static_assert(std::is_integral_v<conduit_index_t>, "conduit_index_t must be integral");
+  static_assert(std::is_signed_v<conduit_index_t>, "conduit_index_t must be signed");
   abi_require(sizeof(conduit_index_t) == 8, "conduit_index_t must be 64-bits");
 
   return ret;
@@ -172,9 +170,9 @@ static int test_conduit_datatype_abi()
     using func_types = funcinfo<decltype(conduit_datatype_sizeof_index_t)>;
     abi_require(
       &conduit_datatype_sizeof_index_t, "conduit_datatype_sizeof_index_t must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
-      "conduit_datatype_sizeof_index_t must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 0,
+    static_assert(
+      std::is_same_v<func_types::return_t, int>, "conduit_datatype_sizeof_index_t must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 0,
       "conduit_datatype_sizeof_index_t must take no arguments");
   }
 
@@ -184,12 +182,12 @@ static int test_conduit_datatype_abi()
   {
     using func_types = funcinfo<decltype(conduit_datatype_id)>;
     abi_require(&conduit_datatype_id, "conduit_datatype_id must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_datatype_id must return conduit_index_t");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_datatype_id must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,
-                    const conduit_datatype*>::value,
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_datatype_id must take one argument");
+    static_assert(
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_datatype*>,
       "conduit_datatype_id should take a const conduit_datatype*");
   }
 
@@ -197,12 +195,12 @@ static int test_conduit_datatype_abi()
   {
     using func_types = funcinfo<decltype(conduit_datatype_name)>;
     abi_require(&conduit_datatype_name, "conduit_datatype_name must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_datatype_name must return catalyst_status");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_datatype_name must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,
-                    const conduit_datatype*>::value,
+    static_assert(
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_datatype*>,
       "conduit_datatype_name should take a const conduit_datatype*");
   }
 
@@ -211,10 +209,10 @@ static int test_conduit_datatype_abi()
     using func_types = funcinfo<decltype(conduit_datatype_name_destroy)>;
     abi_require(&conduit_datatype_name_destroy, "conduit_datatype_name_destroy must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_datatype_destroy must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, void>, "conduit_datatype_destroy must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_datatype_destroy must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type, char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, char*>,
       "conduit_datatype_destroy should take a char*");
   }
 
@@ -225,12 +223,10 @@ static int test_conduit_datatype_abi()
   {                                                                                                \
     using func_types = funcinfo<decltype(func)>;                                                   \
     abi_require(&(func), #func " must be defined");                                                \
+    static_assert(std::is_same_v<func_types::return_t, rettype>, #func " must return " #rettype);  \
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1, #func " must take one argument");  \
     static_assert(                                                                                 \
-      std::is_same<func_types::return_t, rettype>::value, #func " must return " #rettype);         \
-    abi_require(                                                                                   \
-      std::tuple_size<func_types::argument_t>::value == 1, #func " must take one argument");       \
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,                \
-                    const conduit_datatype*>::value,                                               \
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_datatype*>,    \
       #func " should take a const conduit_datatype*");                                             \
   } while (false)
 
@@ -245,15 +241,14 @@ static int test_conduit_datatype_abi()
   {
     using func_types = funcinfo<decltype(conduit_datatype_element_index)>;
     abi_require(&conduit_datatype_element_index, "conduit_datatype_element_index must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_datatype_element_index must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_datatype_element_index must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,
-                    const conduit_datatype*>::value,
-      "conduit_datatype_element_index should take a const conduit_datatype*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_index_t>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_datatype*>,
+      "conduit_datatype_element_index should take a const conduit_datatype*");
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_index_t>,
       "conduit_datatype_element_index should take a conduit_index_t");
   }
 
@@ -326,10 +321,10 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_create)>;
     abi_require(&conduit_node_create, "conduit_node_create must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_create must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 0,
-      "conduit_node_create must take one argument");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 0, "conduit_node_create must take one argument");
   }
 
   // conduit_node_destroy
@@ -337,11 +332,10 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_destroy)>;
     abi_require(&conduit_node_destroy, "conduit_node_destroy must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_destroy must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_destroy must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_destroy must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_destroy should take a conduit_node*");
   }
 
@@ -349,15 +343,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_fetch)>;
     abi_require(&conduit_node_fetch, "conduit_node_fetch must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_fetch must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
-      "conduit_node_fetch must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 2, "conduit_node_fetch must take two arguments");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_fetch should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_fetch should take a const char*");
   }
 
@@ -365,15 +357,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_fetch_existing)>;
     abi_require(&conduit_node_fetch_existing, "conduit_node_fetch_existing must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_fetch_existing must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_fetch_existing must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_fetch_existing should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_fetch_existing should take a const char*");
   }
 
@@ -381,12 +371,11 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_append)>;
     abi_require(&conduit_node_append, "conduit_node_append must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_append must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_append must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_append must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_append should take a conduit_node*");
   }
 
@@ -394,15 +383,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_add_child)>;
     abi_require(&conduit_node_add_child, "conduit_node_add_child must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_add_child must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_add_child must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_add_child should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_add_child should take a const char*");
   }
 
@@ -410,15 +397,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_child)>;
     abi_require(&conduit_node_child, "conduit_node_child must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_child must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
-      "conduit_node_child must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 2, "conduit_node_child must take two arguments");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_child should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_index_t>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_index_t>,
       "conduit_node_child should take a conduit_index_t");
   }
 
@@ -426,15 +411,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_child_by_name)>;
     abi_require(&conduit_node_child_by_name, "conduit_node_child_by_name must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_child_by_name must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_child_by_name must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_child_by_name should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_child_by_name should take a const char*");
   }
 
@@ -443,12 +426,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_number_of_children)>;
     abi_require(
       &conduit_node_number_of_children, "conduit_node_number_of_children must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_node_number_of_children must return conduit_index_t");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_number_of_children must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_number_of_children should take a conduit_node*");
   }
 
@@ -457,12 +439,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_number_of_elements)>;
     abi_require(
       &conduit_node_number_of_elements, "conduit_node_number_of_elements must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_node_number_of_elements must return conduit_index_t");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_number_of_elements must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_number_of_elements should take a conduit_node*");
   }
 
@@ -471,11 +452,10 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_reset)>;
     abi_require(&conduit_node_reset, "conduit_node_reset must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_reset must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_reset must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_reset must return void");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_reset must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_reset should take a conduit_node*");
   }
 
@@ -483,15 +463,12 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_move)>;
     abi_require(&conduit_node_move, "conduit_node_move must be defined");
-    static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_move must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
-      "conduit_node_move must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>, "conduit_node_move must return void");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 2, "conduit_node_move must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_move should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_move should take a conduit_node*");
   }
 
@@ -499,15 +476,12 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_swap)>;
     abi_require(&conduit_node_swap, "conduit_node_swap must be defined");
-    static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_swap must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
-      "conduit_node_swap must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>, "conduit_node_swap must return void");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 2, "conduit_node_swap must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_swap should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_swap should take a conduit_node*");
   }
 
@@ -516,14 +490,12 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_remove_path)>;
     abi_require(&conduit_node_remove_path, "conduit_node_remove_path must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_remove_path must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_remove_path must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_remove_path must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_remove_path should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_remove_path should take a const char*");
   }
 
@@ -531,15 +503,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_remove_child)>;
     abi_require(&conduit_node_remove_child, "conduit_node_remove_child must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
-      "conduit_node_remove_child must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    static_assert(
+      std::is_same_v<func_types::return_t, void>, "conduit_node_remove_child must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_remove_child must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_remove_child should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_index_t>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_index_t>,
       "conduit_node_remove_child should take a conduit_index_t");
   }
 
@@ -548,15 +518,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_remove_child_by_name)>;
     abi_require(
       &conduit_node_remove_child_by_name, "conduit_node_remove_child_by_name must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_remove_child_by_name must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_remove_child_by_name must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_remove_child_by_name should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_remove_child_by_name should take a const char*");
   }
 
@@ -565,11 +533,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_name)>;
     abi_require(&conduit_node_name, "conduit_node_name must be defined");
     static_assert(
-      std::is_same<func_types::return_t, char*>::value, "conduit_node_name must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_name must take one argument");
+      std::is_same_v<func_types::return_t, char*>, "conduit_node_name must return char*");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_name must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_name should take a const conduit_node*");
   }
 
@@ -578,11 +546,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_path)>;
     abi_require(&conduit_node_path, "conduit_node_path must be defined");
     static_assert(
-      std::is_same<func_types::return_t, char*>::value, "conduit_node_path must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_path must take one argument");
+      std::is_same_v<func_types::return_t, char*>, "conduit_node_path must return char*");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_path must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_path should take a const conduit_node*");
   }
 
@@ -591,14 +559,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_has_child)>;
     abi_require(&conduit_node_has_child, "conduit_node_has_child must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_has_child must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_has_child must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_has_child must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_has_child should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_has_child should take a const char*");
   }
 
@@ -607,14 +574,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_has_path)>;
     abi_require(&conduit_node_has_path, "conduit_node_has_path must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_has_path must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_has_path must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_has_path must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_has_path should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_has_path should take a const char*");
   }
 
@@ -622,18 +588,15 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_rename_child)>;
     abi_require(&conduit_node_rename_child, "conduit_node_rename_child must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
-      "conduit_node_rename_child must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    static_assert(
+      std::is_same_v<func_types::return_t, void>, "conduit_node_rename_child must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_rename_child must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_rename_child should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_rename_child should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_rename_child should take a const char*");
   }
 
@@ -642,11 +605,10 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_is_root)>;
     abi_require(&conduit_node_is_root, "conduit_node_is_root must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_is_root must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_is_root must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_is_root must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_is_root should take a conduit_node*");
   }
 
@@ -654,12 +616,12 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_is_data_external)>;
     abi_require(&conduit_node_is_data_external, "conduit_node_is_data_external must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
-      "conduit_node_is_data_external must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    static_assert(
+      std::is_same_v<func_types::return_t, int>, "conduit_node_is_data_external must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_is_data_external must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_is_data_external should take a const conduit_node*");
   }
 
@@ -667,12 +629,11 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_parent)>;
     abi_require(&conduit_node_parent, "conduit_node_parent must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_node*>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_node*>,
       "conduit_node_parent must return conduit_node*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_parent must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_parent must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_parent should take a conduit_node*");
   }
 
@@ -681,12 +642,12 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_total_strided_bytes)>;
     abi_require(
       &conduit_node_total_strided_bytes, "conduit_node_total_strided_bytes must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_node_total_strided_bytes must return conduit_index_t");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_total_strided_bytes must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_total_strided_bytes should take a const conduit_node*");
   }
 
@@ -695,12 +656,12 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_total_bytes_compact)>;
     abi_require(
       &conduit_node_total_bytes_compact, "conduit_node_total_bytes_compact must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_node_total_bytes_compact must return conduit_index_t");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_total_bytes_compact must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_total_bytes_compact should take a const conduit_node*");
   }
 
@@ -709,12 +670,12 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_total_bytes_allocated)>;
     abi_require(
       &conduit_node_total_bytes_allocated, "conduit_node_total_bytes_allocated must be defined");
-    static_assert(std::is_same<func_types::return_t, conduit_index_t>::value,
+    static_assert(std::is_same_v<func_types::return_t, conduit_index_t>,
       "conduit_node_total_bytes_allocated must return conduit_index_t");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_total_bytes_allocated must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_total_bytes_allocated should take a const conduit_node*");
   }
 
@@ -723,11 +684,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_is_compact)>;
     abi_require(&conduit_node_is_compact, "conduit_node_is_compact must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_is_compact must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_is_compact must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_is_compact must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_is_compact should take a const conduit_node*");
   }
 
@@ -736,14 +697,14 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_compatible)>;
     abi_require(&conduit_node_compatible, "conduit_node_compatible must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_compatible must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_compatible must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_compatible must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_compatible should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_compatible should take a const conduit_node*");
   }
 
@@ -752,11 +713,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_is_contiguous)>;
     abi_require(&conduit_node_is_contiguous, "conduit_node_is_contiguous must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_is_contiguous must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_is_contiguous must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_is_contiguous must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_is_contiguous should take a const conduit_node*");
   }
 
@@ -765,15 +726,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_contiguous_with_node)>;
     abi_require(
       &conduit_node_contiguous_with_node, "conduit_node_contiguous_with_node must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_node_contiguous_with_node must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_contiguous_with_node must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_contiguous_with_node should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_contiguous_with_node should take a const conduit_node*");
   }
 
@@ -782,14 +743,14 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_contiguous_with_address)>;
     abi_require(&conduit_node_contiguous_with_address,
       "conduit_node_contiguous_with_address must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_node_contiguous_with_address must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_contiguous_with_address must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_contiguous_with_address should take a const conduit_node*");
-    static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, void*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, void*>,
       "conduit_node_contiguous_with_address should take a void*");
   }
 
@@ -797,21 +758,18 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_diff)>;
     abi_require(&conduit_node_diff, "conduit_node_diff must be defined");
+    static_assert(std::is_same_v<func_types::return_t, int>, "conduit_node_diff must return int");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 4, "conduit_node_diff must take four arguments");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_diff must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 4,
-      "conduit_node_diff must take four arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_diff should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_diff should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_node_diff should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_float64>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_float64>,
       "conduit_node_diff should take a conduit_float64");
   }
 
@@ -819,21 +777,19 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_diff_compatible)>;
     abi_require(&conduit_node_diff_compatible, "conduit_node_diff_compatible must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
-      "conduit_node_diff_compatible must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 4,
+    static_assert(
+      std::is_same_v<func_types::return_t, int>, "conduit_node_diff_compatible must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 4,
       "conduit_node_diff_compatible must take four arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_diff_compatible should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_diff_compatible should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_node_diff_compatible should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_float64>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_float64>,
       "conduit_node_diff_compatible should take a conduit_float64");
   }
 
@@ -842,14 +798,14 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_compatible)>;
     abi_require(&conduit_node_compatible, "conduit_node_compatible must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_node_compatible must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, int>, "conduit_node_compatible must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_compatible must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_compatible should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_compatible should take a const conduit_node*");
   }
 
@@ -857,15 +813,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_info)>;
     abi_require(&conduit_node_info, "conduit_node_info must be defined");
+    static_assert(std::is_same_v<func_types::return_t, void>, "conduit_node_info must return void");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 2, "conduit_node_info must take two arguments");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_info must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
-      "conduit_node_info must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_info should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_info should take a conduit_node*");
   }
 
@@ -874,11 +828,10 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_print)>;
     abi_require(&conduit_node_print, "conduit_node_print must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_print must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_print must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_print must return void");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_print must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_print should take a conduit_node*");
   }
 
@@ -886,12 +839,11 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_print_detailed)>;
     abi_require(&conduit_node_print_detailed, "conduit_node_print_detailed must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
-      "conduit_node_print_detailed must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_print_detailed must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_print_detailed must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
+      "conduit_node_print_detailed must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_print_detailed should take a conduit_node*");
   }
 
@@ -900,14 +852,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_compact_to)>;
     abi_require(&conduit_node_compact_to, "conduit_node_compact_to must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_compact_to must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_compact_to must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_compact_to must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_compact_to should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_compact_to should take a conduit_node*");
   }
 
@@ -916,14 +867,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_update)>;
     abi_require(&conduit_node_update, "conduit_node_update must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_update must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_update must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_update must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_update should take a conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_update should take a const conduit_node*");
   }
 
@@ -931,15 +881,14 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_update_compatible)>;
     abi_require(&conduit_node_update_compatible, "conduit_node_update_compatible must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_update_compatible must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_update_compatible must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_update_compatible should take a conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_update_compatible should take a const conduit_node*");
   }
 
@@ -947,15 +896,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_update_external)>;
     abi_require(&conduit_node_update_external, "conduit_node_update_external must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
-      "conduit_node_update_external must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    static_assert(
+      std::is_same_v<func_types::return_t, void>, "conduit_node_update_external must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_update_external must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_update_external should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_update_external should take a conduit_node*");
   }
 
@@ -964,17 +911,14 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_parse)>;
     abi_require(&conduit_node_parse, "conduit_node_parse must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_parse must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_parse must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_parse must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_parse should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_parse should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_parse should take a const char*");
   }
 
@@ -983,19 +927,16 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_generate)>;
     abi_require(&conduit_node_generate, "conduit_node_generate must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_generate must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 4,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_generate must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 4,
       "conduit_node_generate must take four arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_generate should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_generate should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_generate should take a const char*");
-    static_assert(std::is_same<std::tuple_element<3, func_types::argument_t>::type, void*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, void*>,
       "conduit_node_generate should take a void*");
   }
 
@@ -1003,20 +944,17 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_generate_external)>;
     abi_require(&conduit_node_generate_external, "conduit_node_generate_external must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_generate_external must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 4,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 4,
       "conduit_node_generate_external must take four arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_generate_external should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_generate_external should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_generate_external should take a const char*");
-    static_assert(std::is_same<std::tuple_element<3, func_types::argument_t>::type, void*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, void*>,
       "conduit_node_generate_external should take a void*");
   }
 
@@ -1024,18 +962,14 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_save)>;
     abi_require(&conduit_node_save, "conduit_node_save must be defined");
-    static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_save must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    static_assert(std::is_same_v<func_types::return_t, void>, "conduit_node_save must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_save must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_save should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_save should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_save should take a const char*");
   }
 
@@ -1043,18 +977,14 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_load)>;
     abi_require(&conduit_node_load, "conduit_node_load must be defined");
-    static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_load must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    static_assert(std::is_same_v<func_types::return_t, void>, "conduit_node_load must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_load must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_load should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_load should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_load should take a const char*");
   }
 
@@ -1063,14 +993,12 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_set_node)>;
     abi_require(&conduit_node_set_node, "conduit_node_set_node must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_node_set_node must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+      std::is_same_v<func_types::return_t, void>, "conduit_node_set_node must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_set_node must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_node should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_node should take a conduit_node*");
   }
 
@@ -1078,18 +1006,15 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_set_path_node)>;
     abi_require(&conduit_node_set_path_node, "conduit_node_set_path_node must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
-      "conduit_node_set_path_node must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    static_assert(
+      std::is_same_v<func_types::return_t, void>, "conduit_node_set_path_node must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_set_path_node must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_path_node should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_set_path_node should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_path_node should take a conduit_node*");
   }
 
@@ -1097,15 +1022,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_set_external_node)>;
     abi_require(&conduit_node_set_external_node, "conduit_node_set_external_node must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_set_external_node must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_set_external_node must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_external_node should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_external_node should take a conduit_node*");
   }
 
@@ -1114,18 +1037,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_set_path_external_node)>;
     abi_require(
       &conduit_node_set_path_external_node, "conduit_node_set_path_external_node must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_set_path_external_node must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_set_path_external_node must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_path_external_node should take a conduit_external_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_set_path_external_node should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_path_external_node should take a conduit_external_node*");
   }
 
@@ -1133,15 +1053,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_set_char8_str)>;
     abi_require(&conduit_node_set_char8_str, "conduit_node_set_char8_str must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
-      "conduit_node_set_char8_str must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    static_assert(
+      std::is_same_v<func_types::return_t, void>, "conduit_node_set_char8_str must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_set_char8_str must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_char8_str should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_set_char8_str should take a const char*");
   }
 
@@ -1150,18 +1068,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_set_path_char8_str)>;
     abi_require(
       &conduit_node_set_path_char8_str, "conduit_node_set_path_char8_str must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_set_path_char8_str must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_set_path_char8_str must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_path_char8_str should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_set_path_char8_str should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, const char*>,
       "conduit_node_set_path_char8_str should take a const char*");
   }
 
@@ -1170,14 +1085,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_set_external_char8_str)>;
     abi_require(
       &conduit_node_set_external_char8_str, "conduit_node_set_external_char8_str must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_set_external_char8_str must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_set_external_char8_str must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_external_char8_str should take a conduit_node*");
-    static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, char*>,
       "conduit_node_set_external_char8_str should take a char*");
   }
 
@@ -1186,17 +1100,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_set_path_external_char8_str)>;
     abi_require(&conduit_node_set_path_external_char8_str,
       "conduit_node_set_path_external_char8_str must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_node_set_path_external_char8_str must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_set_path_external_char8_str must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_set_path_external_char8_str should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_set_path_external_char8_str should take a const char*");
-    static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, char*>,
       "conduit_node_set_path_external_char8_str should take a char*");
   }
 
@@ -1205,11 +1117,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_json)>;
     abi_require(&conduit_node_to_json, "conduit_node_to_json must be defined");
     static_assert(
-      std::is_same<func_types::return_t, char*>::value, "conduit_node_to_json must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, char*>, "conduit_node_to_json must return char*");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_to_json must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_json should take a const conduit_node*");
   }
 
@@ -1218,15 +1130,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_json_with_options)>;
     abi_require(
       &conduit_node_to_json_with_options, "conduit_node_to_json_with_options must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_node_to_json_with_options must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_to_json_with_options must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_json_with_options should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_json_with_options should take a const conduit_node*");
   }
 
@@ -1235,11 +1147,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_string)>;
     abi_require(&conduit_node_to_string, "conduit_node_to_string must be defined");
     static_assert(
-      std::is_same<func_types::return_t, char*>::value, "conduit_node_to_string must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, char*>, "conduit_node_to_string must return char*");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_to_string must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_string should take a const conduit_node*");
   }
 
@@ -1248,15 +1160,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_string_with_options)>;
     abi_require(
       &conduit_node_to_string_with_options, "conduit_node_to_string_with_options must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_node_to_string_with_options must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_to_string_with_options must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_string_with_options should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_string_with_options should take a const conduit_node*");
   }
 
@@ -1264,12 +1176,12 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_to_summary_string)>;
     abi_require(&conduit_node_to_summary_string, "conduit_node_to_summary_string must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_node_to_summary_string must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_to_summary_string must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_summary_string should take a const conduit_node*");
   }
 
@@ -1278,15 +1190,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_summary_string_with_options)>;
     abi_require(&conduit_node_to_summary_string_with_options,
       "conduit_node_to_summary_string_with_options must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_node_to_summary_string_with_options must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_to_summary_string_with_options must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_summary_string_with_options should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_summary_string_with_options should take a const conduit_node*");
   }
 
@@ -1295,11 +1207,11 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_yaml)>;
     abi_require(&conduit_node_to_yaml, "conduit_node_to_yaml must be defined");
     static_assert(
-      std::is_same<func_types::return_t, char*>::value, "conduit_node_to_yaml must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, char*>, "conduit_node_to_yaml must return char*");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_to_yaml must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_yaml should take a const conduit_node*");
   }
 
@@ -1308,15 +1220,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_to_yaml_with_options)>;
     abi_require(
       &conduit_node_to_yaml_with_options, "conduit_node_to_yaml_with_options must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_node_to_yaml_with_options must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_to_yaml_with_options must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_yaml_with_options should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_node_to_yaml_with_options should take a const conduit_node*");
   }
 
@@ -1327,14 +1239,14 @@ static int test_conduit_node_abi()
     {                                                                                              \
       using func_types = funcinfo<decltype(conduit_node_set_##stem)>;                              \
       abi_require(&conduit_node_set_##stem, "conduit_node_set_" #stem " must be defined");         \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_" #stem " must return void");                                            \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 2,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 2,                                  \
         "conduit_node_set_" #stem " must take two arguments");                                     \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_" #stem " must take a conduit_node*");                                   \
-      static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty>::value,  \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, ty>,           \
         "conduit_node_set_" #stem " must take a " #ty);                                            \
     }                                                                                              \
                                                                                                    \
@@ -1343,18 +1255,18 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_##stem##_ptr)>;                        \
       abi_require(                                                                                 \
         &conduit_node_set_##stem##_ptr, "conduit_node_set_" #stem "_ptr must be defined");         \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_" #stem "_ptr must return void");                                        \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 3,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 3,                                  \
         "conduit_node_set_" #stem "_ptr must take three arguments");                               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_" #stem "_ptr must take a conduit_node*");                               \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, ty*>,          \
         "conduit_node_set_" #stem "_ptr must take a " #ty);                                        \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_" #stem "_ptr must take a conduit_index_t");                             \
     }                                                                                              \
                                                                                                    \
@@ -1363,30 +1275,30 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_##stem##_ptr_detailed)>;               \
       abi_require(&conduit_node_set_##stem##_ptr_detailed,                                         \
         "conduit_node_set_" #stem "_ptr_detailed must be defined");                                \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_" #stem "_ptr_detailed must return void");                               \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 7,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 7,                                  \
         "conduit_node_set_" #stem "_ptr_detailed must take seven arguments");                      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_node*");                      \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, ty*>,          \
         "conduit_node_set_" #stem "_ptr_detailed must take a " #ty "*");                           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_index_t");                    \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_index_t");                    \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<4, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<4, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_index_t");                    \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<5, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<5, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_index_t");                    \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<6, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<6, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_" #stem "_ptr_detailed must take a conduit_index_t");                    \
     }                                                                                              \
                                                                                                    \
@@ -1395,17 +1307,16 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_path_##stem)>;                         \
       abi_require(                                                                                 \
         &conduit_node_set_path_##stem, "conduit_node_set_path_" #stem " must be defined");         \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_path_" #stem " must return void");                                       \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 3,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 3,                                  \
         "conduit_node_set_path_" #stem " must take three arguments");                              \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_path_" #stem " must take a conduit_node*");                              \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_set_path_" #stem " must take a const char*");                                \
-      static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty>::value,  \
+      static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, ty>,           \
         "conduit_node_set_path_" #stem " must take a " #ty);                                       \
     }                                                                                              \
                                                                                                    \
@@ -1414,21 +1325,20 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_path_##stem##_ptr)>;                   \
       abi_require(&conduit_node_set_path_##stem##_ptr,                                             \
         "conduit_node_set_path_" #stem "_ptr must be defined");                                    \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_path_" #stem "_ptr must return void");                                   \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 4,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 4,                                  \
         "conduit_node_set_path_" #stem "_ptr must take four arguments");                           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_path_" #stem "_ptr must take a conduit_node*");                          \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_set_path_" #stem "_ptr must take a const char*");                            \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, ty*>,          \
         "conduit_node_set_path_" #stem "_ptr must take a " #ty "*");                               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_" #stem "_ptr must take a conduit_index_t");                        \
     }                                                                                              \
                                                                                                    \
@@ -1437,33 +1347,32 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_path_##stem##_ptr_detailed)>;          \
       abi_require(&conduit_node_set_path_##stem##_ptr_detailed,                                    \
         "conduit_node_set_path_" #stem "_ptr_detailed must be defined");                           \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_path_" #stem "_ptr_detailed must return void");                          \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 8,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 8,                                  \
         "conduit_node_set_path_" #stem "_ptr_detailed must take eight arguments");                 \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a conduit_node*");                 \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a const char*");                   \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, ty*>,          \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a " #ty "*");                      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a conduit_index_t");               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<4, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<4, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a conduit_index_t");               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<5, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<5, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a conduit_index_t");               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<6, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<6, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a conduit_index_t");               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<7, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<7, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_" #stem "_ptr_detailed must take a conduit_index_t");               \
     }                                                                                              \
                                                                                                    \
@@ -1472,18 +1381,18 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_external_##stem##_ptr)>;               \
       abi_require(&conduit_node_set_external_##stem##_ptr,                                         \
         "conduit_node_set_external_" #stem "_ptr must be defined");                                \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_external_" #stem "_ptr must return void");                               \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 3,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 3,                                  \
         "conduit_node_set_external_" #stem "_ptr must take three arguments");                      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_external_" #stem "_ptr must take a conduit_node*");                      \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, ty*>,          \
         "conduit_node_set_external_" #stem "_ptr must take a " #ty);                               \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_external_" #stem "_ptr must take a conduit_index_t");                    \
     }                                                                                              \
                                                                                                    \
@@ -1492,30 +1401,30 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_external_##stem##_ptr_detailed)>;      \
       abi_require(&conduit_node_set_external_##stem##_ptr_detailed,                                \
         "conduit_node_set_external_" #stem "_ptr_detailed must be defined");                       \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_external_" #stem "_ptr_detailed must return void");                      \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 7,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 7,                                  \
         "conduit_node_set_external_" #stem "_ptr_detailed must take seven arguments");             \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_node*");             \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<1, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, ty*>,          \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a " #ty "*");                  \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_index_t");           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_index_t");           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<4, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<4, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_index_t");           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<5, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<5, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_index_t");           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<6, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<6, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_external_" #stem "_ptr_detailed must take a conduit_index_t");           \
     }                                                                                              \
                                                                                                    \
@@ -1524,21 +1433,20 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_path_external_##stem##_ptr)>;          \
       abi_require(&conduit_node_set_path_external_##stem##_ptr,                                    \
         "conduit_node_set_path_external_" #stem "_ptr must be defined");                           \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_path_external_" #stem "_ptr must return void");                          \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 4,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 4,                                  \
         "conduit_node_set_path_external_" #stem "_ptr must take four arguments");                  \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_path_external_" #stem "_ptr must take a conduit_node*");                 \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_set_path_external_" #stem "_ptr must take a const char*");                   \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, ty*>,          \
         "conduit_node_set_path_external_" #stem "_ptr must take a " #ty "*");                      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_external_" #stem "_ptr must take a conduit_index_t");               \
     }                                                                                              \
                                                                                                    \
@@ -1547,33 +1455,32 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_set_path_external_##stem##_ptr_detailed)>; \
       abi_require(&conduit_node_set_path_external_##stem##_ptr_detailed,                           \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must be defined");                  \
-      static_assert(std::is_same<func_types::return_t, void>::value,                               \
+      static_assert(std::is_same_v<func_types::return_t, void>,                                    \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must return void");                 \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 8,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 8,                                  \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take eight arguments");        \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a conduit_node*");        \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a const char*");          \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<std::tuple_element<2, func_types::argument_t>::type, ty*>::value, \
+      static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, ty*>,          \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a " #ty "*");             \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a conduit_index_t");      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<4, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<4, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a conduit_index_t");      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<5, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<5, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a conduit_index_t");      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<6, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<6, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a conduit_index_t");      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<7, func_types::argument_t>::type, conduit_index_t>::value, \
+        std::is_same_v<std::tuple_element_t<7, func_types::argument_t>, conduit_index_t>,          \
         "conduit_node_set_path_external_" #stem "_ptr_detailed must take a conduit_index_t");      \
     }                                                                                              \
                                                                                                    \
@@ -1581,12 +1488,12 @@ static int test_conduit_node_abi()
     {                                                                                              \
       using func_types = funcinfo<decltype(conduit_node_as_##stem)>;                               \
       abi_require(&conduit_node_as_##stem, "conduit_node_as_" #stem " must be defined");           \
-      static_assert(std::is_same<func_types::return_t, ty>::value,                                 \
-        "conduit_node_as_" #stem " must return " #ty);                                             \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 1,                             \
+      static_assert(                                                                               \
+        std::is_same_v<func_types::return_t, ty>, "conduit_node_as_" #stem " must return " #ty);   \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 1,                                  \
         "conduit_node_set_" #stem " must take one argument");                                      \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_" #stem " must take a conduit_node*");                                   \
     }                                                                                              \
                                                                                                    \
@@ -1595,12 +1502,12 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_as_##stem##_ptr)>;                         \
       abi_require(&conduit_node_as_##stem##_ptr, "conduit_node_as_" #stem "_ptr must be defined"); \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<func_types::return_t, ty*>::value,                                \
+      static_assert(std::is_same_v<func_types::return_t, ty*>,                                     \
         "conduit_node_as_" #stem "_ptr must return " #ty "*");                                     \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 1,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 1,                                  \
         "conduit_node_set_" #stem "_ptr must take one argument");                                  \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_set_" #stem "_ptr must take a conduit_node*");                               \
     }                                                                                              \
                                                                                                    \
@@ -1609,15 +1516,14 @@ static int test_conduit_node_abi()
       using func_types = funcinfo<decltype(conduit_node_fetch_path_as_##stem)>;                    \
       abi_require(&conduit_node_fetch_path_as_##stem,                                              \
         "conduit_node_fetch_path_as_" #stem " must be defined");                                   \
-      static_assert(std::is_same<func_types::return_t, ty>::value,                                 \
+      static_assert(std::is_same_v<func_types::return_t, ty>,                                      \
         "conduit_node_fetch_path_as_" #stem " must return " #ty);                                  \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 2,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 2,                                  \
         "conduit_node_fetch_path_as_" #stem " must take two arguments");                           \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_fetch_path_as_" #stem " must take a conduit_node*");                         \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_fetch_path_as_" #stem " must take a const char*");                           \
     }                                                                                              \
                                                                                                    \
@@ -1627,15 +1533,14 @@ static int test_conduit_node_abi()
       abi_require(&conduit_node_fetch_path_as_##stem##_ptr,                                        \
         "conduit_node_fetch_path_as_" #stem "_ptr must be defined");                               \
       /* NOLINTNEXTLINE(bugprone-macro-parentheses) */                                             \
-      static_assert(std::is_same<func_types::return_t, ty*>::value,                                \
+      static_assert(std::is_same_v<func_types::return_t, ty*>,                                     \
         "conduit_node_fetch_path_as_" #stem "_ptr must return " #ty "*");                          \
-      abi_require(std::tuple_size<func_types::argument_t>::value == 2,                             \
+      abi_require(std::tuple_size_v<func_types::argument_t> == 2,                                  \
         "conduit_node_fetch_path_as_" #stem "_ptr must take two arguments");                       \
       static_assert(                                                                               \
-        std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,   \
+        std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,            \
         "conduit_node_fetch_path_as_" #stem "_ptr must take a conduit_node*");                     \
-      static_assert(                                                                               \
-        std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,     \
+      static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,  \
         "conduit_node_fetch_path_as_" #stem "_ptr must take a const char*");                       \
     }                                                                                              \
   } while (false)
@@ -1678,11 +1583,10 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_data_ptr)>;
     abi_require(&conduit_node_data_ptr, "conduit_node_data_ptr must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void*>::value, "conduit_node_data_ptr must return void*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, void*>, "conduit_node_data_ptr must return void*");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_node_data_ptr must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_data_ptr should take a conduit_node*");
   }
 
@@ -1690,15 +1594,13 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_element_ptr)>;
     abi_require(&conduit_node_element_ptr, "conduit_node_element_ptr must be defined");
-    static_assert(std::is_same<func_types::return_t, void*>::value,
-      "conduit_node_element_ptr must return void*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    static_assert(
+      std::is_same_v<func_types::return_t, void*>, "conduit_node_element_ptr must return void*");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_element_ptr must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_element_ptr should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_index_t>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_index_t>,
       "conduit_node_element_ptr should take a conduit_index_t");
   }
 
@@ -1707,15 +1609,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_fetch_path_data_ptr)>;
     abi_require(
       &conduit_node_fetch_path_data_ptr, "conduit_node_fetch_path_data_ptr must be defined");
-    static_assert(std::is_same<func_types::return_t, void*>::value,
+    static_assert(std::is_same_v<func_types::return_t, void*>,
       "conduit_node_fetch_path_data_ptr must return void*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_fetch_path_data_ptr must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_fetch_path_data_ptr should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_fetch_path_data_ptr should take a const char*");
   }
 
@@ -1724,18 +1624,15 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_fetch_path_element_ptr)>;
     abi_require(
       &conduit_node_fetch_path_element_ptr, "conduit_node_fetch_path_element_ptr must be defined");
-    static_assert(std::is_same<func_types::return_t, void*>::value,
+    static_assert(std::is_same_v<func_types::return_t, void*>,
       "conduit_node_fetch_path_element_ptr must return void*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_node_fetch_path_element_ptr must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_fetch_path_element_ptr should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_fetch_path_element_ptr should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_index_t>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_index_t>,
       "conduit_node_fetch_path_element_ptr should take a conduit_index_t");
   }
 
@@ -1743,12 +1640,11 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_as_char8_str)>;
     abi_require(&conduit_node_as_char8_str, "conduit_node_as_char8_str must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
-      "conduit_node_as_char8_str must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_as_char8_str must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      std::is_same_v<func_types::return_t, char*>, "conduit_node_as_char8_str must return char*");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
+      "conduit_node_as_char8_str must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_as_char8_str should take a conduit_node*");
   }
 
@@ -1757,15 +1653,13 @@ static int test_conduit_node_abi()
     using func_types = funcinfo<decltype(conduit_node_fetch_path_as_char8_str)>;
     abi_require(&conduit_node_fetch_path_as_char8_str,
       "conduit_node_fetch_path_as_char8_str must be defined");
-    static_assert(std::is_same<func_types::return_t, char*>::value,
+    static_assert(std::is_same_v<func_types::return_t, char*>,
       "conduit_node_fetch_path_as_char8_str must return char*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_node_fetch_path_as_char8_str must take two arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_node_fetch_path_as_char8_str should take a conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_node_fetch_path_as_char8_str should take a const char*");
   }
 
@@ -1773,12 +1667,12 @@ static int test_conduit_node_abi()
   {
     using func_types = funcinfo<decltype(conduit_node_dtype)>;
     abi_require(&conduit_node_dtype, "conduit_node_dtype must be defined");
-    static_assert(std::is_same<func_types::return_t, const conduit_datatype*>::value,
+    static_assert(std::is_same_v<func_types::return_t, const conduit_datatype*>,
       "conduit_node_dtype must return const conduit_datatype*");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
-      "conduit_node_dtype must take one argument");
+    abi_require(
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_node_dtype must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_node_dtype should take a const conduit_node*");
   }
 
@@ -1793,12 +1687,10 @@ static int test_conduit_abi()
   {
     using func_types = funcinfo<decltype(conduit_about)>;
     abi_require(&conduit_about, "conduit_about must be defined");
-    static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_about must return void");
+    static_assert(std::is_same_v<func_types::return_t, void>, "conduit_about must return void");
     abi_require(
-      std::tuple_size<func_types::argument_t>::value == 1, "conduit_about must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+      std::tuple_size_v<func_types::argument_t> == 1, "conduit_about must take one argument");
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_about should take a conduit_node*");
   }
 
@@ -1813,12 +1705,12 @@ static int test_conduit_utils_abi()
   {
     using func_types = funcinfo<decltype(conduit_utils_set_info_handler)>;
     abi_require(&conduit_utils_set_info_handler, "conduit_utils_set_info_handler must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_utils_set_info_handler must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_utils_set_info_handler must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,
-                    void (*)(const char*, const char*, int)>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>,
+                    void (*)(const char*, const char*, int)>,
       "conduit_utils_set_info_handler should take an appropriate callback type");
   }
 
@@ -1827,12 +1719,12 @@ static int test_conduit_utils_abi()
     using func_types = funcinfo<decltype(conduit_utils_set_warning_handler)>;
     abi_require(
       &conduit_utils_set_warning_handler, "conduit_utils_set_warning_handler must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_utils_set_warning_handler must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_utils_set_warning_handler must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,
-                    void (*)(const char*, const char*, int)>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>,
+                    void (*)(const char*, const char*, int)>,
       "conduit_utils_set_warning_handler should take an appropriate callback type");
   }
 
@@ -1841,12 +1733,12 @@ static int test_conduit_utils_abi()
     using func_types = funcinfo<decltype(conduit_utils_set_error_handler)>;
     abi_require(
       &conduit_utils_set_error_handler, "conduit_utils_set_error_handler must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_utils_set_error_handler must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_utils_set_error_handler must take one argument");
-    static_assert(std::is_same<std::tuple_element<0, func_types::argument_t>::type,
-                    void (*)(const char*, const char*, int)>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>,
+                    void (*)(const char*, const char*, int)>,
       "conduit_utils_set_error_handler should take an appropriate callback type");
   }
 
@@ -1862,11 +1754,10 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_about)>;
     abi_require(&conduit_blueprint_about, "conduit_blueprint_about must be defined");
     static_assert(
-      std::is_same<func_types::return_t, void>::value, "conduit_blueprint_about must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+      std::is_same_v<func_types::return_t, void>, "conduit_blueprint_about must return void");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_blueprint_about must take one argument");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_about should take a conduit_node*");
   }
 
@@ -1875,17 +1766,15 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_verify)>;
     abi_require(&conduit_blueprint_verify, "conduit_blueprint_verify must be defined");
     static_assert(
-      std::is_same<func_types::return_t, int>::value, "conduit_blueprint_verify must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+      std::is_same_v<func_types::return_t, int>, "conduit_blueprint_verify must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_blueprint_verify must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const char*>,
       "conduit_blueprint_verify should take a const char*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_verify should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_verify should take a conduit_node*");
   }
 
@@ -1894,15 +1783,14 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mcarray_verify)>;
     abi_require(
       &conduit_blueprint_mcarray_verify, "conduit_blueprint_mcarray_verify must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_mcarray_verify must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_blueprint_mcarray_verify must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mcarray_verify should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mcarray_verify should take a conduit_node*");
   }
 
@@ -1911,18 +1799,16 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mcarray_verify_sub_protocol)>;
     abi_require(&conduit_blueprint_mcarray_verify_sub_protocol,
       "conduit_blueprint_mcarray_verify_sub_protocol must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_mcarray_verify_sub_protocol must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_blueprint_mcarray_verify_sub_protocol must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const char*>,
       "conduit_blueprint_mcarray_verify_sub_protocol should take a const char*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mcarray_verify_sub_protocol should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mcarray_verify_sub_protocol should take a conduit_node*");
   }
 
@@ -1931,12 +1817,12 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mcarray_is_interleaved)>;
     abi_require(&conduit_blueprint_mcarray_is_interleaved,
       "conduit_blueprint_mcarray_is_interleaved must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_mcarray_is_interleaved must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 1,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 1,
       "conduit_blueprint_mcarray_is_interleaved must take one argument");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mcarray_is_interleaved should take a const conduit_node*");
   }
 
@@ -1945,15 +1831,14 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mcarray_to_contiguous)>;
     abi_require(&conduit_blueprint_mcarray_to_contiguous,
       "conduit_blueprint_mcarray_to_contiguous must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_mcarray_to_contiguous must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_blueprint_mcarray_to_contiguous must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mcarray_to_contiguous should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mcarray_to_contiguous should take a conduit_node*");
   }
 
@@ -1962,15 +1847,14 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mcarray_to_interleaved)>;
     abi_require(&conduit_blueprint_mcarray_to_interleaved,
       "conduit_blueprint_mcarray_to_interleaved must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_mcarray_to_interleaved must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_blueprint_mcarray_to_interleaved must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mcarray_to_interleaved should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mcarray_to_interleaved should take a conduit_node*");
   }
 
@@ -1978,15 +1862,14 @@ static int test_conduit_blueprint_abi()
   {
     using func_types = funcinfo<decltype(conduit_blueprint_mesh_verify)>;
     abi_require(&conduit_blueprint_mesh_verify, "conduit_blueprint_mesh_verify must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
-      "conduit_blueprint_mesh_verify must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    static_assert(
+      std::is_same_v<func_types::return_t, int>, "conduit_blueprint_mesh_verify must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_blueprint_mesh_verify must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_verify should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mesh_verify should take a conduit_node*");
   }
 
@@ -1995,18 +1878,16 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mesh_verify_sub_protocol)>;
     abi_require(&conduit_blueprint_mesh_verify_sub_protocol,
       "conduit_blueprint_mesh_verify_sub_protocol must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_mesh_verify_sub_protocol must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_blueprint_mesh_verify_sub_protocol must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const char*>,
       "conduit_blueprint_mesh_verify_sub_protocol should take a const char*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_verify_sub_protocol should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mesh_verify_sub_protocol should take a conduit_node*");
   }
 
@@ -2015,21 +1896,18 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mesh_generate_index)>;
     abi_require(&conduit_blueprint_mesh_generate_index,
       "conduit_blueprint_mesh_generate_index must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_blueprint_mesh_generate_index must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 4,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 4,
       "conduit_blueprint_mesh_generate_index must take four arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_generate_index should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const char*>,
       "conduit_blueprint_mesh_generate_index should take a const char*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_index_t>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_index_t>,
       "conduit_blueprint_mesh_generate_index should take a conduit_index_t");
-    static_assert(
-      std::is_same<std::tuple_element<3, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<3, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mesh_generate_index should take a conduit_node*");
   }
 
@@ -2038,18 +1916,17 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_mesh_partition)>;
     abi_require(
       &conduit_blueprint_mesh_partition, "conduit_blueprint_mesh_partition must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_blueprint_mesh_partition must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_blueprint_mesh_partition must take four arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_partition should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_partition should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mesh_partition should take a conduit_node*");
   }
 
@@ -2057,18 +1934,17 @@ static int test_conduit_blueprint_abi()
   {
     using func_types = funcinfo<decltype(conduit_blueprint_mesh_flatten)>;
     abi_require(&conduit_blueprint_mesh_flatten, "conduit_blueprint_mesh_flatten must be defined");
-    static_assert(std::is_same<func_types::return_t, void>::value,
+    static_assert(std::is_same_v<func_types::return_t, void>,
       "conduit_blueprint_mesh_flatten must return void");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_blueprint_mesh_flatten must take three arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_flatten should take a const conduit_node*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_mesh_flatten should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_mesh_flatten should take a conduit_node*");
   }
 
@@ -2076,15 +1952,14 @@ static int test_conduit_blueprint_abi()
   {
     using func_types = funcinfo<decltype(conduit_blueprint_table_verify)>;
     abi_require(&conduit_blueprint_table_verify, "conduit_blueprint_table_verify must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
-      "conduit_blueprint_table_verify must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 2,
+    static_assert(
+      std::is_same_v<func_types::return_t, int>, "conduit_blueprint_table_verify must return int");
+    abi_require(std::tuple_size_v<func_types::argument_t> == 2,
       "conduit_blueprint_table_verify must take two arguments");
     static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_table_verify should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_table_verify should take a conduit_node*");
   }
 
@@ -2093,18 +1968,16 @@ static int test_conduit_blueprint_abi()
     using func_types = funcinfo<decltype(conduit_blueprint_table_verify_sub_protocol)>;
     abi_require(&conduit_blueprint_table_verify_sub_protocol,
       "conduit_blueprint_table_verify_sub_protocol must be defined");
-    static_assert(std::is_same<func_types::return_t, int>::value,
+    static_assert(std::is_same_v<func_types::return_t, int>,
       "conduit_blueprint_table_verify_sub_protocol must return int");
-    abi_require(std::tuple_size<func_types::argument_t>::value == 3,
+    abi_require(std::tuple_size_v<func_types::argument_t> == 3,
       "conduit_blueprint_table_verify_sub_protocol must take three arguments");
-    static_assert(
-      std::is_same<std::tuple_element<0, func_types::argument_t>::type, const char*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<0, func_types::argument_t>, const char*>,
       "conduit_blueprint_table_verify_sub_protocol should take a const char*");
     static_assert(
-      std::is_same<std::tuple_element<1, func_types::argument_t>::type, const conduit_node*>::value,
+      std::is_same_v<std::tuple_element_t<1, func_types::argument_t>, const conduit_node*>,
       "conduit_blueprint_table_verify_sub_protocol should take a const conduit_node*");
-    static_assert(
-      std::is_same<std::tuple_element<2, func_types::argument_t>::type, conduit_node*>::value,
+    static_assert(std::is_same_v<std::tuple_element_t<2, func_types::argument_t>, conduit_node*>,
       "conduit_blueprint_table_verify_sub_protocol should take a conduit_node*");
   }
 
