@@ -143,12 +143,8 @@ struct is_type_complete
   static const bool value = false;
 };
 
-// XXX(c++17): use `std::void_t`
-template <typename...>
-using void_t = void;
-
 template <typename T>
-struct is_type_complete<T, void_t<decltype(sizeof(T))>>
+struct is_type_complete<T, std::void_t<decltype(sizeof(T))>>
 {
   static const bool value = true;
 };
