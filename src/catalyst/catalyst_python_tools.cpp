@@ -29,10 +29,7 @@ bool initialize_conduit()
       fprintf(stderr, "Could not import conduit");
       return false;
     }
-    else
-    {
-      CONDUIT_PYTHON_INITIALIZED = true;
-    }
+    CONDUIT_PYTHON_INITIALIZED = true;
   }
   return true;
 }
