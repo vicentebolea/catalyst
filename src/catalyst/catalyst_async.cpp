@@ -78,7 +78,7 @@ struct AsyncConfig
   double slow_threshold_sec = 10.0; // Log warning if execute takes longer
   double flush_timeout_sec = 300.0; // 5 minutes default, 0 = no timeout
 
-  enum class AffinityMode
+  enum class AffinityMode : std::uint8_t
   {
     Auto,
     Manual,
@@ -121,7 +121,7 @@ struct AsyncStats
 
 struct GpuRuntime
 {
-  enum class Backend
+  enum class Backend : std::uint8_t
   {
     None,
     CUDA,
