@@ -166,8 +166,8 @@ static PyObject* PyCatalyst_results(PyObject* /* self */, PyObject* args)
 
 // Python Module Method Defs
 //---------------------------------------------------------------------------//
+// clang-format off
 static PyMethodDef catalyst_python_methods[] =
-  // clang-format off
 {
  { "initialize",(PyCFunction)PyCatalyst_initialize, METH_VARARGS, "Intialize Catalyst" },
  { "execute",   (PyCFunction)PyCatalyst_execute, METH_VARARGS, "Execute per timestep" },
@@ -178,8 +178,8 @@ static PyMethodDef catalyst_python_methods[] =
 };
 // clang-format on
 
+// clang-format off
 static struct PyModuleDef catalyst_module =
-  // clang-format off
 {
    PyModuleDef_HEAD_INIT,
   "catalyst",
