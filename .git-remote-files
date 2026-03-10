@@ -1,5 +1,29 @@
 [file "update-common.sh" from "https://gitlab.kitware.com/utils/git-import-third-party.git"]
-commit = 8e52fdc2adb7d481798581af64047cbc228fea8e
+commit = 8f83cbcdac0af41574abfb632dfbe2c403948803
 branch = master
 target = thirdparty/update-common.sh
 comment = third-party import script
+
+[file "cmake/4.1/cmake.sh" from "https://gitlab.kitware.com/utils/ci-scripts.git"]
+commit = d083109d221c650d0f35cb54350bb7ffcd6a128b
+branch = master
+target = .gitlab/ci/cmake.sh
+comment = cmake unix download script
+
+[file "cmake/4.1/cmake.ps1" from "https://gitlab.kitware.com/utils/ci-scripts.git"]
+commit = d083109d221c650d0f35cb54350bb7ffcd6a128b
+branch = master
+target = .gitlab/ci/cmake.ps1
+comment = cmake windows download script
+
+[file "ninja/ninja.sh" from "https://gitlab.kitware.com/utils/ci-scripts.git"]
+commit = d083109d221c650d0f35cb54350bb7ffcd6a128b
+branch = master
+target = .gitlab/ci/ninja.sh
+comment = ninja unix download script
+
+[file "ninja/ninja.ps1" from "https://gitlab.kitware.com/utils/ci-scripts.git"]
+commit = d083109d221c650d0f35cb54350bb7ffcd6a128b
+branch = master
+target = .gitlab/ci/ninja.ps1
+comment = ninja windows download script

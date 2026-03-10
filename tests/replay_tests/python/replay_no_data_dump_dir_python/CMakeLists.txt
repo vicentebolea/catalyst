@@ -33,11 +33,11 @@ if (BUILD_TESTING)
   # Add a test for writing out the conduit nodes to disk
   add_test(
     NAME no_write_out
-    COMMAND  ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CATALYST_PYTHONPATH}
-             ${mpi_prefix_or_blank}
+    COMMAND  ${mpi_prefix_or_blank}
              ${Python3_EXECUTABLE} ${no_data_dump_dir_driver}
             "$<TARGET_FILE_DIR:no_data_dump_dir_adapter>" ${mpi_flag_or_blank}
   )
+  catalyst_apply_python_env(no_write_out)
 
   set_tests_properties(no_write_out
     PROPERTIES

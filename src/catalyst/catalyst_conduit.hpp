@@ -106,6 +106,7 @@ class DataType
 public:
   ~DataType() = default;
 
+  // NOLINTNEXTLINE(performance-enum-size)
   enum class Id
   {
     int8,

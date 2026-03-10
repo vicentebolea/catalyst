@@ -9,9 +9,9 @@ dnf install -y --setopt=install_weak_deps=False \
 
 dnf clean all
 # if version changes, make sure to update all places where "conduit_version" is used
-readonly conduit_version="0.8.7"
+readonly conduit_version="0.9.5"
 readonly conduit_tarball="conduit-v$conduit_version-src-with-blt.tar.gz"
-readonly conduit_sha256sum="f3bf44d860783f4e0d61517c5e280c88144af37414569f4cf86e2d29b3ba5293"
+readonly conduit_sha256sum="d93294efbf0936da5a27941e13486aa1a04a74a59285786a2303eed19a24265a"
 
 readonly conduit_root="$HOME/conduit"
 readonly conduit_src="$conduit_root/src"
@@ -35,7 +35,6 @@ cmake_args=""
 update_cmake_args()
 {
     cmake_args="\
--GNinja \
 -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
 -DCMAKE_BUILD_TYPE=Release \
 -DBUILD_GTEST=OFF \
@@ -69,19 +68,19 @@ ENABLE_WRAPPERS="OFF"
 update_cmake_args
 
 cmake $cmake_args
-ninja
-ninja install
+make -j$(nproc)
+make install
 
 # install wrapped version of conduit
 INSTALL_PATH="/opt/conduit/wrapped"
 ENABLE_WRAPPERS="ON"
 update_cmake_args
 
-ninja clean
+make clean
 
 cmake $cmake_args
-ninja
-ninja install
+make -j$(nproc)
+make install
 
 cd
 

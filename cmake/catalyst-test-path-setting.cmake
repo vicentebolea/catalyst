@@ -27,6 +27,7 @@ execute_process(
             "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
             "-DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}"
             "-Dcatalyst_DIR:PATH=${root}/${CATALYST_INSTALL_PACKAGE_DIR}"
+            --fresh
             ${replay_argument}
             ${conduit_argument}
           --test-command

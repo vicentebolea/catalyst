@@ -38,11 +38,11 @@ if (BUILD_TESTING)
   # Add a test for writing out the conduit nodes to disk
   add_test(
     NAME high_num_ranks_write_out
-    COMMAND  ${CMAKE_COMMAND} -E env --modify PYTHONPATH=path_list_prepend:${CATALYST_PYTHONPATH}
-             ${mpi_prefix}
+    COMMAND  ${mpi_prefix}
              ${Python3_EXECUTABLE} ${high_num_ranks_driver}
             "$<TARGET_FILE_DIR:high_num_ranks_adaptor>" "--use-mpi"
   )
+  catalyst_apply_python_env(high_num_ranks_write_out)
 
   set_tests_properties(high_num_ranks_write_out
     PROPERTIES

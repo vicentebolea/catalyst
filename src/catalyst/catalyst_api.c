@@ -546,6 +546,7 @@ catalyst_handle_t handle_open(const char* directory, const char* libname)
   int scope_flag = RTLD_GLOBAL;
 #endif
 
+  // NOLINTNEXTLINE(clang-analyzer-optin.taint.GenericTaint)
   catalyst_handle_t handle = dlopen(full_library_path, RTLD_LAZY | scope_flag);
   if (!handle)
   {

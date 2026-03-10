@@ -7,8 +7,6 @@
 #include "Python.h"
 #endif
 
-// XXX(c++14): use `_t` and `_v`-suffixed type queries.
-
 #include <catalyst.h>
 #include <catalyst_impl.h>
 #include <catalyst_python_tools.h>

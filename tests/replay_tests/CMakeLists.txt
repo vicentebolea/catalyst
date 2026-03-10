@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
-project(CATALYST_REPLAY_TESTS)
-
 # These tests require that we use num_ranks != 1 at least once.
 # Hence, we can not run it unless MPI is enabled
 if (CATALYST_USE_MPI)

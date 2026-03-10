@@ -16,6 +16,7 @@ extern "C"
 {
 #endif
 
+  // NOLINTNEXTLINE(performance-enum-size): ABI requirements
   enum catalyst_status
   {
     // No error; everything is OK.

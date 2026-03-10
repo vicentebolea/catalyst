@@ -61,9 +61,9 @@ using namespace conduit_cpp;
 //-----------------------------------------------------------------------------
 TEST(conduit_node_paths, simple_path)
 {
-  uint32 a_val = 10;
-  uint32 b_val = 20;
-  float64 c_val = 30.0;
+  const uint32 a_val = 10;
+  const uint32 b_val = 20;
+  const float64 c_val = 30.0;
 
   Node n;
   n["a"] = a_val;
@@ -102,16 +102,16 @@ TEST(conduit_node_paths, path_empty_slashes)
 
   n.print();
 
-  Node n_sub = n["a/b/c/d/e/f"];
+  const Node n_sub = n["a/b/c/d/e/f"];
   EXPECT_EQ(n_sub.to_int64(), 10);
 
-  Node n_sub_2 = n["/a/b/c/d/e/f"];
+  const Node n_sub_2 = n["/a/b/c/d/e/f"];
   EXPECT_EQ(n_sub_2.to_int64(), 10);
 
-  Node n_sub_3 = n["/////a/b/c/d/e/f"];
+  const Node n_sub_3 = n["/////a/b/c/d/e/f"];
   EXPECT_EQ(n_sub_3.to_int64(), 10);
 
-  Node n_sub_4 = n["/////a/b/c/////d/e/f"];
+  const Node n_sub_4 = n["/////a/b/c/////d/e/f"];
   EXPECT_EQ(n_sub_4.to_int64(), 10);
 
   n.print();

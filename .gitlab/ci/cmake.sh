@@ -2,33 +2,26 @@
 
 set -e
 
-readonly version="3.29.8"
+readonly version="4.1.4"
 
-case "$( uname -s )" in
-    Linux)
-        case "$( uname -i )" in
-            x86_64)
-                sha256sum="0ed430e41059eab130010e74c6a779b651340f3755eb9525e2a573a989f0994e"
-                platform="linux-x86_64"
-                ;;
-            aarch64)
-                sha256sum="d8e9f789253c75aabc565d3702759c17c1c2f57e8deb639a8f4ffe4b89aefc2e"
-                platform="linux-aarch64"
-                ;;
-            *)
-                echo "Unrecognized architecture $( uname -i )"
-                exit 1
-                ;;
-        esac
+case "$(uname -s)-$(uname -m)" in
+    Linux-x86_64)
         shatool="sha256sum"
+        sha256sum="af5c72ce7ce61607d70ff80445130f6278204aa46c45127edc0dc36e26a687b2"
+        platform="linux-x86_64"
         ;;
-    Darwin)
+    Linux-aarch64)
+        shatool="sha256sum"
+        sha256sum="efe4dfc830fbf4d897af8e210f5a0632ad2b93c015a37c9305d40a57b0e4c538"
+        platform="linux-aarch64"
+        ;;
+    Darwin-*)
         shatool="shasum -a 256"
-        sha256sum="7461028490d0d907b66fd8e3cb6871b6368a52605938fbcdb19b38b9738e4c32"
+        sha256sum="7fc64e989af34201acff6d16628d6a8d1f72cfb74d5bd9342ab332c8c00e69ab"
         platform="macos-universal"
         ;;
     *)
-        echo "Unrecognized platform $( uname -s )"
+        echo "Unrecognized platform $(uname -s)-$(uname -m)"
         exit 1
         ;;
 esac
@@ -45,8 +38,9 @@ echo "$sha256sum  $tarball" > cmake.sha256sum
 curl -OL "https://github.com/Kitware/CMake/releases/download/v$version/$tarball"
 $shatool --check cmake.sha256sum
 tar xf "$tarball"
-mv "$filename" cmake
+mv "$filename" "cmake$CMAKE_SUFFIX"
+rm "$tarball" cmake.sha256sum
 
 if [ "$( uname -s )" = "Darwin" ]; then
-    ln -s CMake.app/Contents/bin cmake/bin
+    ln -s CMake.app/Contents/bin "cmake$CMAKE_SUFFIX/bin"
 fi

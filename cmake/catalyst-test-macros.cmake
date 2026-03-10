@@ -11,10 +11,6 @@ function(_add_example2 example_or_test dir mode root)
   endif ()
 
   add_test(
-    NAME    "${example_or_test}-${mode}-${dir}-prepare"
-    COMMAND "${CMAKE_COMMAND}" -E rm -rf
-            "${CMAKE_CURRENT_BINARY_DIR}/${mode}-${dir}")
-  add_test(
     NAME    "${example_or_test}-${mode}-${dir}"
     COMMAND "${CMAKE_COMMAND}"
             "-DCMAKE_GENERATOR=${CMAKE_GENERATOR}"
@@ -29,12 +25,6 @@ function(_add_example2 example_or_test dir mode root)
             "-Dmode=${mode}"
             "-Dcatalyst_runtime_dir=$<TARGET_FILE_DIR:catalyst>"
             -P "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/catalyst-test-path-setting.cmake")
-  set_tests_properties("${example_or_test}-${mode}-${dir}"
-    PROPERTIES
-      FIXTURES_REQUIRED "fixture-${mode}-${dir}")
-  set_tests_properties("${example_or_test}-${mode}-${dir}-prepare"
-    PROPERTIES
-      FIXTURES_SETUP "fixture-${mode}-${dir}")
 
   if (mode STREQUAL "install")
     # install-based tests, depend on the install fixture.

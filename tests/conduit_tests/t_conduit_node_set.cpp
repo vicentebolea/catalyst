@@ -63,10 +63,10 @@ using namespace conduit_cpp;
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_bitwidth_uint_scalar)
 {
-  uint8 u8v = 8;
-  uint16 u16v = 16;
-  uint32 u32v = 32;
-  uint64 u64v = 64;
+  const uint8 u8v = 8;
+  const uint16 u16v = 16;
+  const uint32 u32v = 32;
+  const uint64 u64v = 64;
 
   Node n;
   // uint8
@@ -113,10 +113,10 @@ TEST(conduit_node_set, set_bitwidth_uint_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_bitwidth_uint_scalar)
 {
-  uint8 u8v = 8;
-  uint16 u16v = 16;
-  uint32 u32v = 32;
-  uint64 u64v = 64;
+  const uint8 u8v = 8;
+  const uint16 u16v = 16;
+  const uint32 u32v = 32;
+  const uint64 u64v = 64;
 
   Node n;
   // uint8
@@ -175,10 +175,10 @@ TEST(conduit_node_set, set_path_bitwidth_uint_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_external_bitwidth_uint_scalar)
 {
-  uint8 u8v = 8;
-  uint16 u16v = 16;
-  uint32 u32v = 32;
-  uint64 u64v = 64;
+  const uint8 u8v = 8;
+  const uint16 u16v = 16;
+  const uint32 u32v = 32;
+  const uint64 u64v = 64;
 
   Node n;
   // uint8
@@ -237,10 +237,10 @@ TEST(conduit_node_set, set_external_bitwidth_uint_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_bitwidth_int_scalar)
 {
-  int8 i8v = -8;
-  int16 i16v = -16;
-  int32 i32v = -32;
-  int64 i64v = -64;
+  const int8 i8v = -8;
+  const int16 i16v = -16;
+  const int32 i32v = -32;
+  const int64 i64v = -64;
 
   Node n;
   // int8
@@ -287,10 +287,10 @@ TEST(conduit_node_set, set_bitwidth_int_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_bitwidth_int_scalar)
 {
-  int8 i8v = -8;
-  int16 i16v = -16;
-  int32 i32v = -32;
-  int64 i64v = -64;
+  const int8 i8v = -8;
+  const int16 i16v = -16;
+  const int32 i32v = -32;
+  const int64 i64v = -64;
 
   Node n;
   // int8
@@ -349,10 +349,10 @@ TEST(conduit_node_set, set_path_bitwidth_int_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_external_bitwidth_int_scalar)
 {
-  int8 i8v = -8;
-  int16 i16v = -16;
-  int32 i32v = -32;
-  int64 i64v = -64;
+  const int8 i8v = -8;
+  const int16 i16v = -16;
+  const int32 i32v = -32;
+  const int64 i64v = -64;
 
   Node n;
   // int8
@@ -410,8 +410,8 @@ TEST(conduit_node_set, set_external_bitwidth_int_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_bitwidth_float_scalar)
 {
-  float32 f32v = -3.2F;
-  float64 f64v = -6.4;
+  const float32 f32v = -3.2F;
+  const float64 f64v = -6.4;
 
   Node n;
 
@@ -439,8 +439,8 @@ TEST(conduit_node_set, set_bitwidth_float_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_bitwidth_float_scalar)
 {
-  float32 f32v = -3.2F;
-  float64 f64v = -6.4;
+  const float32 f32v = -3.2F;
+  const float64 f64v = -6.4;
 
   // float32
   Node n;
@@ -473,7 +473,12 @@ TEST(conduit_node_set, set_path_bitwidth_float_scalar)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_external_bitwidth_float_scalar)
 {
+  // These cannot be `const` because `n.set()` is expected to change the underlying value in this
+  // test.
+
+  // NOLINTNEXTLINE(misc-const-correctness)
   float32 f32v = -3.2F;
+  // NOLINTNEXTLINE(misc-const-correctness)
   float64 f64v = -6.4;
 
   Node n;
@@ -518,7 +523,7 @@ TEST(conduit_node_set, set_bitwidth_uint_ptr)
   Node n;
   // using uint8* interface
   n.set(u8av.data(), u8av.size());
-  uint8* u8av_ptr = n.as_uint8_ptr();
+  const uint8* u8av_ptr = n.as_uint8_ptr();
   for (index_t i = 0; i < u8av.size(); i++)
   {
     EXPECT_EQ(u8av_ptr[i], u8av[i]);
@@ -529,7 +534,7 @@ TEST(conduit_node_set, set_bitwidth_uint_ptr)
 
   // using uint16* interface
   n.set(u16av.data(), u16av.size());
-  uint16* u16av_ptr = n.as_uint16_ptr();
+  const uint16* u16av_ptr = n.as_uint16_ptr();
   for (index_t i = 0; i < u16av.size(); i++)
   {
     EXPECT_EQ(u16av_ptr[i], u16av[i]);
@@ -540,7 +545,7 @@ TEST(conduit_node_set, set_bitwidth_uint_ptr)
 
   // using uint32 * interface
   n.set(u32av.data(), u32av.size());
-  uint32* u32av_ptr = n.as_uint32_ptr();
+  const uint32* u32av_ptr = n.as_uint32_ptr();
   for (index_t i = 0; i < u32av.size(); i++)
   {
     EXPECT_EQ(u32av_ptr[i], u32av[i]);
@@ -551,7 +556,7 @@ TEST(conduit_node_set, set_bitwidth_uint_ptr)
 
   // using uint64 * interface
   n.set(u64av.data(), u64av.size());
-  uint64* u64av_ptr = n.as_uint64_ptr();
+  const uint64* u64av_ptr = n.as_uint64_ptr();
   for (index_t i = 0; i < u64av.size(); i++)
   {
     EXPECT_EQ(u64av_ptr[i], u64av[i]);
@@ -574,7 +579,7 @@ TEST(conduit_node_set, set_path_bitwidth_uint_ptr)
   n.set_path("two/lvl", u8av.data(), u8av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  uint8* u8av_ptr = n["two/lvl"].as_uint8_ptr();
+  const uint8* u8av_ptr = n["two/lvl"].as_uint8_ptr();
   for (index_t i = 0; i < u8av.size(); i++)
   {
     EXPECT_EQ(u8av_ptr[i], u8av[i]);
@@ -587,7 +592,7 @@ TEST(conduit_node_set, set_path_bitwidth_uint_ptr)
   n.set_path("two/lvl", u16av.data(), u16av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  uint16* u16av_ptr = n["two/lvl"].as_uint16_ptr();
+  const uint16* u16av_ptr = n["two/lvl"].as_uint16_ptr();
   for (index_t i = 0; i < u16av.size(); i++)
   {
     EXPECT_EQ(u16av_ptr[i], u16av[i]);
@@ -600,7 +605,7 @@ TEST(conduit_node_set, set_path_bitwidth_uint_ptr)
   n.set_path("two/lvl", u32av.data(), u32av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  uint32* u32av_ptr = n["two"]["lvl"].as_uint32_ptr();
+  const uint32* u32av_ptr = n["two"]["lvl"].as_uint32_ptr();
   for (index_t i = 0; i < u32av.size(); i++)
   {
     EXPECT_EQ(u32av_ptr[i], u32av[i]);
@@ -613,7 +618,7 @@ TEST(conduit_node_set, set_path_bitwidth_uint_ptr)
   n.set_path("two/lvl", u64av.data(), u64av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  uint64* u64av_ptr = n["two/lvl"].as_uint64_ptr();
+  const uint64* u64av_ptr = n["two/lvl"].as_uint64_ptr();
   for (index_t i = 0; i < u64av.size(); i++)
   {
     EXPECT_EQ(u64av_ptr[i], u64av[i]);
@@ -768,7 +773,7 @@ TEST(conduit_node_set, set_bitwidth_int_ptr)
   Node n;
   // int8
   n.set(i8av.data(), i8av.size());
-  int8* i8av_ptr = n.as_int8_ptr();
+  const int8* i8av_ptr = n.as_int8_ptr();
   for (index_t i = 0; i < i8av.size(); i++)
   {
     EXPECT_EQ(i8av_ptr[i], i8av[i]);
@@ -778,7 +783,7 @@ TEST(conduit_node_set, set_bitwidth_int_ptr)
   EXPECT_EQ(i8av_ptr[5], -64);
   // int16
   n.set(i16av.data(), i16av.size());
-  int16* i16av_ptr = n.as_int16_ptr();
+  const int16* i16av_ptr = n.as_int16_ptr();
   for (index_t i = 0; i < i16av.size(); i++)
   {
     EXPECT_EQ(i16av_ptr[i], i16av[i]);
@@ -788,7 +793,7 @@ TEST(conduit_node_set, set_bitwidth_int_ptr)
   EXPECT_EQ(i16av_ptr[5], -64);
   // int32
   n.set(i32av.data(), i32av.size());
-  int32* i32av_ptr = n.as_int32_ptr();
+  const int32* i32av_ptr = n.as_int32_ptr();
   for (index_t i = 0; i < i32av.size(); i++)
   {
     EXPECT_EQ(i32av_ptr[i], i32av[i]);
@@ -798,7 +803,7 @@ TEST(conduit_node_set, set_bitwidth_int_ptr)
   EXPECT_EQ(i32av_ptr[5], -64);
   // int64
   n.set(i64av.data(), i64av.size());
-  int64* i64av_ptr = n.as_int64_ptr();
+  const int64* i64av_ptr = n.as_int64_ptr();
   for (index_t i = 0; i < i64av.size(); i++)
   {
     EXPECT_EQ(i64av_ptr[i], i64av[i]);
@@ -821,7 +826,7 @@ TEST(conduit_node_set_, set_path_bitwidth_int_ptr)
   n.set_path("two/lvl", i8av.data(), i8av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  int8* i8av_ptr = n["two/lvl"].as_int8_ptr();
+  const int8* i8av_ptr = n["two/lvl"].as_int8_ptr();
   for (index_t i = 0; i < i8av.size(); i++)
   {
     EXPECT_EQ(i8av_ptr[i], i8av[i]);
@@ -833,7 +838,7 @@ TEST(conduit_node_set_, set_path_bitwidth_int_ptr)
   n.set_path("two/lvl", i16av.data(), i16av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  int16* i16av_ptr = n["two/lvl"].as_int16_ptr();
+  const int16* i16av_ptr = n["two/lvl"].as_int16_ptr();
   for (index_t i = 0; i < i16av.size(); i++)
   {
     EXPECT_EQ(i16av_ptr[i], i16av[i]);
@@ -845,7 +850,7 @@ TEST(conduit_node_set_, set_path_bitwidth_int_ptr)
   n.set_path("two/lvl", i32av.data(), i32av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  int32* i32av_ptr = n["two/lvl"].as_int32_ptr();
+  const int32* i32av_ptr = n["two/lvl"].as_int32_ptr();
   for (index_t i = 0; i < i32av.size(); i++)
   {
     EXPECT_EQ(i32av_ptr[i], i32av[i]);
@@ -857,7 +862,7 @@ TEST(conduit_node_set_, set_path_bitwidth_int_ptr)
   n.set_path("two/lvl", i64av.data(), i64av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  int64* i64av_ptr = n["two/lvl"].as_int64_ptr();
+  const int64* i64av_ptr = n["two/lvl"].as_int64_ptr();
   for (index_t i = 0; i < i64av.size(); i++)
   {
     EXPECT_EQ(i64av_ptr[i], i64av[i]);
@@ -1016,7 +1021,7 @@ TEST(conduit_node_set, set_bitwidth_float_ptr)
   Node n;
   // float32
   n.set(f32av.data(), f32av.size());
-  float32* f32av_ptr = n.as_float32_ptr();
+  const float32* f32av_ptr = n.as_float32_ptr();
   for (index_t i = 0; i < f32av.size(); i++)
   {
     EXPECT_NEAR(f32av_ptr[i], f32av[i], 0.001);
@@ -1027,7 +1032,7 @@ TEST(conduit_node_set, set_bitwidth_float_ptr)
 
   // float64
   n.set(f64av.data(), f64av.size());
-  float64* f64av_ptr = n.as_float64_ptr();
+  const float64* f64av_ptr = n.as_float64_ptr();
   for (index_t i = 0; i < f64av.size(); i++)
   {
     EXPECT_NEAR(f64av_ptr[i], f64av[i], 0.001);
@@ -1048,7 +1053,7 @@ TEST(conduit_node_set, set_path_bitwidth_float_ptr)
   n.set_path("two/lvl", f32av.data(), f32av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  float32* f32av_ptr = n["two/lvl"].as_float32_ptr();
+  const float32* f32av_ptr = n["two/lvl"].as_float32_ptr();
   for (index_t i = 0; i < f32av.size(); i++)
   {
     EXPECT_NEAR(f32av_ptr[i], f32av[i], 0.001);
@@ -1061,7 +1066,7 @@ TEST(conduit_node_set, set_path_bitwidth_float_ptr)
   n.set_path("two/lvl", f64av.data(), f64av.size());
   EXPECT_TRUE(n.has_path("two"));
   EXPECT_TRUE(n["two"].has_path("lvl"));
-  float64* f64av_ptr = n["two/lvl"].as_float64_ptr();
+  const float64* f64av_ptr = n["two/lvl"].as_float64_ptr();
   for (index_t i = 0; i < f64av.size(); i++)
   {
     EXPECT_NEAR(f64av_ptr[i], f64av[i], 0.001);
@@ -1178,10 +1183,10 @@ TEST(conduit_node_set, set_path_external_bitwidth_float_ptr)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_native_int)
 {
-  char char_v = 2;
-  short short_v = 4;
-  int int_v = 8;
-  long long_v = 16;
+  const char char_v = 2;
+  const short short_v = 4;
+  const int int_v = 8;
+  const long long_v = 16;
 
   Node n;
   // char
@@ -1241,7 +1246,7 @@ TEST(conduit_node_set, set_cstyle_native_int_ptr)
 
   // char
   n.set_char_ptr(char_av.data(), char_av.size());
-  char* char_ptr = n.as_char_ptr();
+  const char* char_ptr = n.as_char_ptr();
   for (index_t i = 0; i < char_av.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_av[i]);
@@ -1253,7 +1258,7 @@ TEST(conduit_node_set, set_cstyle_native_int_ptr)
 
   // short
   n.set(short_av.data(), short_av.size());
-  short* short_ptr = n.as_short_ptr();
+  const short* short_ptr = n.as_short_ptr();
   for (index_t i = 0; i < short_av.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_av[i]);
@@ -1265,7 +1270,7 @@ TEST(conduit_node_set, set_cstyle_native_int_ptr)
 
   // int
   n.set(int_av.data(), int_av.size());
-  int* int_ptr = n.as_int_ptr();
+  const int* int_ptr = n.as_int_ptr();
   for (index_t i = 0; i < int_av.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_av[i]);
@@ -1277,7 +1282,7 @@ TEST(conduit_node_set, set_cstyle_native_int_ptr)
 
   // long
   n.set(long_av.data(), long_av.size());
-  long* long_ptr = n.as_long_ptr();
+  const long* long_ptr = n.as_long_ptr();
   for (index_t i = 0; i < long_av.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_av[i]);
@@ -1363,7 +1368,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
 
   // char
   n.set(char_v);
-  char* char_ptr = n.as_char_ptr();
+  const char* char_ptr = n.as_char_ptr();
   for (index_t i = 0; i < char_v.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_v[i]);
@@ -1375,7 +1380,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
 
   // short
   n.set(short_v);
-  short* short_ptr = n.as_short_ptr();
+  const short* short_ptr = n.as_short_ptr();
   for (index_t i = 0; i < short_v.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_v[i]);
@@ -1387,7 +1392,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
 
   // int
   n.set(int_v);
-  int* int_ptr = n.as_int_ptr();
+  const int* int_ptr = n.as_int_ptr();
   for (index_t i = 0; i < int_v.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_v[i]);
@@ -1399,7 +1404,7 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
 
   // long
   n.set(long_v);
-  long* long_ptr = n.as_long_ptr();
+  const long* long_ptr = n.as_long_ptr();
   for (index_t i = 0; i < long_v.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_v[i]);
@@ -1469,10 +1474,10 @@ TEST(conduit_node_set, set_cstyle_native_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_unsigned_int)
 {
-  unsigned char uchar_v = 2;
-  unsigned short ushort_v = 4;
-  unsigned int uint_v = 8;
-  unsigned long ulong_v = 16;
+  const unsigned char uchar_v = 2;
+  const unsigned short ushort_v = 4;
+  const unsigned int uint_v = 8;
+  const unsigned long ulong_v = 16;
 
   Node n;
   // char
@@ -1532,7 +1537,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_ptr)
 
   // unsigned char
   n.set(uchar_av.data(), uchar_av.size());
-  unsigned char* uchar_ptr = n.as_unsigned_char_ptr();
+  const unsigned char* uchar_ptr = n.as_unsigned_char_ptr();
   for (index_t i = 0; i < uchar_av.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_av[i]);
@@ -1544,7 +1549,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_ptr)
 
   // unsigned short
   n.set(ushort_av.data(), ushort_av.size());
-  unsigned short* ushort_ptr = n.as_unsigned_short_ptr();
+  const unsigned short* ushort_ptr = n.as_unsigned_short_ptr();
   for (index_t i = 0; i < ushort_av.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_av[i]);
@@ -1556,7 +1561,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_ptr)
 
   // unsigned int
   n.set(uint_av.data(), uint_av.size());
-  unsigned int* uint_ptr = n.as_unsigned_int_ptr();
+  const unsigned int* uint_ptr = n.as_unsigned_int_ptr();
   for (index_t i = 0; i < uint_av.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_av[i]);
@@ -1568,7 +1573,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_ptr)
 
   // unsigned long
   n.set(ulong_av.data(), ulong_av.size());
-  unsigned long* ulong_ptr = n.as_unsigned_long_ptr();
+  const unsigned long* ulong_ptr = n.as_unsigned_long_ptr();
   for (index_t i = 0; i < ulong_av.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_av[i]);
@@ -1652,7 +1657,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
 
   // unsigned char
   n.set(uchar_v);
-  unsigned char* uchar_ptr = n.as_unsigned_char_ptr();
+  const unsigned char* uchar_ptr = n.as_unsigned_char_ptr();
   for (index_t i = 0; i < uchar_v.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_v[i]);
@@ -1664,7 +1669,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
 
   // unsigned short
   n.set(ushort_v);
-  unsigned short* ushort_ptr = n.as_unsigned_short_ptr();
+  const unsigned short* ushort_ptr = n.as_unsigned_short_ptr();
   for (index_t i = 0; i < ushort_v.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_v[i]);
@@ -1676,7 +1681,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
 
   // unsigned int
   n.set(uint_v);
-  unsigned int* uint_ptr = n.as_unsigned_int_ptr();
+  const unsigned int* uint_ptr = n.as_unsigned_int_ptr();
   for (index_t i = 0; i < uint_v.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_v[i]);
@@ -1688,7 +1693,7 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
 
   // unsigned long
   n.set(ulong_v);
-  unsigned long* ulong_ptr = n.as_unsigned_long_ptr();
+  const unsigned long* ulong_ptr = n.as_unsigned_long_ptr();
   for (index_t i = 0; i < ulong_v.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_v[i]);
@@ -1758,10 +1763,10 @@ TEST(conduit_node_set, set_cstyle_unsigned_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_signed_int)
 {
-  signed char schar_v = 2;
-  signed short sshort_v = 4;
-  signed int sint_v = 8;
-  signed long slong_v = 16;
+  const signed char schar_v = 2;
+  const signed short sshort_v = 4;
+  const signed int sint_v = 8;
+  const signed long slong_v = 16;
 
   Node n;
   // char
@@ -1821,7 +1826,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_ptr)
 
   // unsigned char
   n.set(schar_av.data(), schar_av.size());
-  signed char* schar_ptr = n.as_signed_char_ptr();
+  const signed char* schar_ptr = n.as_signed_char_ptr();
   for (index_t i = 0; i < schar_av.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_av[i]);
@@ -1833,7 +1838,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_ptr)
 
   // unsigned short
   n.set(sshort_av.data(), sshort_av.size());
-  signed short* sshort_ptr = n.as_signed_short_ptr();
+  const signed short* sshort_ptr = n.as_signed_short_ptr();
   for (index_t i = 0; i < sshort_av.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_av[i]);
@@ -1845,7 +1850,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_ptr)
 
   // unsigned int
   n.set(sint_av.data(), sint_av.size());
-  signed int* sint_ptr = n.as_signed_int_ptr();
+  const signed int* sint_ptr = n.as_signed_int_ptr();
   for (index_t i = 0; i < sint_av.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_av[i]);
@@ -1857,7 +1862,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_ptr)
 
   // unsigned long
   n.set(slong_av.data(), slong_av.size());
-  signed long* slong_ptr = n.as_signed_long_ptr();
+  const signed long* slong_ptr = n.as_signed_long_ptr();
   for (index_t i = 0; i < slong_av.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_av[i]);
@@ -1941,7 +1946,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
 
   // char
   n.set(schar_v);
-  signed char* schar_ptr = n.as_signed_char_ptr();
+  const signed char* schar_ptr = n.as_signed_char_ptr();
   for (index_t i = 0; i < schar_v.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_v[i]);
@@ -1953,7 +1958,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
 
   // short
   n.set(sshort_v);
-  short* sshort_ptr = n.as_signed_short_ptr();
+  const short* sshort_ptr = n.as_signed_short_ptr();
   for (index_t i = 0; i < sshort_v.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_v[i]);
@@ -1965,7 +1970,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
 
   // int
   n.set(sint_v);
-  int* sint_ptr = n.as_signed_int_ptr();
+  const int* sint_ptr = n.as_signed_int_ptr();
   for (index_t i = 0; i < sint_v.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_v[i]);
@@ -1977,7 +1982,7 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
 
   // long
   n.set(slong_v);
-  long* slong_ptr = n.as_signed_long_ptr();
+  const long* slong_ptr = n.as_signed_long_ptr();
   for (index_t i = 0; i < slong_v.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_v[i]);
@@ -2047,8 +2052,8 @@ TEST(conduit_node_set, set_cstyle_signed_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_cstyle_float)
 {
-  float fv = -0.8F;
-  double dv = -1.6;
+  const float fv = -0.8F;
+  const double dv = -1.6;
 
   Node n;
   // float
@@ -2083,7 +2088,7 @@ TEST(conduit_node_set, set_cstyle_float_ptr)
   {
     // float32
     n.set(fav.data(), fav.size());
-    float32* f32av_ptr = n.as_float32_ptr();
+    const float32* f32av_ptr = n.as_float32_ptr();
     for (index_t i = 0; i < fav.size(); i++)
     {
       EXPECT_NEAR(f32av_ptr[i], fav[i], 0.001);
@@ -2097,7 +2102,7 @@ TEST(conduit_node_set, set_cstyle_float_ptr)
   {
     // float64
     n.set(dav.data(), dav.size());
-    float64* f64av_ptr = n.as_float64_ptr();
+    const float64* f64av_ptr = n.as_float64_ptr();
     for (index_t i = 0; i < dav.size(); i++)
     {
       EXPECT_NEAR(f64av_ptr[i], dav[i], 0.001);
@@ -2113,7 +2118,7 @@ TEST(conduit_node_set, set_cstyle_float_ptr)
 
   // float
   n.set(fav.data(), fav.size());
-  float* f_ptr = n.as_float_ptr();
+  const float* f_ptr = n.as_float_ptr();
   for (index_t i = 0; i < fav.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav[i], 0.001);
@@ -2125,7 +2130,7 @@ TEST(conduit_node_set, set_cstyle_float_ptr)
 
   // double
   n.set(dav.data(), dav.size());
-  double* d_ptr = n.as_double_ptr();
+  const double* d_ptr = n.as_double_ptr();
   for (index_t i = 0; i < dav.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav[i], 0.001);
@@ -2181,7 +2186,7 @@ TEST(conduit_node_set, set_cstyle_float_vec)
 
   // float
   n.set(fav_v);
-  float* f_ptr = n.as_float_ptr();
+  const float* f_ptr = n.as_float_ptr();
   for (index_t i = 0; i < fav_v.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav_v[i], 0.001);
@@ -2192,7 +2197,7 @@ TEST(conduit_node_set, set_cstyle_float_vec)
 
   // double
   n.set(dav_v);
-  double* d_ptr = n.as_double_ptr();
+  const double* d_ptr = n.as_double_ptr();
   for (index_t i = 0; i < dav_v.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav_v[i], 0.001);
@@ -2259,10 +2264,10 @@ TEST(conduit_node_set, set_cstyle_float_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_cstyle_native_int)
 {
-  char char_v = 2;
-  short short_v = 4;
-  int int_v = 8;
-  long long_v = 16;
+  const char char_v = 2;
+  const short short_v = 4;
+  const int int_v = 8;
+  const long long_v = 16;
 
   Node n;
   // char
@@ -2334,7 +2339,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_ptr)
 
   // char
   n.set_path_char_ptr("c", char_av.data(), char_av.size());
-  char* char_ptr = n["c"].as_char_ptr();
+  const char* char_ptr = n["c"].as_char_ptr();
   for (index_t i = 0; i < char_av.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_av[i]);
@@ -2346,7 +2351,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_ptr)
 
   // short
   n.set_path("s", short_av.data(), short_av.size());
-  short* short_ptr = n["s"].as_short_ptr();
+  const short* short_ptr = n["s"].as_short_ptr();
   for (index_t i = 0; i < short_av.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_av[i]);
@@ -2358,7 +2363,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_ptr)
 
   // int
   n.set_path("i", int_av.data(), int_av.size());
-  int* int_ptr = n["i"].as_int_ptr();
+  const int* int_ptr = n["i"].as_int_ptr();
   for (index_t i = 0; i < int_av.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_av[i]);
@@ -2370,7 +2375,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_ptr)
 
   // long
   n.set_path("l", long_av.data(), long_av.size());
-  long* long_ptr = n["l"].as_long_ptr();
+  const long* long_ptr = n["l"].as_long_ptr();
   for (index_t i = 0; i < long_av.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_av[i]);
@@ -2454,7 +2459,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
 
   // char
   n.set_path("c", char_v);
-  char* char_ptr = n["c"].as_char_ptr();
+  const char* char_ptr = n["c"].as_char_ptr();
   for (index_t i = 0; i < char_v.size(); i++)
   {
     EXPECT_EQ(char_ptr[i], char_v[i]);
@@ -2466,7 +2471,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
 
   // short
   n.set_path("s", short_v);
-  short* short_ptr = n["s"].as_short_ptr();
+  const short* short_ptr = n["s"].as_short_ptr();
   for (index_t i = 0; i < short_v.size(); i++)
   {
     EXPECT_EQ(short_ptr[i], short_v[i]);
@@ -2478,7 +2483,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
 
   // int
   n.set_path("i", int_v);
-  int* int_ptr = n["i"].as_int_ptr();
+  const int* int_ptr = n["i"].as_int_ptr();
   for (index_t i = 0; i < int_v.size(); i++)
   {
     EXPECT_EQ(int_ptr[i], int_v[i]);
@@ -2490,7 +2495,7 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
 
   // long
   n.set_path("l", long_v);
-  long* long_ptr = n["l"].as_long_ptr();
+  const long* long_ptr = n["l"].as_long_ptr();
   for (index_t i = 0; i < long_v.size(); i++)
   {
     EXPECT_EQ(long_ptr[i], long_v[i]);
@@ -2560,10 +2565,10 @@ TEST(conduit_node_set, set_path_cstyle_native_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_cstyle_unsigned_int)
 {
-  unsigned char uchar_v = 2;
-  unsigned short ushort_v = 4;
-  unsigned int uint_v = 8;
-  unsigned long ulong_v = 16;
+  const unsigned char uchar_v = 2;
+  const unsigned short ushort_v = 4;
+  const unsigned int uint_v = 8;
+  const unsigned long ulong_v = 16;
 
   Node n;
   // char
@@ -2635,7 +2640,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_ptr)
 
   // unsigned char
   n.set_path("uc", uchar_av.data(), uchar_av.size());
-  unsigned char* uchar_ptr = n["uc"].as_unsigned_char_ptr();
+  const unsigned char* uchar_ptr = n["uc"].as_unsigned_char_ptr();
   for (index_t i = 0; i < uchar_av.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_av[i]);
@@ -2647,7 +2652,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_ptr)
 
   // unsigned short
   n.set_path("us", ushort_av.data(), ushort_av.size());
-  unsigned short* ushort_ptr = n["us"].as_unsigned_short_ptr();
+  const unsigned short* ushort_ptr = n["us"].as_unsigned_short_ptr();
   for (index_t i = 0; i < ushort_av.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_av[i]);
@@ -2659,7 +2664,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_ptr)
 
   // unsigned int
   n.set_path("ui", uint_av.data(), uint_av.size());
-  unsigned int* uint_ptr = n["ui"].as_unsigned_int_ptr();
+  const unsigned int* uint_ptr = n["ui"].as_unsigned_int_ptr();
   for (index_t i = 0; i < uint_av.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_av[i]);
@@ -2671,7 +2676,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_ptr)
 
   // unsigned long
   n.set_path("ul", ulong_av.data(), ulong_av.size());
-  unsigned long* ulong_ptr = n["ul"].as_unsigned_long_ptr();
+  const unsigned long* ulong_ptr = n["ul"].as_unsigned_long_ptr();
   for (index_t i = 0; i < ulong_av.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_av[i]);
@@ -2755,7 +2760,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
 
   // unsigned char
   n.set_path("uc", uchar_v);
-  unsigned char* uchar_ptr = n["uc"].as_unsigned_char_ptr();
+  const unsigned char* uchar_ptr = n["uc"].as_unsigned_char_ptr();
   for (index_t i = 0; i < uchar_v.size(); i++)
   {
     EXPECT_EQ(uchar_ptr[i], uchar_v[i]);
@@ -2767,7 +2772,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
 
   // unsigned short
   n.set_path("us", ushort_v);
-  unsigned short* ushort_ptr = n["us"].as_unsigned_short_ptr();
+  const unsigned short* ushort_ptr = n["us"].as_unsigned_short_ptr();
   for (index_t i = 0; i < ushort_v.size(); i++)
   {
     EXPECT_EQ(ushort_ptr[i], ushort_v[i]);
@@ -2779,7 +2784,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
 
   // unsigned int
   n.set_path("ui", uint_v);
-  unsigned int* uint_ptr = n["ui"].as_unsigned_int_ptr();
+  const unsigned int* uint_ptr = n["ui"].as_unsigned_int_ptr();
   for (index_t i = 0; i < uint_v.size(); i++)
   {
     EXPECT_EQ(uint_ptr[i], uint_v[i]);
@@ -2791,7 +2796,7 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
 
   // unsigned long
   n.set_path("ul", ulong_v);
-  unsigned long* ulong_ptr = n["ul"].as_unsigned_long_ptr();
+  const unsigned long* ulong_ptr = n["ul"].as_unsigned_long_ptr();
   for (index_t i = 0; i < ulong_v.size(); i++)
   {
     EXPECT_EQ(ulong_ptr[i], ulong_v[i]);
@@ -2861,10 +2866,10 @@ TEST(conduit_node_set, set_path_cstyle_unsigned_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_cstyle_signed_int)
 {
-  signed char schar_v = 2;
-  signed short sshort_v = 4;
-  signed int sint_v = 8;
-  signed long slong_v = 16;
+  const signed char schar_v = 2;
+  const signed short sshort_v = 4;
+  const signed int sint_v = 8;
+  const signed long slong_v = 16;
 
   Node n;
   // char
@@ -2936,7 +2941,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_ptr)
 
   // char
   n.set_path("c", schar_av.data(), schar_av.size());
-  signed char* schar_ptr = n["c"].as_signed_char_ptr();
+  const signed char* schar_ptr = n["c"].as_signed_char_ptr();
   for (index_t i = 0; i < schar_av.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_av[i]);
@@ -2948,7 +2953,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_ptr)
 
   // short
   n.set_path("s", sshort_av.data(), sshort_av.size());
-  signed short* sshort_ptr = n["s"].as_signed_short_ptr();
+  const signed short* sshort_ptr = n["s"].as_signed_short_ptr();
   for (index_t i = 0; i < sshort_av.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_av[i]);
@@ -2960,7 +2965,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_ptr)
 
   // int
   n.set_path("i", sint_av.data(), sint_av.size());
-  signed int* sint_ptr = n["i"].as_signed_int_ptr();
+  const signed int* sint_ptr = n["i"].as_signed_int_ptr();
   for (index_t i = 0; i < sint_av.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_av[i]);
@@ -2972,7 +2977,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_ptr)
 
   // long
   n.set_path("l", slong_av.data(), slong_av.size());
-  signed long* slong_ptr = n["l"].as_signed_long_ptr();
+  const signed long* slong_ptr = n["l"].as_signed_long_ptr();
   for (index_t i = 0; i < slong_av.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_av[i]);
@@ -3056,7 +3061,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
 
   // char
   n.set_path("c", schar_v);
-  signed char* schar_ptr = n["c"].as_signed_char_ptr();
+  const signed char* schar_ptr = n["c"].as_signed_char_ptr();
   for (index_t i = 0; i < schar_v.size(); i++)
   {
     EXPECT_EQ(schar_ptr[i], schar_v[i]);
@@ -3068,7 +3073,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
 
   // short
   n.set_path("s", sshort_v);
-  signed short* sshort_ptr = n["s"].as_signed_short_ptr();
+  const signed short* sshort_ptr = n["s"].as_signed_short_ptr();
   for (index_t i = 0; i < sshort_v.size(); i++)
   {
     EXPECT_EQ(sshort_ptr[i], sshort_v[i]);
@@ -3080,7 +3085,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
 
   // int
   n.set_path("i", sint_v);
-  signed int* sint_ptr = n["i"].as_signed_int_ptr();
+  const signed int* sint_ptr = n["i"].as_signed_int_ptr();
   for (index_t i = 0; i < sint_v.size(); i++)
   {
     EXPECT_EQ(sint_ptr[i], sint_v[i]);
@@ -3092,7 +3097,7 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
 
   // long
   n.set_path("l", slong_v);
-  signed long* slong_ptr = n["l"].as_signed_long_ptr();
+  const signed long* slong_ptr = n["l"].as_signed_long_ptr();
   for (index_t i = 0; i < slong_v.size(); i++)
   {
     EXPECT_EQ(slong_ptr[i], slong_v[i]);
@@ -3162,8 +3167,8 @@ TEST(conduit_node_set, set_path_cstyle_signed_int_vec)
 //-----------------------------------------------------------------------------
 TEST(conduit_node_set, set_path_cstyle_float)
 {
-  float fv = -0.8F;
-  double dv = -1.6;
+  const float fv = -0.8F;
+  const double dv = -1.6;
 
   Node n;
   // float
@@ -3207,7 +3212,7 @@ TEST(conduit_node_set, set_path_cstyle_float_ptr)
 
   // float
   n.set_path("f", fav.data(), fav.size());
-  float* f_ptr = n["f"].as_float_ptr();
+  const float* f_ptr = n["f"].as_float_ptr();
   for (index_t i = 0; i < fav.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav[i], 0.001);
@@ -3219,7 +3224,7 @@ TEST(conduit_node_set, set_path_cstyle_float_ptr)
 
   // double
   n.set_path("d", dav.data(), dav.size());
-  double* d_ptr = n["d"].as_double_ptr();
+  const double* d_ptr = n["d"].as_double_ptr();
   for (index_t i = 0; i < dav.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav[i], 0.001);
@@ -3280,7 +3285,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
   Node n;
   // float
   n.set_path("f", fav);
-  float* f_ptr = n["f"].as_float_ptr();
+  const float* f_ptr = n["f"].as_float_ptr();
   for (index_t i = 0; i < fav.size(); i++)
   {
     EXPECT_NEAR(f_ptr[i], fav[i], 0.001);
@@ -3291,7 +3296,7 @@ TEST(conduit_node_set, set_path_cstyle_float_vec)
 
   // double
   n.set_path("d", dav);
-  double* d_ptr = n["d"].as_double_ptr();
+  const double* d_ptr = n["d"].as_double_ptr();
   for (index_t i = 0; i < dav.size(); i++)
   {
     EXPECT_NEAR(d_ptr[i], dav[i], 0.001);
@@ -3452,7 +3457,7 @@ TEST(conduit_node_set, set_string)
   EXPECT_EQ(conduit_datatype_is_char8_str(n.c_dtype()), true);
   EXPECT_EQ(conduit_datatype_is_string(n.c_dtype()), true);
 
-  std::string std_strv = std::string("str2");
+  const std::string std_strv = std::string("str2");
   n.set(std_strv);
   EXPECT_EQ(n.as_char8_str(), std_strv);
   EXPECT_EQ(conduit_datatype_is_number(n.c_dtype()), false);
@@ -3466,7 +3471,7 @@ TEST(conduit_node_set, set_string)
   ////////////////////////////
   // set external
   ////////////////////////////
-  Node n2;
+  const Node n2;
   std::array<char, 5> ext_char_strv;
   // Copy in str2
   std::copy(char_strv, char_strv + strlen(char_strv) + 1, ext_char_strv.data());
@@ -3505,7 +3510,7 @@ TEST(conduit_node_set, set_path_string)
   EXPECT_EQ(conduit_datatype_is_char8_str(nc.c_dtype()), true);
   EXPECT_EQ(conduit_datatype_is_string(nc.c_dtype()), true);
 
-  std::string std_strv = std::string("str2");
+  const std::string std_strv = std::string("str2");
   n.set_path("one/two/three", std_strv);
   EXPECT_TRUE(n.has_path("one"));
   EXPECT_TRUE(n["one"].has_path("two/three"));
@@ -3578,28 +3583,28 @@ TEST(conduit_node_set, set_vector)
 
   n.print();
 
-  int8* i8_ptr = n["i8"].as_int8_ptr();
-  int16* i16_ptr = n["i16"].as_int16_ptr();
-  int32* i32_ptr = n["i32"].as_int32_ptr();
-  int64* i64_ptr = n["i64"].as_int64_ptr();
+  const int8* i8_ptr = n["i8"].as_int8_ptr();
+  const int16* i16_ptr = n["i16"].as_int16_ptr();
+  const int32* i32_ptr = n["i32"].as_int32_ptr();
+  const int64* i64_ptr = n["i64"].as_int64_ptr();
 
   EXPECT_EQ(i8_ptr[0], i8_vec[0]);
   EXPECT_EQ(i16_ptr[0], i16_vec[0]);
   EXPECT_EQ(i32_ptr[0], i32_vec[0]);
   EXPECT_EQ(i64_ptr[0], i64_vec[0]);
 
-  uint8* ui8_ptr = n["ui8"].as_uint8_ptr();
-  uint16* ui16_ptr = n["ui16"].as_uint16_ptr();
-  uint32* ui32_ptr = n["ui32"].as_uint32_ptr();
-  uint64* ui64_ptr = n["ui64"].as_uint64_ptr();
+  const uint8* ui8_ptr = n["ui8"].as_uint8_ptr();
+  const uint16* ui16_ptr = n["ui16"].as_uint16_ptr();
+  const uint32* ui32_ptr = n["ui32"].as_uint32_ptr();
+  const uint64* ui64_ptr = n["ui64"].as_uint64_ptr();
 
   EXPECT_EQ(ui8_ptr[0], ui8_vec[0]);
   EXPECT_EQ(ui16_ptr[0], ui16_vec[0]);
   EXPECT_EQ(ui32_ptr[0], ui32_vec[0]);
   EXPECT_EQ(ui64_ptr[0], ui64_vec[0]);
 
-  float32* f32_ptr = n["f32"].as_float32_ptr();
-  float64* f64_ptr = n["f64"].as_float64_ptr();
+  const float32* f32_ptr = n["f32"].as_float32_ptr();
+  const float64* f64_ptr = n["f64"].as_float64_ptr();
 
   EXPECT_EQ(f32_ptr[0], f32_vec[0]);
   EXPECT_EQ(f64_ptr[0], f64_vec[0]);
@@ -3647,28 +3652,28 @@ TEST(conduit_node_set, set_path_vector)
   n.set_path("f32", f32_vec);
   n.set_path("f64", f64_vec);
 
-  int8* i8_ptr = n["i8"].as_int8_ptr();
-  int16* i16_ptr = n["i16"].as_int16_ptr();
-  int32* i32_ptr = n["i32"].as_int32_ptr();
-  int64* i64_ptr = n["i64"].as_int64_ptr();
+  const int8* i8_ptr = n["i8"].as_int8_ptr();
+  const int16* i16_ptr = n["i16"].as_int16_ptr();
+  const int32* i32_ptr = n["i32"].as_int32_ptr();
+  const int64* i64_ptr = n["i64"].as_int64_ptr();
 
   EXPECT_EQ(i8_ptr[0], i8_vec[0]);
   EXPECT_EQ(i16_ptr[0], i16_vec[0]);
   EXPECT_EQ(i32_ptr[0], i32_vec[0]);
   EXPECT_EQ(i64_ptr[0], i64_vec[0]);
 
-  uint8* ui8_ptr = n["ui8"].as_uint8_ptr();
-  uint16* ui16_ptr = n["ui16"].as_uint16_ptr();
-  uint32* ui32_ptr = n["ui32"].as_uint32_ptr();
-  uint64* ui64_ptr = n["ui64"].as_uint64_ptr();
+  const uint8* ui8_ptr = n["ui8"].as_uint8_ptr();
+  const uint16* ui16_ptr = n["ui16"].as_uint16_ptr();
+  const uint32* ui32_ptr = n["ui32"].as_uint32_ptr();
+  const uint64* ui64_ptr = n["ui64"].as_uint64_ptr();
 
   EXPECT_EQ(ui8_ptr[0], ui8_vec[0]);
   EXPECT_EQ(ui16_ptr[0], ui16_vec[0]);
   EXPECT_EQ(ui32_ptr[0], ui32_vec[0]);
   EXPECT_EQ(ui64_ptr[0], ui64_vec[0]);
 
-  float32* f32_ptr = n["f32"].as_float32_ptr();
-  float64* f64_ptr = n["f64"].as_float64_ptr();
+  const float32* f32_ptr = n["f32"].as_float32_ptr();
+  const float64* f64_ptr = n["f64"].as_float64_ptr();
 
   EXPECT_EQ(f32_ptr[0], f32_vec[0]);
   EXPECT_EQ(f64_ptr[0], f64_vec[0]);
@@ -3742,28 +3747,28 @@ TEST(conduit_node_set, set_vector_external)
   n1.print();
   n2.print();
 
-  int8* i8_ptr = n1["i8"].as_int8_ptr();
-  int16* i16_ptr = n1["i16"].as_int16_ptr();
-  int32* i32_ptr = n1["i32"].as_int32_ptr();
-  int64* i64_ptr = n1["i64"].as_int64_ptr();
+  const int8* i8_ptr = n1["i8"].as_int8_ptr();
+  const int16* i16_ptr = n1["i16"].as_int16_ptr();
+  const int32* i32_ptr = n1["i32"].as_int32_ptr();
+  const int64* i64_ptr = n1["i64"].as_int64_ptr();
 
   EXPECT_EQ(i8_ptr, i8_vec.data());
   EXPECT_EQ(i16_ptr, i16_vec.data());
   EXPECT_EQ(i32_ptr, i32_vec.data());
   EXPECT_EQ(i64_ptr, i64_vec.data());
 
-  uint8* ui8_ptr = n1["ui8"].as_uint8_ptr();
-  uint16* ui16_ptr = n1["ui16"].as_uint16_ptr();
-  uint32* ui32_ptr = n1["ui32"].as_uint32_ptr();
-  uint64* ui64_ptr = n1["ui64"].as_uint64_ptr();
+  const uint8* ui8_ptr = n1["ui8"].as_uint8_ptr();
+  const uint16* ui16_ptr = n1["ui16"].as_uint16_ptr();
+  const uint32* ui32_ptr = n1["ui32"].as_uint32_ptr();
+  const uint64* ui64_ptr = n1["ui64"].as_uint64_ptr();
 
   EXPECT_EQ(ui8_ptr, ui8_vec.data());
   EXPECT_EQ(ui16_ptr, ui16_vec.data());
   EXPECT_EQ(ui32_ptr, ui32_vec.data());
   EXPECT_EQ(ui64_ptr, ui64_vec.data());
 
-  float32* f32_ptr = n1["f32"].as_float32_ptr();
-  float64* f64_ptr = n1["f64"].as_float64_ptr();
+  const float32* f32_ptr = n1["f32"].as_float32_ptr();
+  const float64* f64_ptr = n1["f64"].as_float64_ptr();
 
   EXPECT_EQ(f32_ptr, f32_vec.data());
   EXPECT_EQ(f64_ptr, f64_vec.data());
@@ -3772,7 +3777,7 @@ TEST(conduit_node_set, set_vector_external)
 //-----------------------------------------------------------------------------
 TEST(conduit_node, node_set_existing_char8)
 {
-  std::string value = "my value";
+  const std::string value = "my value";
 
   Node n2;
   n2.set_external_char8_str(const_cast<char*>(value.c_str()));

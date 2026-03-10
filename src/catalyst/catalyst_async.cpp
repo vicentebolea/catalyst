@@ -78,7 +78,7 @@ struct AsyncConfig
   double slow_threshold_sec = 10.0; // Log warning if execute takes longer
   double flush_timeout_sec = 300.0; // 5 minutes default, 0 = no timeout
 
-  enum class AffinityMode
+  enum class AffinityMode : std::uint8_t
   {
     Auto,
     Manual,
@@ -121,7 +121,7 @@ struct AsyncStats
 
 struct GpuRuntime
 {
-  enum class Backend
+  enum class Backend : std::uint8_t
   {
     None,
     CUDA,
@@ -357,7 +357,7 @@ void init_gpu_runtime()
     // CUDA Driver API: cuPointerGetAttribute with CU_POINTER_ATTRIBUTE_MEMORY_TYPE
     // Returns CU_MEMORYTYPE_DEVICE (2) or CU_MEMORYTYPE_UNIFIED (4) for device memory
     unsigned int memType = 0;
-    int result = g_ctx.gpu_runtime.cuPointerGetAttribute(&memType,
+    const int result = g_ctx.gpu_runtime.cuPointerGetAttribute(&memType,
       GpuRuntime::CU_POINTER_ATTRIBUTE_MEMORY_TYPE, reinterpret_cast<unsigned long long>(ptr));
 
     if (result != 0)
@@ -386,7 +386,7 @@ void init_gpu_runtime()
   };
 
   HipPointerAttribute attrs = {};
-  int result = g_ctx.gpu_runtime.hipPointerGetAttributes(&attrs, ptr);
+  const int result = g_ctx.gpu_runtime.hipPointerGetAttributes(&attrs, ptr);
 
   if (result != 0)
   {
@@ -416,10 +416,10 @@ void copy_gpu_arrays_to_cpu_impl(conduit::Node& node)
   // Check if this is a leaf with external data
   if (node.dtype().is_number() && node.is_data_external())
   {
-    void* ptr = node.data_ptr();
+    const void* ptr = node.data_ptr();
     if (is_device_pointer(ptr))
     {
-      size_t nbytes = node.dtype().bytes_compact();
+      const size_t nbytes = node.dtype().bytes_compact();
 
       // Allocate CPU buffer
       g_gpu_copy_buffers.emplace_back();
@@ -626,7 +626,7 @@ template <typename T>
     {
       end = s.size();
     }
-    std::string token = s.substr(start, end - start);
+    const std::string token = s.substr(start, end - start);
     if (token.empty())
     {
       std::cerr << "catalyst_async: Empty element in worker_cores list\n";
@@ -724,7 +724,7 @@ void async_cleanup_atexit()
   if (allowed.empty())
   {
     // Fall back to system core count if sched_getaffinity fails
-    int num_cores = get_num_cores();
+    const int num_cores = get_num_cores();
     if (num_cores < 2)
     {
       return std::nullopt;
@@ -780,7 +780,7 @@ void apply_worker_affinity()
     return;
   }
 
-  int local_rank = detect_local_rank();
+  const int local_rank = detect_local_rank();
   std::optional<int> worker_core;
 
   if (g_ctx.config.affinity_mode == AsyncConfig::AffinityMode::Manual)
@@ -808,7 +808,7 @@ void apply_worker_affinity()
   cpu_set_t mask;
   CPU_ZERO(&mask);
   CPU_SET(*worker_core, &mask);
-  int ret = pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask);
+  const int ret = pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask);
   if (ret == 0)
   {
     g_ctx.worker_pinned_core = *worker_core;
@@ -892,7 +892,7 @@ void worker_loop()
         g_ctx.worker_busy = true;
 
         auto wait_time = std::chrono::steady_clock::now() - item->enqueue_time;
-        double wait_sec = std::chrono::duration<double>(wait_time).count();
+        const double wait_sec = std::chrono::duration<double>(wait_time).count();
         g_ctx.stats.max_queue_wait = std::max(g_ctx.stats.max_queue_wait, wait_sec);
       }
     }
@@ -903,14 +903,14 @@ void worker_loop()
     {
       auto start = std::chrono::steady_clock::now();
 
-      conduit_node* c_node = conduit::c_node(&item->data);
+      const conduit_node* c_node = conduit::c_node(&item->data);
 
       // Lock impl_mutex: prevents concurrent access if main thread
       // calls catalyst_about() or catalyst_results() during execution
       enum catalyst_status status = catalyst_status_ok;
       bool had_exception = false;
       {
-        std::scoped_lock impl_lock(g_ctx.impl_mutex);
+        const std::scoped_lock impl_lock(g_ctx.impl_mutex);
         try
         {
           status = (*impl_execute)(c_node);
@@ -928,7 +928,7 @@ void worker_loop()
       }
 
       auto elapsed = std::chrono::steady_clock::now() - start;
-      double elapsed_sec = std::chrono::duration<double>(elapsed).count();
+      const double elapsed_sec = std::chrono::duration<double>(elapsed).count();
       g_ctx.stats.total_execute_time += elapsed_sec;
       g_ctx.stats.max_execute_time = std::max(g_ctx.stats.max_execute_time, elapsed_sec);
 
@@ -1164,12 +1164,14 @@ void print_stats()
     return;
   }
 
-  [[maybe_unused]] int rank = 0;
 #ifdef CATALYST_USE_MPI
+  int rank = 0;
   if (g_ctx.mpi_comm != MPI_COMM_NULL)
   {
     MPI_Comm_rank(g_ctx.mpi_comm, &rank);
   }
+#else
+  const int rank = 0;
 #endif
 
   if (rank == 0)
@@ -1197,7 +1199,7 @@ void print_stats()
     }
     std::cerr << "Max queue wait: " << g_ctx.stats.max_queue_wait << " s\n"
               << "=========================================\n"
-              << std::defaultfloat << std::endl;
+              << std::defaultfloat << '\n';
   }
 }
 
@@ -1307,7 +1309,7 @@ extern "C"
     // ----------------------------------------------------------------
     int local_can_enqueue;
     {
-      std::scoped_lock lock(g_ctx.queue_mutex);
+      const std::scoped_lock lock(g_ctx.queue_mutex);
       local_can_enqueue = (g_ctx.work_queue.size() < g_ctx.config.queue_depth) ? 1 : 0;
     }
 
@@ -1323,7 +1325,7 @@ extern "C"
       MPI_Allreduce(&local_can_enqueue, &global_can_enqueue, 1, MPI_INT, MPI_MIN, g_ctx.mpi_comm);
     }
 #else
-    int global_can_enqueue = local_can_enqueue;
+    const int global_can_enqueue = local_can_enqueue;
 #endif
 
     if (!global_can_enqueue)
@@ -1362,13 +1364,10 @@ extern "C"
     // Enqueue
     // ----------------------------------------------------------------
     {
-      std::scoped_lock lock(g_ctx.queue_mutex);
+      const std::scoped_lock lock(g_ctx.queue_mutex);
 
       auto new_depth = g_ctx.work_queue.size() + 1;
-      if (new_depth > g_ctx.stats.max_queue_depth_seen)
-      {
-        g_ctx.stats.max_queue_depth_seen = new_depth;
-      }
+      g_ctx.stats.max_queue_depth_seen = std::max(g_ctx.stats.max_queue_depth_seen, new_depth);
 
       g_ctx.work_queue.push(std::move(item));
     }
@@ -1401,7 +1400,7 @@ extern "C"
     if (g_ctx.config.flush_timeout_sec > 0)
     {
       auto timeout = std::chrono::duration<double>(g_ctx.config.flush_timeout_sec);
-      bool completed = g_ctx.queue_cv.wait_for(
+      const bool completed = g_ctx.queue_cv.wait_for(
         lock, timeout, [] { return g_ctx.work_queue.empty() && !g_ctx.worker_busy; });
 
       if (!completed)
@@ -1426,7 +1425,7 @@ extern "C"
       return 0;
     }
 
-    std::scoped_lock lock(g_ctx.queue_mutex);
+    const std::scoped_lock lock(g_ctx.queue_mutex);
     return (!g_ctx.work_queue.empty() || g_ctx.worker_busy) ? 1 : 0;
   }
 
@@ -1437,7 +1436,7 @@ extern "C"
       return 0;
     }
 
-    std::scoped_lock lock(g_ctx.queue_mutex);
+    const std::scoped_lock lock(g_ctx.queue_mutex);
     return g_ctx.work_queue.size();
   }
 
@@ -1451,7 +1450,7 @@ extern "C"
     catalyst_async_flush();
 
     {
-      std::scoped_lock lock(g_ctx.queue_mutex);
+      const std::scoped_lock lock(g_ctx.queue_mutex);
       g_ctx.should_stop = true;
     }
     g_ctx.queue_cv.notify_all();
@@ -1479,7 +1478,7 @@ extern "C"
 
     // Clear the queue and stop immediately - don't process pending work
     {
-      std::scoped_lock lock(g_ctx.queue_mutex);
+      const std::scoped_lock lock(g_ctx.queue_mutex);
       while (!g_ctx.work_queue.empty())
       {
         g_ctx.work_queue.pop();
@@ -1537,7 +1536,7 @@ extern "C"
     node["config/enabled"] = g_ctx.config.enabled ? 1 : 0;
     node["config/queue_depth"] = static_cast<conduit::int64>(g_ctx.config.queue_depth);
 
-    const char* mode_str = "none";
+    const char* mode_str = nullptr;
     switch (g_ctx.config.affinity_mode)
     {
       case AsyncConfig::AffinityMode::Auto:
@@ -1559,7 +1558,7 @@ extern "C"
 #endif
 
     // GPU runtime status
-    const char* gpu_backend_str = "none";
+    const char* gpu_backend_str = nullptr;
     switch (g_ctx.gpu_runtime.backend)
     {
       case GpuRuntime::Backend::CUDA:
@@ -1608,7 +1607,7 @@ extern "C"
     node["catalyst/async/enabled"] = (g_ctx.config.enabled && g_ctx.initialized) ? 1 : 0;
     node["catalyst/async/queue_depth"] = static_cast<conduit::int64>(g_ctx.config.queue_depth);
 
-    const char* mode_str = "none";
+    const char* mode_str = nullptr;
     switch (g_ctx.config.affinity_mode)
     {
       case AsyncConfig::AffinityMode::Auto:
@@ -1630,7 +1629,7 @@ extern "C"
 #endif
 
     // GPU runtime status
-    const char* gpu_backend_str = "none";
+    const char* gpu_backend_str = nullptr;
     switch (g_ctx.gpu_runtime.backend)
     {
       case GpuRuntime::Backend::CUDA:

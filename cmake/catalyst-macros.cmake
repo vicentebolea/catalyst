@@ -173,3 +173,45 @@ function (catalyst_implementation)
       LIBRARY DESTINATION "${catalyst_impl_LIBRARY_DESTINATION}")
   endif ()
 endfunction ()
+
+#[==[
+Apply Python environment settings to a set of tests.
+
+~~~{.cmake}
+catalyst_apply_python_env(<test>...)
+~~~
+
+Adds `ENVIRONMENT_MODIFICATION` property values to the listed tests to
+effectively use Catalyst's Python modules.
+#]==]
+function (catalyst_apply_python_env)
+  set(catalyst_pythonpaths "")
+  if (COMMAND catalyst_module_python_default_destination)
+    set(_path)
+    catalyst_module_python_default_destination(_path)
+    if (_path)
+      set(catalyst_pythonpaths
+        "${CMAKE_BINARY_DIR}/${_path}")
+    endif ()
+  else ()
+    set(catalyst_pythonpaths
+      "${CATALYST_PYTHONPATH}")
+  endif ()
+  if (CONDUIT_PYTHON_MODULE_DIR)
+    set(conduit_python_path "${CONDUIT_PYTHON_MODULE_DIR}")
+    if (NOT IS_ABSOLUTE "${catalyst_python_path}")
+      string(PREPEND conduit_python_path "${CONDUIT_INSTALL_PREFIX}/")
+    endif ()
+    list(APPEND catalyst_pythonpaths
+      "${conduit_python_path}")
+  endif ()
+  set(env_args)
+  foreach (pythonpath IN LISTS catalyst_pythonpaths)
+    list(APPEND env_args
+      "PYTHONPATH=path_list_prepend:${pythonpath}")
+  endforeach ()
+
+  set_property(TEST ${ARGN} APPEND
+    PROPERTY
+      ENVIRONMENT_MODIFICATION ${env_args})
+endfunction ()

@@ -17,9 +17,9 @@ using namespace conduit_cpp;
 //-----------------------------------------------------------------------------
 TEST(conduit_to_string, simple_1)
 {
-  conduit_uint32 a_val = 10;
-  conduit_uint32 b_val = 20;
-  conduit_float64 c_val = 30.0;
+  const conduit_uint32 a_val = 10;
+  const conduit_uint32 b_val = 20;
+  const conduit_float64 c_val = 30.0;
 
   const std::string n_expected = "\n"
                                  "a: 10\n"
