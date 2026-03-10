@@ -86,7 +86,7 @@ public:
 
   ~Error() noexcept override = default;
 
-  void print() const { std::cout << message() << std::endl; }
+  void print() const { std::cout << message() << '\n'; }
 
   CATALYST_CONDUIT_ERROR_NODISCARD std::string message() const
   {
@@ -97,10 +97,10 @@ public:
 
   void message(std::ostringstream& oss) const
   {
-    oss << std::endl;
-    oss << m_msg << std::endl;
-    oss << "file: " << m_file << std::endl;
-    oss << "line: " << m_line << std::endl;
+    oss << '\n';
+    oss << m_msg << '\n';
+    oss << "file: " << m_file << '\n';
+    oss << "line: " << m_line << '\n';
   }
 
   CATALYST_CONDUIT_ERROR_NODISCARD const char* what() const noexcept override

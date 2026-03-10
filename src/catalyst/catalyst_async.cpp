@@ -1197,7 +1197,7 @@ void print_stats()
     }
     std::cerr << "Max queue wait: " << g_ctx.stats.max_queue_wait << " s\n"
               << "=========================================\n"
-              << std::defaultfloat << std::endl;
+              << std::defaultfloat << '\n';
   }
 }
 
