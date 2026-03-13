@@ -445,7 +445,8 @@ void copy_gpu_arrays_to_cpu_impl(conduit::Node& node)
       {
         // Update node to point to CPU copy
         // We need to use set_external with the same dtype
-        node.set_external(node.dtype(), buf.data.data());
+        const conduit::DataType saved_dtype = node.dtype();
+        node.set_external(saved_dtype, buf.data.data());
 
         if (g_ctx.config.verbose)
         {
