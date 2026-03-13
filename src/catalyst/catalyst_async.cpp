@@ -293,25 +293,35 @@ void init_gpu_runtime()
   }
 #elif defined(__linux__)
   // Use CUDA Driver API (libcuda.so) - version-stable
-  // RTLD_DEFAULT finds symbols in any loaded library
-  auto cuInit = reinterpret_cast<GpuRuntime::CuInitFn>(dlsym(RTLD_DEFAULT, "cuInit"));
-  auto cuPtrGetAttr = reinterpret_cast<GpuRuntime::CuPointerGetAttributeFn>(
-    dlsym(RTLD_DEFAULT, "cuPointerGetAttribute"));
-  auto cuMemcpyDtoH =
-    reinterpret_cast<GpuRuntime::CuMemcpyDtoHFn>(dlsym(RTLD_DEFAULT, "cuMemcpyDtoH_v2"));
+  // RTLD_NOLOAD returns a handle to libcuda.so if it is already loaded by any
+  // means (including RTLD_LOCAL linkage from nvcc-compiled code), without
+  // loading it if absent. This is the correct analog to GetModuleHandleA on
+  // Windows: we don't want to force-load CUDA into a non-CUDA process.
 
-  if (cuInit && cuPtrGetAttr && cuMemcpyDtoH)
+  void* cuda_handle = dlopen("libcuda.so", RTLD_NOW | RTLD_NOLOAD);
+
+  if (cuda_handle)
   {
-    cuInit(0);
-    g_ctx.gpu_runtime.handle = nullptr;
-    g_ctx.gpu_runtime.cuPointerGetAttribute = cuPtrGetAttr;
-    g_ctx.gpu_runtime.cuMemcpyDtoH = cuMemcpyDtoH;
-    g_ctx.gpu_runtime.backend = GpuRuntime::Backend::CUDA;
-    if (g_ctx.config.verbose)
+    auto cuInit = reinterpret_cast<GpuRuntime::CuInitFn>(dlsym(cuda_handle, "cuInit"));
+    auto cuPtrGetAttr = reinterpret_cast<GpuRuntime::CuPointerGetAttributeFn>(
+      dlsym(cuda_handle, "cuPointerGetAttribute"));
+    auto cuMemcpyDtoH =
+      reinterpret_cast<GpuRuntime::CuMemcpyDtoHFn>(dlsym(cuda_handle, "cuMemcpyDtoH_v2"));
+
+    if (cuInit && cuPtrGetAttr && cuMemcpyDtoH)
     {
-      std::cerr << "catalyst_async: CUDA driver API detected\n";
+      cuInit(0);
+      g_ctx.gpu_runtime.handle = nullptr;
+      g_ctx.gpu_runtime.cuPointerGetAttribute = cuPtrGetAttr;
+      g_ctx.gpu_runtime.cuMemcpyDtoH = cuMemcpyDtoH;
+      g_ctx.gpu_runtime.backend = GpuRuntime::Backend::CUDA;
+      if (g_ctx.config.verbose)
+      {
+        std::cerr << "catalyst_async: CUDA driver API detected\n";
+      }
+      dlclose(cuda_handle);
+      return;
     }
-    return;
   }
 
   // Try HIP (AMD) - use runtime API (HIP has no separate driver API)
