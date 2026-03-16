@@ -288,15 +288,11 @@ enum catalyst_status catalyst_initialize(const conduit_node* params)
   }
 
   impl_check(initialize);
-  enum catalyst_status status = (*impl->initialize)(params);
-
-  if (status == catalyst_status_ok)
-  {
-    // Initialize async support (will check if enabled via params/env)
-    catalyst_async_initialize(params);
-  }
-
-  return status;
+  // Run impl->initialize on the worker thread (when async is enabled) so that
+  // VTK/Python are initialized on the same thread that will call impl->execute.
+  // When async is disabled, catalyst_async_initialize calls impl->initialize
+  // directly on the calling thread (no behavior change).
+  return catalyst_async_initialize(params, impl->initialize);
 }
 
 enum catalyst_status catalyst_execute(const conduit_node* params)
@@ -309,11 +305,12 @@ enum catalyst_status catalyst_execute(const conduit_node* params)
 
 enum catalyst_status catalyst_finalize(const conduit_node* params)
 {
-  // Finalize async first (flushes pending work)
-  catalyst_async_finalize(params);
-
   impl_check(finalize);
-  return (*impl->finalize)(params);
+  // Route impl->finalize through the async layer so it runs on the worker
+  // thread (same thread as impl->initialize and impl->execute).  When async
+  // is disabled, catalyst_async_finalize calls impl->finalize directly on the
+  // calling thread (no behavior change).
+  return catalyst_async_finalize(params, impl->finalize);
 }
 
 enum catalyst_status catalyst_about(conduit_node* params)

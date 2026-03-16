@@ -15,7 +15,9 @@
 #include <condition_variable>
 #include <cstdlib>
 #include <cstring>
+#include <future>
 #include <iostream>
+#include <memory>
 #include <mutex>
 #include <optional>
 #include <queue>
@@ -94,8 +96,21 @@ struct AsyncConfig
 
 struct WorkItem
 {
+  enum class Type
+  {
+    EXECUTE,
+    INITIALIZE,
+    FINALIZE
+  };
+
+  Type type = Type::EXECUTE;
   conduit::Node data;
   std::chrono::steady_clock::time_point enqueue_time;
+
+  // For INITIALIZE and FINALIZE: function to call + promise for sync return.
+  // nullptr for EXECUTE items.
+  enum catalyst_status (*impl_fn)(const conduit_node*) = nullptr;
+  std::shared_ptr<std::promise<enum catalyst_status>> sync_promise;
 };
 
 struct AsyncStats
@@ -899,7 +914,7 @@ void worker_loop()
 
     // Copy to local to avoid races on g_ctx.impl_execute
     auto impl_execute = g_ctx.impl_execute;
-    if (item && impl_execute)
+    if (item && (item->type == WorkItem::Type::EXECUTE) && impl_execute)
     {
       auto start = std::chrono::steady_clock::now();
 
@@ -952,6 +967,38 @@ void worker_loop()
       }
 
       g_ctx.stats.timesteps_processed++;
+    }
+    else if (item &&
+      (item->type == WorkItem::Type::INITIALIZE || item->type == WorkItem::Type::FINALIZE) &&
+      item->impl_fn)
+    {
+      // Synchronous init/finalize items: run impl_fn on the worker thread
+      // so that VTK (GC, Python interpreter) are always on the same thread
+      // as impl_execute.  The caller holds a future and waits below.
+      enum catalyst_status status = catalyst_status_ok;
+      {
+        std::scoped_lock impl_lock(g_ctx.impl_mutex);
+        conduit_node* c_node = conduit::c_node(&item->data);
+        try
+        {
+          status = (*item->impl_fn)(c_node);
+        }
+        catch (const std::exception& e)
+        {
+          std::cerr << "catalyst_async: Worker caught exception in init/finalize: " << e.what()
+                    << "\n";
+          status = catalyst_status_error_incomplete;
+        }
+        catch (...)
+        {
+          std::cerr << "catalyst_async: Worker caught unknown exception in init/finalize\n";
+          status = catalyst_status_error_incomplete;
+        }
+      }
+      if (item->sync_promise)
+      {
+        item->sync_promise->set_value(status);
+      }
     }
   }
 }
@@ -1210,7 +1257,8 @@ void print_stats()
 extern "C"
 {
 
-  enum catalyst_status catalyst_async_initialize(const conduit_node* params)
+  enum catalyst_status catalyst_async_initialize(
+    const conduit_node* params, enum catalyst_status (*impl_initialize)(const conduit_node*))
   {
     if (g_ctx.initialized)
     {
@@ -1237,7 +1285,8 @@ extern "C"
         std::cerr << "catalyst_async: Async mode not enabled\n";
       }
       g_ctx.initializing = false;
-      return catalyst_status_ok;
+      // Run impl_initialize synchronously on the calling thread (unchanged behavior)
+      return (*impl_initialize)(params);
     }
 
     // Reset state
@@ -1271,12 +1320,66 @@ extern "C"
       atexit_registered = true;
     }
 
+    // Run impl_initialize on the worker thread and wait for completion.
+    //
+    // Fixes issue #50: Python's interpreter state is thread-local -- bound to
+    // whichever thread calls impl_initialize. Previously impl_finalize ran on
+    // the simulation main thread and crashed calling back into Python (SIGSEGV).
+    // Running all three impl calls on the same worker thread keeps Python's
+    // thread state consistent.
+    //
+    // vtkGarbageCollector records the "main thread" at dlopen() time, before
+    // this runs, so the debug-mode GC assertion is not resolved here. In
+    // practice this is benign: vtkAlgorithm/vtkExecutive cycles are created
+    // once at pipeline construction and held for the session lifetime -- a
+    // fixed overhead independent of timestep count. A proper fix requires
+    // vtkGarbageCollector::SetMainThread() as a separate VTK enhancement.
+    //
+    // catalyst_initialize() remains synchronous from the simulation's perspective.
+    {
+      auto promise = std::make_shared<std::promise<enum catalyst_status>>();
+      auto future = promise->get_future();
+
+      WorkItem item;
+      item.type = WorkItem::Type::INITIALIZE;
+      item.impl_fn = impl_initialize;
+      item.sync_promise = promise;
+      if (params)
+      {
+        conduit::cpp_node(const_cast<conduit_node*>(params))->compact_to(item.data);
+      }
+
+      {
+        std::scoped_lock lock(g_ctx.queue_mutex);
+        g_ctx.work_queue.push(std::move(item));
+      }
+      g_ctx.queue_cv.notify_one();
+
+      enum catalyst_status init_status = future.get(); // blocks until worker runs it
+      if (init_status != catalyst_status_ok)
+      {
+        // impl_initialize failed — tear down the worker cleanly
+        {
+          std::scoped_lock lock(g_ctx.queue_mutex);
+          g_ctx.should_stop = true;
+        }
+        g_ctx.queue_cv.notify_all();
+        if (g_ctx.worker_thread.joinable())
+        {
+          g_ctx.worker_thread.join();
+        }
+        g_ctx.initializing = false;
+        return init_status;
+      }
+    }
+
     g_ctx.initialized = true;
     g_ctx.initializing = false;
 
     if (g_ctx.config.verbose)
     {
-      std::cerr << "catalyst_async: Initialized (queue_depth=" << g_ctx.config.queue_depth << ")\n";
+      std::cerr << "catalyst_async: Initialized (queue_depth=" << g_ctx.config.queue_depth
+                << ", impl_initialize ran on worker thread)\n";
     }
 
     return catalyst_status_ok;
@@ -1441,15 +1544,48 @@ extern "C"
     return g_ctx.work_queue.size();
   }
 
-  void catalyst_async_finalize(const conduit_node* /* params */)
+  enum catalyst_status catalyst_async_finalize(
+    const conduit_node* params, enum catalyst_status (*impl_finalize)(const conduit_node*))
   {
     if (!g_ctx.initialized)
     {
-      return;
+      // Async was not enabled; caller is responsible for running impl_finalize
+      // on the calling thread (unchanged synchronous behavior).
+      return (*impl_finalize)(params);
     }
 
+    // Flush all pending execute items first.
     catalyst_async_flush();
 
+    // Enqueue FINALIZE on the worker thread and wait for completion.
+    // impl_finalize must run on the same thread as impl_initialize and
+    // impl_execute to satisfy Python interpreter thread-state requirements
+    // (PyUnicode_FromString and friends assert the calling thread owns the
+    // interpreter state, which was set up on the worker in impl_initialize).
+    enum catalyst_status fin_status = catalyst_status_ok;
+    {
+      auto promise = std::make_shared<std::promise<enum catalyst_status>>();
+      auto future = promise->get_future();
+
+      WorkItem item;
+      item.type = WorkItem::Type::FINALIZE;
+      item.impl_fn = impl_finalize;
+      item.sync_promise = promise;
+      if (params)
+      {
+        conduit::cpp_node(const_cast<conduit_node*>(params))->compact_to(item.data);
+      }
+
+      {
+        std::scoped_lock lock(g_ctx.queue_mutex);
+        g_ctx.work_queue.push(std::move(item));
+      }
+      g_ctx.queue_cv.notify_one();
+
+      fin_status = future.get(); // blocks until worker runs it
+    }
+
+    // Now safe to stop the worker.
     {
       std::scoped_lock lock(g_ctx.queue_mutex);
       g_ctx.should_stop = true;
@@ -1468,6 +1604,8 @@ extern "C"
 #ifdef CATALYST_USE_MPI
     g_ctx.mpi_comm = MPI_COMM_NULL;
 #endif
+
+    return fin_status;
   }
 
   void catalyst_async_abort(void)
