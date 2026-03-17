@@ -45,7 +45,18 @@ extern "C"
    * @param params Configuration node (may be NULL)
    * @return catalyst_status_ok on success
    */
-  enum catalyst_status catalyst_async_initialize(const conduit_node* params);
+  /**
+   * Start the worker thread and run impl_initialize on it, blocking until
+   * complete. Ensures Python's interpreter state and all VTK initialization
+   * occur on the same thread as impl_execute and impl_finalize (fixes #50).
+   * When async is disabled, calls impl_initialize directly on the calling thread.
+   *
+   * @param params          Configuration node (may be NULL)
+   * @param impl_initialize The implementation's initialize function
+   * @return Status from impl_initialize
+   */
+  enum catalyst_status catalyst_async_initialize(
+    const conduit_node* params, enum catalyst_status (*impl_initialize)(const conduit_node*));
 
   /**
    * Check if async mode is currently enabled.
@@ -98,16 +109,16 @@ extern "C"
   size_t catalyst_async_queue_depth(void);
 
   /**
-   * Finalize async support.
+   * Flush pending work, run impl_finalize on the worker thread, then stop it.
+   * Mirrors catalyst_async_initialize: all impl calls share the same thread.
+   * When async is disabled, calls impl_finalize directly on the calling thread.
    *
-   * This will:
-   * 1. Flush any pending work
-   * 2. Stop the worker thread
-   * 3. Print statistics (if verbose)
-   *
-   * @param params Finalize parameters (may be NULL)
+   * @param params        Finalize parameters (may be NULL)
+   * @param impl_finalize The implementation's finalize function
+   * @return Status from impl_finalize
    */
-  void catalyst_async_finalize(const conduit_node* params);
+  enum catalyst_status catalyst_async_finalize(
+    const conduit_node* params, enum catalyst_status (*impl_finalize)(const conduit_node*));
 
   /**
    * Abort async execution immediately without draining the queue.
