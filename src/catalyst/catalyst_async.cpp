@@ -96,7 +96,7 @@ struct AsyncConfig
 
 struct WorkItem
 {
-  enum class Type
+  enum class Type : std::uint8_t
   {
     EXECUTE,
     INITIALIZE,
@@ -444,7 +444,12 @@ void copy_gpu_arrays_to_cpu_impl(conduit::Node& node)
     const void* ptr = node.data_ptr();
     if (is_device_pointer(ptr))
     {
-      const size_t nbytes = node.dtype().bytes_compact();
+      // strided_bytes() returns the memory extent EXCLUDING the offset.
+      // We must copy offset + strided_bytes() bytes starting from data_ptr()
+      // (the base pointer without offset) so that compact_to can read every
+      // element at its correct position: buf[offset + i*stride].
+      const size_t nbytes = static_cast<size_t>(node.dtype().offset()) +
+        static_cast<size_t>(node.dtype().strided_bytes());
 
       // Allocate CPU buffer
       g_gpu_copy_buffers.emplace_back();
@@ -988,8 +993,8 @@ void worker_loop()
       // as impl_execute.  The caller holds a future and waits below.
       enum catalyst_status status = catalyst_status_ok;
       {
-        std::scoped_lock impl_lock(g_ctx.impl_mutex);
-        conduit_node* c_node = conduit::c_node(&item->data);
+        const std::scoped_lock impl_lock(g_ctx.impl_mutex);
+        const conduit_node* c_node = conduit::c_node(&item->data);
         try
         {
           status = (*item->impl_fn)(c_node);
@@ -1363,17 +1368,17 @@ extern "C"
       }
 
       {
-        std::scoped_lock lock(g_ctx.queue_mutex);
+        const std::scoped_lock lock(g_ctx.queue_mutex);
         g_ctx.work_queue.push(std::move(item));
       }
       g_ctx.queue_cv.notify_one();
 
-      enum catalyst_status init_status = future.get(); // blocks until worker runs it
+      const enum catalyst_status init_status = future.get(); // blocks until worker runs it
       if (init_status != catalyst_status_ok)
       {
         // impl_initialize failed — tear down the worker cleanly
         {
-          std::scoped_lock lock(g_ctx.queue_mutex);
+          const std::scoped_lock lock(g_ctx.queue_mutex);
           g_ctx.should_stop = true;
         }
         g_ctx.queue_cv.notify_all();
@@ -1587,7 +1592,7 @@ extern "C"
       }
 
       {
-        std::scoped_lock lock(g_ctx.queue_mutex);
+        const std::scoped_lock lock(g_ctx.queue_mutex);
         g_ctx.work_queue.push(std::move(item));
       }
       g_ctx.queue_cv.notify_one();
