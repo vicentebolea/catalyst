@@ -184,12 +184,7 @@ struct GpuRuntime
   static constexpr unsigned int CU_MEMORYTYPE_DEVICE = 2;
   static constexpr unsigned int CU_MEMORYTYPE_UNIFIED = 4;
 
-  // HIP Runtime API constants (from hip_runtime_api.h)
-  // Note: HIP uses different values than CUDA runtime!
-  // hipMemoryTypeHost = 0, hipMemoryTypeDevice = 1, hipMemoryTypeManaged = 3
-  static constexpr int HIP_MEMORY_TYPE_HOST = 0;
-  static constexpr int HIP_MEMORY_TYPE_DEVICE = 1;
-  static constexpr int HIP_MEMORY_TYPE_MANAGED = 3;
+  // HIP Runtime API constants
   // hipMemcpyDeviceToHost = 2
   static constexpr int HIP_MEMCPY_DEVICE_TO_HOST = 2;
 };
@@ -403,9 +398,9 @@ void init_gpu_runtime()
   //   unsigned allocationFlags;
   struct HipPointerAttribute
   {
-    int memoryType;
+    int memoryType; // hipMemoryType - value varies by ROCm version, avoid using
     int device;
-    void* devicePointer;
+    void* devicePointer; // non-null iff pointer is device-accessible
     void* hostPointer;
     int isManaged;
   };
@@ -417,7 +412,12 @@ void init_gpu_runtime()
   {
     return false;
   }
-  return (attrs.memoryType == GpuRuntime::HIP_MEMORY_TYPE_DEVICE || attrs.isManaged != 0);
+  // Use devicePointer rather than memoryType to detect device memory.
+  // The hipMemoryType enum values shifted in ROCm 6.0 (hipMemoryTypeDevice
+  // changed from 1 to 2), so checking the type value is fragile.
+  // devicePointer is non-null for all device-accessible memory across all
+  // ROCm versions.
+  return (attrs.devicePointer != nullptr);
 }
 
 // Temporary buffer storage for GPU->CPU copies (freed after compact_to)
