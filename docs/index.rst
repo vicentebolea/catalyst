@@ -14,6 +14,7 @@ ParaView 5.9. For earlier versions of Catalyst, please refer to earlier `docs`_.
    architecture
    async_execution
    build_and_install
+   compatibility
    for_simulation_developers
    for_implementation_developers
    catalyst_replay
