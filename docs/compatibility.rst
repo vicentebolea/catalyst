@@ -75,12 +75,5 @@ versions, node operations will silently return incorrect results, causing
 In practice, the Conduit struct layout has been stable across recent versions.
 However, this is not guaranteed across all future releases. The safest
 approach is to ensure that ``libcatalyst.so`` and the implementation are
-built from the same Catalyst source or release tag, which guarantees they
-embed identical Conduit versions.
-
-.. note::
-
-   This is why Catalyst issues point releases (e.g., ``v2.1.0``) rather than
-   encouraging users to build from arbitrary master commits. A release tag
-   guarantees a consistent Conduit version across all components built from
-   that release.
+built from the same Catalyst source, which guarantees they embed identical
+Conduit versions.
