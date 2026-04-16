@@ -13,6 +13,7 @@
 
 #include "conduit_node.h"
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -251,6 +252,14 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
     : 0; // version < 2 never supported an external conduit
   if (conduit_is_external != CATALYST_WITH_EXTERNAL_CONDUIT)
   {
+    fprintf(stderr,
+      "catalyst error: Conduit configuration mismatch between libcatalyst and '%s'.\n"
+      "  libcatalyst built with CATALYST_WITH_EXTERNAL_CONDUIT=%d\n"
+      "  implementation built with CATALYST_WITH_EXTERNAL_CONDUIT=%" PRIu64 "\n"
+      "  Both must be built with the same Conduit configuration.\n",
+      loaded_impl_path ? loaded_impl_path : "(unknown)", (int)CATALYST_WITH_EXTERNAL_CONDUIT,
+      conduit_is_external);
+    impl = NULL;
     return catalyst_status_error_conduit_mismatch;
   }
 
