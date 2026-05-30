@@ -23,6 +23,11 @@
 #include <future>
 #include <string>
 
+#ifdef __linux__
+#include <pthread.h>
+#include <sched.h>
+#endif
+
 static size_t g_test_failures = 0;
 
 #define CHECK(cond, msg)                                                                           \
@@ -475,12 +480,31 @@ static void test_async_affinity_auto()
 
 static void test_async_affinity_manual()
 {
+  // Detect a core that this process is actually allowed to use, since CI
+  // environments (e.g. PowerPC) may not include core 0 in the cpuset.
+  int target_core = 0;
+#ifdef __linux__
+  cpu_set_t allowed;
+  CPU_ZERO(&allowed);
+  if (sched_getaffinity(0, sizeof(allowed), &allowed) == 0)
+  {
+    for (int i = 0; i < CPU_SETSIZE; i++)
+    {
+      if (CPU_ISSET(i, &allowed))
+      {
+        target_core = i;
+        break;
+      }
+    }
+  }
+#endif
+
   conduit_cpp::Node params;
   params["catalyst/async/enabled"] = 1;
   params["catalyst/async/queue_depth"] = 2;
   params["catalyst/async/verbose"] = 1;
   params["catalyst/async/affinity/mode"] = "manual";
-  params["catalyst/async/affinity/worker_cores"].append().set(0);
+  params["catalyst/async/affinity/worker_cores"].append().set(target_core);
 
   catalyst_initialize(conduit_cpp::c_node(&params));
   CHECK(is_async_enabled() == 1, "Async should be enabled with manual affinity");
@@ -498,11 +522,12 @@ static void test_async_affinity_manual()
   CHECK(
     info["catalyst/async/affinity_mode"].as_string() == "manual", "Affinity mode should be manual");
 
-  // Check if pinning occurred to core 0
+  // Check that pinning occurred to the requested core
   const int pinned_core = info["catalyst/async/worker_pinned_core"].to_int();
 
 #if defined(__linux__) || defined(_WIN32)
-  CHECK(pinned_core == 0, "Worker should be pinned to core 0 on Linux/Windows");
+  CHECK(
+    pinned_core == target_core, "Worker should be pinned to the requested core on Linux/Windows");
 #else
   // On macOS: hwloc can detect topology but cannot set thread affinity.
   // Pinning will fail even with hwloc available, so just verify the value is reported.
