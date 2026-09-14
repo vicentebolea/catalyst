@@ -50,6 +50,8 @@ What this means in practice:
   without a matching ``libpython`` present.
 - Plain C, C++ and Fortran simulations are unaffected by the Python
   configuration of the ``libcatalyst`` they link against.
+- Consumers of the installed CMake package do not need to find Python
+  themselves.
 - ``PyCatalystConduit_Node_Wrap`` returns ``nullptr`` when no interpreter is
   present in the process, which is its existing contract.
 

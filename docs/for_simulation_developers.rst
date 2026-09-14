@@ -50,6 +50,9 @@ Now, when you run ``cmake`` on your simulation code, a new cache variable
 to help CMake find where you built Catalyst. That file can be found in either the
 Catalyst build directory or the Catalyst install directory.
 
+Note that ``find_package(catalyst)`` does not provide Python to your project,
+because ``libcatalyst`` links no ``libpython``. See :doc:`runtime_linkage`.
+
 
 Using `make` (or similar)
 -------------------------
