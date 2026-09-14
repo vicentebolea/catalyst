@@ -1,4 +1,7 @@
-if (NOT APPLE AND UNIX)
+if (APPLE)
+  list(APPEND CMAKE_INSTALL_RPATH
+    "@loader_path/..")
+elseif (UNIX)
   list(APPEND CMAKE_INSTALL_RPATH
     "$ORIGIN/..")
 endif ()
