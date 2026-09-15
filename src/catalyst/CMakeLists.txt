@@ -45,7 +45,9 @@ configure_file(
 
 set(private_headers
   catalyst_async.h
-  catalyst_dump_node.hpp)
+  catalyst_dump_node.hpp
+  catalyst_mpi_ops.h
+  catalyst_search_path.h)
 
 #------------------------------------------------------------
 # Add an interface library just to setup include dirs.
@@ -69,6 +71,7 @@ add_library(catalyst
   catalyst_async.cpp
   catalyst_stub.cpp
   catalyst_conduit_abi_${catalyst_conduit_state}.c
+  catalyst_mpi_load.c
   catalyst_python_tools.cpp
   ${headers}
   ${private_headers})

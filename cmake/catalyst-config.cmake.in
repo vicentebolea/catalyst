@@ -17,6 +17,8 @@ set(CATALYST_USE_MPI "@CATALYST_USE_MPI@")
 set(CATALYST_PYTHONPATH "${CMAKE_CURRENT_LIST_DIR}/../../../@CATALYST_PYTHONPATH@")
 set(CATALYST_USE_PYTHON "@CATALYST_WRAP_PYTHON@")
 
+# `libcatalyst` no longer links MPI itself, but adaptors and implementations
+# commonly do, and they rely on this package providing `MPI::MPI_C`.
 if (CATALYST_USE_MPI)
   include(CMakeFindDependencyMacro)
   find_dependency(MPI COMPONENTS C)
