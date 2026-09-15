@@ -32,6 +32,9 @@ extern "C"
 /** Passed as `comm_f` to operate on the equivalent of `MPI_COMM_WORLD`. */
 #define CATALYST_MPI_COMM_WORLD ((int64_t)-1)
 
+/** Stored in place of a communicator when MPI is unavailable or not in use. */
+#define CATALYST_MPI_NO_COMM ((int64_t)-2)
+
   enum catalyst_mpi_result
   {
     /** Returned by every operation on success. */

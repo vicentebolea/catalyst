@@ -4,13 +4,8 @@
  */
 
 /**
- * `libcatalyst_mpi`: the only part of Catalyst compiled against a real
- * `mpi.h`.
- *
- * `libcatalyst` itself names no MPI type or constant, so a single
- * `libcatalyst` binary works against whichever MPI is present. This module is
- * built per-MPI alongside it and loaded at runtime. `MPI_COMM_WORLD`,
- * `MPI_INT` and `MPI_MIN` are whatever the header says they are.
+ * `libcatalyst_mpi`: the only part of Catalyst compiled against a real `mpi.h`.
+ * Built per-MPI and loaded at runtime; see `catalyst_mpi_ops.h`.
  */
 
 #include <mpi.h>
@@ -28,6 +23,10 @@ static MPI_Comm resolve_comm(int64_t comm_f)
   if (comm_f == CATALYST_MPI_COMM_WORLD)
   {
     return MPI_COMM_WORLD;
+  }
+  if (comm_f == CATALYST_MPI_NO_COMM)
+  {
+    return MPI_COMM_NULL;
   }
   return MPI_Comm_f2c((MPI_Fint)comm_f);
 }

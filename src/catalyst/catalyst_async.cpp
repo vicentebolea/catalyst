@@ -25,9 +25,7 @@
 #include <thread>
 #include <vector>
 
-#ifdef CATALYST_USE_MPI
-#include <mpi.h>
-#endif
+#include "catalyst_mpi_ops.h"
 
 #ifdef __linux__
 #include <pthread.h>
@@ -214,33 +212,17 @@ struct CatalystAsyncContext
   // Worker thread affinity tracking
   std::atomic<int> worker_pinned_core{ -1 }; // -1 = not pinned
 
-#ifdef CATALYST_USE_MPI
-  MPI_Comm mpi_comm = MPI_COMM_NULL;
-#endif
+  int64_t mpi_comm = CATALYST_MPI_NO_COMM;
 };
 
 CatalystAsyncContext g_ctx;
 
-#ifdef CATALYST_USE_MPI
-// Check if MPI is initialized and not yet finalized
-[[nodiscard]] bool mpi_is_usable()
+// The MPI operations module, or nullptr when Catalyst was built without MPI.
+[[nodiscard]] const struct catalyst_mpi_ops* mpi_ops()
 {
-  int initialized = 0;
-  int finalized = 0;
-  if (MPI_Initialized(&initialized) != MPI_SUCCESS)
-  {
-    return false;
-  }
-  if (initialized)
-  {
-    if (MPI_Finalized(&finalized) != MPI_SUCCESS)
-    {
-      return false;
-    }
-  }
-  return initialized && !finalized;
+  const struct catalyst_mpi_ops* ops = catalyst_mpi_get_loaded_ops();
+  return (ops && ops->is_usable()) ? ops : nullptr;
 }
-#endif
 
 // ============================================================================
 // GPU runtime initialization (dlopen-based)
@@ -1193,31 +1175,24 @@ void load_config(const conduit_node* params)
     }
   }
 
-#ifdef CATALYST_USE_MPI
-  if (mpi_is_usable())
+  if (const struct catalyst_mpi_ops* ops = mpi_ops())
   {
-    if (node.has_path("catalyst/mpi_comm") && node["catalyst/mpi_comm"].dtype().is_integer())
-    {
-      g_ctx.mpi_comm = MPI_Comm_f2c(node["catalyst/mpi_comm"].to_int());
-    }
-    else
-    {
-      g_ctx.mpi_comm = MPI_COMM_WORLD;
-    }
+    const bool provided =
+      node.has_path("catalyst/mpi_comm") && node["catalyst/mpi_comm"].dtype().is_integer();
+    g_ctx.mpi_comm =
+      provided ? static_cast<int64_t>(node["catalyst/mpi_comm"].to_int()) : CATALYST_MPI_COMM_WORLD;
 
     if (g_ctx.config.verbose)
     {
-      int rank;
-      MPI_Comm_rank(g_ctx.mpi_comm, &rank);
-      if (rank == 0)
+      int rank = 0;
+      if (ops->comm_rank(g_ctx.mpi_comm, &rank) == CATALYST_MPI_OK && rank == 0)
       {
         std::cerr << "catalyst_async: MPI enabled, using "
-                  << (node.has_path("catalyst/mpi_comm") ? "provided" : "MPI_COMM_WORLD")
+                  << (provided ? "provided" : "MPI_COMM_WORLD")
                   << " communicator for synchronized skip decisions\n";
       }
     }
   }
-#endif
 }
 
 void print_stats()
@@ -1227,15 +1202,19 @@ void print_stats()
     return;
   }
 
-#ifdef CATALYST_USE_MPI
   int rank = 0;
-  if (g_ctx.mpi_comm != MPI_COMM_NULL)
+  if (g_ctx.mpi_comm != CATALYST_MPI_NO_COMM)
   {
-    MPI_Comm_rank(g_ctx.mpi_comm, &rank);
+    if (const struct catalyst_mpi_ops* ops = mpi_ops())
+    {
+      if (ops->comm_rank(g_ctx.mpi_comm, &rank) != CATALYST_MPI_OK)
+      {
+        // Only decides which rank prints the summary, so carry on as rank 0.
+        std::cerr << "catalyst_async: could not determine MPI rank for statistics\n";
+        rank = 0;
+      }
+    }
   }
-#else
-  const int rank = 0;
-#endif
 
   if (rank == 0)
   {
@@ -1432,20 +1411,24 @@ extern "C"
       local_can_enqueue = (g_ctx.work_queue.size() < g_ctx.config.queue_depth) ? 1 : 0;
     }
 
-#ifdef CATALYST_USE_MPI
     // CRITICAL: All ranks must make the same enqueue/skip decision,
     // because the Catalyst implementation (e.g., ParaView) may call
     // MPI collectives during execute. If ranks disagree, we deadlock.
-    //
-    // MPI_MIN: if ANY rank's queue is full, ALL ranks skip.
     int global_can_enqueue = local_can_enqueue;
-    if (g_ctx.mpi_comm != MPI_COMM_NULL)
+    if (g_ctx.mpi_comm != CATALYST_MPI_NO_COMM)
     {
-      MPI_Allreduce(&local_can_enqueue, &global_can_enqueue, 1, MPI_INT, MPI_MIN, g_ctx.mpi_comm);
+      if (const struct catalyst_mpi_ops* ops = mpi_ops())
+      {
+        if (ops->allreduce_min_int(g_ctx.mpi_comm, local_can_enqueue, &global_can_enqueue) !=
+          CATALYST_MPI_OK)
+        {
+          // Every rank that gets here makes the same choice, and skipping never
+          // enters the implementation's collectives.
+          std::cerr << "catalyst_async: MPI reduction failed; skipping this timestep\n";
+          global_can_enqueue = 0;
+        }
+      }
     }
-#else
-    const int global_can_enqueue = local_can_enqueue;
-#endif
 
     if (!global_can_enqueue)
     {
@@ -1616,9 +1599,7 @@ extern "C"
 
     g_ctx.initialized = false;
     g_ctx.impl_execute = nullptr;
-#ifdef CATALYST_USE_MPI
-    g_ctx.mpi_comm = MPI_COMM_NULL;
-#endif
+    g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
 
     return fin_status;
   }
@@ -1650,9 +1631,7 @@ extern "C"
 
     g_ctx.initialized = false;
     g_ctx.impl_execute = nullptr;
-#ifdef CATALYST_USE_MPI
-    g_ctx.mpi_comm = MPI_COMM_NULL;
-#endif
+    g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
   }
 
   void catalyst_async_get_stats(conduit_node* stats)

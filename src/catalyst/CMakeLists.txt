@@ -172,15 +172,10 @@ target_compile_features(catalyst
 add_library(catalyst::catalyst ALIAS catalyst)
 
 if (CATALYST_USE_MPI)
-  target_link_libraries(catalyst PRIVATE MPI::MPI_C)
+  # No MPI link: MPI is reached only through the module in src/mpi-shim, which
+  # this definition makes `catalyst_initialize` require.
   target_compile_definitions(catalyst
-    PRIVATE CATALYST_USE_MPI
-            # force `mpi.h` to not include cxx components to avoid
-            # unnecessary dependency on MPI_CPP
-            MPICH_SKIP_MPICXX
-            OMPI_SKIP_MPICXX
-            MPI_NO_CPPBIND
-            _MPICC_H)
+    PRIVATE CATALYST_USE_MPI)
 endif ()
 
 c_install_targets(catalyst catalyst_headers)
