@@ -19,6 +19,7 @@ include(CTest)
 if (BUILD_TESTING)
   add_executable(replay_ranks_mismatch_driver "${src_dir}/common_replay_driver.cxx")
 
+  find_package(MPI COMPONENTS C REQUIRED)
   target_link_libraries(replay_ranks_mismatch_driver
     PRIVATE
       catalyst::catalyst

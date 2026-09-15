@@ -93,6 +93,8 @@ What this means in practice:
   every rank behaving as rank 0.
 - The simulation still passes its communicator as a Fortran handle via
   ``catalyst/mpi_comm``, so no adaptor change is needed.
+- This package no longer provides ``MPI::MPI_C``. An adaptor that uses MPI
+  directly finds it itself, as it would any other dependency of its own.
 
 This does not let a simulation using one MPI interoperate with an
 implementation using another. There is still only one MPI in a process. What

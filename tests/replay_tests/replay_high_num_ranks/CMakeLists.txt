@@ -18,6 +18,7 @@ catalyst_implementation(
 include(CTest)
 if (BUILD_TESTING)
   add_executable(high_num_ranks_driver "${src_dir}/common_replay_driver.cxx")
+  find_package(MPI COMPONENTS C REQUIRED)
   target_link_libraries(high_num_ranks_driver
     PRIVATE
       catalyst::catalyst
