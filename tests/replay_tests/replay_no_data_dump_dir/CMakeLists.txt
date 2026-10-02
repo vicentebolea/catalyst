@@ -25,6 +25,7 @@ if (BUILD_TESTING)
 
   set(num_ranks_if_mpi 2)
   if (CATALYST_USE_MPI)
+    find_package(MPI COMPONENTS C REQUIRED)
     target_link_libraries(no_data_dump_dir_driver PRIVATE MPI::MPI_C)
     target_compile_definitions(no_data_dump_dir_driver
       PRIVATE CATALYST_USE_MPI

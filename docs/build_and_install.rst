@@ -88,6 +88,14 @@ Important `CMake`_ options that affect how Catalyst is built are:
   external dependencies will be embedded into the install tree rendering it
   unable to be relocated to other machines without similar setup.
 
+* ``CATALYST_USE_MPI`` (default: ``OFF``): Build Catalyst with MPI support.
+  ``libcatalyst`` itself links no MPI. This option additionally builds and
+  installs ``libcatalyst_mpi`` beside the implementations, which Catalyst loads
+  during ``catalyst_initialize`` and requires at runtime; if it cannot be
+  loaded, ``catalyst_initialize`` fails with
+  ``catalyst_status_error_not_found``. Note that the installed package does not
+  provide ``MPI::MPI_C`` to consumers. See :doc:`runtime_linkage`.
+
 * ``CATALYST_WRAP_PYTHON`` (default: ``OFF``): Build python wrappers for
   Catalyst and Conduit.
 

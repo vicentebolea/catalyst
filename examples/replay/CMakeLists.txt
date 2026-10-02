@@ -13,6 +13,7 @@ catalyst_implementation(
   SOURCES catalyst_example_replay_adaptor.cxx)
 
 if (CATALYST_USE_MPI)
+  find_package(MPI COMPONENTS C REQUIRED)
   target_link_libraries(catalyst_example_replay_adaptor PRIVATE MPI::MPI_C)
   target_compile_definitions(catalyst_example_replay_adaptor
     PRIVATE REPLAY_ADAPTOR_USE_MPI

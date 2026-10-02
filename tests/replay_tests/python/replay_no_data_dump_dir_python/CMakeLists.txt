@@ -19,6 +19,10 @@ catalyst_implementation(
 include(CTest)
 if (BUILD_TESTING)
   find_package(Python3 REQUIRED)
+  # These tests launch through MPIEXEC_EXECUTABLE; Catalyst does not provide it.
+  if (CATALYST_USE_MPI)
+    find_package(MPI COMPONENTS C REQUIRED)
+  endif ()
   set(no_data_dump_dir_driver "${PARENT_DIR0}/common_src_dir/common_replay_driver.py")
   
   set(mpi_prefix_or_blank)

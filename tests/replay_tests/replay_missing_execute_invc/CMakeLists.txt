@@ -26,6 +26,7 @@ if (BUILD_TESTING)
   set(num_ranks_if_mpi 1)
   set(mpi_prefix_or_blank)
   if (CATALYST_USE_MPI)
+    find_package(MPI COMPONENTS C REQUIRED)
     target_link_libraries(missing_execute_invc_driver PRIVATE MPI::MPI_C)
     target_compile_definitions(missing_execute_invc_driver
       PRIVATE CATALYST_USE_MPI

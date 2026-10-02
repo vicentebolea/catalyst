@@ -50,8 +50,11 @@ Now, when you run ``cmake`` on your simulation code, a new cache variable
 to help CMake find where you built Catalyst. That file can be found in either the
 Catalyst build directory or the Catalyst install directory.
 
-Note that ``find_package(catalyst)`` does not provide Python to your project,
-because ``libcatalyst`` links no ``libpython``. See :doc:`runtime_linkage`.
+Note that ``find_package(catalyst)`` does not provide MPI or Python to your
+project, because ``libcatalyst`` links neither. If your code uses MPI directly,
+whether linking ``MPI::MPI_C`` or launching through ``MPIEXEC_EXECUTABLE``, call
+``find_package(MPI)`` yourself as you would for any other dependency of your
+own. See :doc:`runtime_linkage`.
 
 
 Using `make` (or similar)

@@ -45,7 +45,9 @@ configure_file(
 
 set(private_headers
   catalyst_async.h
-  catalyst_dump_node.hpp)
+  catalyst_dump_node.hpp
+  catalyst_mpi_ops.h
+  catalyst_search_path.h)
 
 #------------------------------------------------------------
 # Add an interface library just to setup include dirs.
@@ -69,6 +71,7 @@ add_library(catalyst
   catalyst_async.cpp
   catalyst_stub.cpp
   catalyst_conduit_abi_${catalyst_conduit_state}.c
+  catalyst_mpi_load.c
   catalyst_python_tools.cpp
   ${headers}
   ${private_headers})
@@ -169,15 +172,10 @@ target_compile_features(catalyst
 add_library(catalyst::catalyst ALIAS catalyst)
 
 if (CATALYST_USE_MPI)
-  target_link_libraries(catalyst PRIVATE MPI::MPI_C)
+  # No MPI link: MPI is reached only through the module in src/mpi-shim, which
+  # this definition makes `catalyst_initialize` require.
   target_compile_definitions(catalyst
-    PRIVATE CATALYST_USE_MPI
-            # force `mpi.h` to not include cxx components to avoid
-            # unnecessary dependency on MPI_CPP
-            MPICH_SKIP_MPICXX
-            OMPI_SKIP_MPICXX
-            MPI_NO_CPPBIND
-            _MPICC_H)
+    PRIVATE CATALYST_USE_MPI)
 endif ()
 
 c_install_targets(catalyst catalyst_headers)

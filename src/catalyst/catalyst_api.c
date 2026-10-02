@@ -9,6 +9,8 @@
 #include "catalyst_api.h"
 #include "catalyst_async.h"
 #include "catalyst_impl.h"
+#include "catalyst_mpi_ops.h"
+#include "catalyst_search_path.h"
 #include "catalyst_version.h"
 
 #include "conduit_node.h"
@@ -28,7 +30,6 @@ typedef void* catalyst_handle_t;
 #define PATH_SEPARATOR ':'
 #endif
 
-static char* default_search_path();
 static catalyst_handle_t handle_default();
 static catalyst_handle_t handle_open(const char* directory, const char* libname);
 static void* handle_load_symbol(catalyst_handle_t handle, const char* symbol);
@@ -192,7 +193,7 @@ static enum catalyst_status catalyst_load(const conduit_node* params)
     // Search the default path
     if (!handle_is_valid(handle))
     {
-      char* beside_catalyst = default_search_path();
+      char* beside_catalyst = catalyst_default_search_path();
       char* default_paths[] = {
         beside_catalyst,
         NULL,
@@ -286,6 +287,15 @@ enum catalyst_status catalyst_initialize(const conduit_node* params)
     char* debug_env = getenv("CATALYST_DEBUG");
     debug_flag = debug_env && *debug_env;
   }
+
+#ifdef CATALYST_USE_MPI
+  // Fatal rather than a fallback: without the module every rank would behave as
+  // rank 0. catalyst_mpi_load() reports why it failed.
+  if (catalyst_mpi_load() != 0)
+  {
+    return catalyst_status_error_not_found;
+  }
+#endif
 
   if (!impl)
   {
@@ -389,7 +399,7 @@ enum catalyst_status catalyst_results(conduit_node* params)
 }
 
 #ifdef _WIN32
-char* default_search_path()
+char* catalyst_default_search_path(void)
 {
   MEMORY_BASIC_INFORMATION mbi;
   VirtualQuery(catalyst_initialize, &mbi, sizeof(mbi));
@@ -492,7 +502,7 @@ int handle_is_valid(catalyst_handle_t handle)
   return handle != NULL;
 }
 #else
-char* default_search_path()
+char* catalyst_default_search_path(void)
 {
   catalyst_handle_t handle = dlsym(RTLD_DEFAULT, "catalyst_initialize");
   if (!handle)

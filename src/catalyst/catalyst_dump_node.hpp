@@ -6,9 +6,7 @@
 #ifndef catalyst_dump_node_h
 #define catalyst_dump_node_h
 
-#ifdef CATALYST_USE_MPI
-#include "mpi.h"
-#endif
+#include "catalyst_mpi_ops.h"
 
 #include <conduit_utils.hpp>
 
@@ -23,19 +21,36 @@
 #define PATH_SEP '/'
 #endif
 
+// Failures are reported rather than ignored: silently taking rank 0 everywhere
+// would have every rank write the same file.
 inline void get_mpi_info(int& rank, int& num_ranks)
 {
   rank = 0;
   num_ranks = 1;
-#ifdef CATALYST_USE_MPI
-  int mpi_initialized = 0;
-  MPI_Initialized(&mpi_initialized);
-  if (mpi_initialized)
+
+  const struct catalyst_mpi_ops* ops = catalyst_mpi_get_loaded_ops();
+  if (!ops)
   {
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &num_ranks);
-  }
+#ifdef CATALYST_USE_MPI
+    // catalyst_initialize refuses to proceed without the module, so this means
+    // it was unloaded underneath us.
+    fprintf(stderr, "catalyst: MPI operations unavailable; assuming serial output\n");
 #endif
+    return;
+  }
+
+  if (!ops->is_usable())
+  {
+    return;
+  }
+
+  if (ops->comm_rank(CATALYST_MPI_COMM_WORLD, &rank) != CATALYST_MPI_OK ||
+    ops->comm_size(CATALYST_MPI_COMM_WORLD, &num_ranks) != CATALYST_MPI_OK)
+  {
+    fprintf(stderr, "catalyst: could not determine MPI rank; assuming serial output\n");
+    rank = 0;
+    num_ranks = 1;
+  }
 }
 
 // Constructs the absolute path of the file to write out.
@@ -110,12 +125,18 @@ inline bool ensure_directory(const char* out_dir)
     directory_exists =
       (conduit::utils::is_directory(out_dir) || conduit::utils::create_directory(out_dir)) ? 1 : 0;
   }
-#ifdef CATALYST_USE_MPI
   if (num_ranks > 1)
   {
-    MPI_Bcast(&directory_exists, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    // Every rank must reach the same conclusion, or some will write into a
+    // directory the others believe does not exist.
+    const struct catalyst_mpi_ops* ops = catalyst_mpi_get_loaded_ops();
+    if (!ops || ops->bcast_int(CATALYST_MPI_COMM_WORLD, &directory_exists, 0) != CATALYST_MPI_OK)
+    {
+      fprintf(stderr,
+        "catalyst: could not agree across ranks on whether `%s` exists; not writing\n", out_dir);
+      return false;
+    }
   }
-#endif
   return (directory_exists == 1);
 }
 
