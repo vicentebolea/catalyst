@@ -13,7 +13,40 @@
 #include "Python.h"
 #include "conduit.hpp"          // for conduit::Node
 #include "conduit_cpp_to_c.hpp" // for conduit::c_node
-#include "conduit_python.hpp"   // PyConduit_Node_Python_Wrap
+
+#ifndef _WIN32
+#include <dlfcn.h>
+
+namespace
+{
+// Avoid linking a specific libpython; this symbol is looked up at runtime instead.
+// See docs/runtime_linkage.rst.
+void* catalyst_capsule_import(const char* name, int no_block)
+{
+  using PyCapsuleImportFn = void* (*)(const char*, int);
+  auto* capsule_import =
+    reinterpret_cast<PyCapsuleImportFn>(dlsym(RTLD_DEFAULT, "PyCapsule_Import"));
+  if (!capsule_import)
+  {
+    fprintf(stderr,
+      "catalyst: no Python interpreter found in this process; "
+      "cannot wrap a conduit node for Python\n");
+    return nullptr;
+  }
+  return capsule_import(name, no_block);
+}
+}
+
+// Preprocessor rather than a wrapper so the capsule name keeps coming from whichever
+// `conduit_python.hpp` is in use rather than being duplicated here.
+#define PyCapsule_Import catalyst_capsule_import
+#endif
+
+#include "conduit_python.hpp" // PyConduit_Node_Python_Wrap, import_conduit
+
+#ifndef _WIN32
+#undef PyCapsule_Import
+#endif
 #endif
 
 #if CATALYST_WRAP_PYTHON

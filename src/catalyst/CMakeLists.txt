@@ -97,7 +97,9 @@ if (CATALYST_WITH_EXTERNAL_CONDUIT)
     set(conduit_private_libraries 
        catalyst_python_flags
        conduit::conduit_python
-       Python3::Python)
+       # Avoid linking a specific libpython; the symbol needed is looked up at
+       # runtime. See docs/runtime_linkage.rst.
+       Python3::Module)
   endif()
 else ()
   set(conduit_public_libraries
@@ -114,7 +116,8 @@ else ()
         ${conduit_private_libraries}
        catalyst::conduit_python_cpp_headers 
        catalyst_python_flags
-       Python3::Python)
+       # See above.
+       Python3::Module)
   endif()
 endif ()
 
