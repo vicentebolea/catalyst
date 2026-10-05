@@ -48,6 +48,8 @@ extern "C"
     int (*comm_dup)(int64_t comm_f, int64_t* out_f);
     /** Frees a communicator returned by `comm_dup`. */
     int (*comm_free)(int64_t comm_f);
+    /** Sets `*is_multiple` non-zero when MPI provides `MPI_THREAD_MULTIPLE`. */
+    int (*query_thread_multiple)(int* is_multiple);
   };
 
   // NOLINTNEXTLINE(performance-enum-size): C ABI boundary; `version` above is int

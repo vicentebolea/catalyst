@@ -159,6 +159,84 @@ static void test_async_execute_and_flush()
 }
 
 // ============================================================================
+// Test: a flush request is not passed to the implementation as a timestep
+// ============================================================================
+
+static void test_flush_is_not_executed()
+{
+  conduit_cpp::Node params;
+  params["catalyst/async/enabled"] = 1;
+  params["catalyst/async/queue_depth"] = 4;
+  params["catalyst/async/verbose"] = 0;
+  params["catalyst/async/affinity/mode"] = "none";
+  catalyst_initialize(conduit_cpp::c_node(&params));
+
+  for (int t = 0; t < 3; t++)
+  {
+    conduit_node* mesh = make_test_mesh(t);
+    catalyst_execute(mesh);
+    conduit_node_destroy(mesh);
+  }
+  flush_async();
+
+  conduit_cpp::Node about;
+  catalyst_about(conduit_cpp::c_node(&about));
+  CHECK(about["catalyst/async/stats/timesteps_processed"].to_int64() == 3,
+    "A flush should not be executed as a timestep");
+
+  const conduit_cpp::Node fin;
+  catalyst_finalize(conduit_cpp::c_node(&fin));
+}
+
+// ============================================================================
+// Test: a flush waits for queued work even when the queue is full
+// ============================================================================
+
+static void test_flush_waits_with_full_queue()
+{
+  conduit_cpp::Node params;
+  params["catalyst/async/enabled"] = 1;
+  params["catalyst/async/queue_depth"] = 1;
+  params["catalyst/async/verbose"] = 0;
+  params["catalyst/async/affinity/mode"] = "none";
+  catalyst_initialize(conduit_cpp::c_node(&params));
+
+  // Hold the worker inside the first timestep, then fill the queue.
+  std::promise<void> worker_started;
+  std::promise<void> continue_signal;
+  auto started_future = worker_started.get_future();
+  auto continue_future = continue_signal.get_future();
+
+  conduit_cpp::Node mesh0;
+  mesh0["catalyst/state/timestep"] = 0;
+  mesh0["catalyst/test/sync/started_promise_ptr"] =
+    static_cast<int64_t>(reinterpret_cast<intptr_t>(&worker_started));
+  mesh0["catalyst/test/sync/continue_future_ptr"] =
+    static_cast<int64_t>(reinterpret_cast<intptr_t>(&continue_future));
+  catalyst_execute(conduit_cpp::c_node(&mesh0));
+  started_future.wait();
+
+  conduit_node* mesh1 = make_test_mesh(1);
+  catalyst_execute(mesh1);
+  conduit_node_destroy(mesh1);
+
+  auto flushed = std::async(std::launch::async, [] { flush_async(); });
+  CHECK(flushed.wait_for(std::chrono::milliseconds(200)) == std::future_status::timeout,
+    "Flush returned while timesteps were still queued");
+
+  continue_signal.set_value();
+  flushed.wait();
+
+  conduit_cpp::Node about;
+  catalyst_about(conduit_cpp::c_node(&about));
+  CHECK(about["catalyst/async/stats/timesteps_processed"].to_int64() == 2,
+    "Both queued timesteps should be processed when the flush returns");
+
+  const conduit_cpp::Node fin;
+  catalyst_finalize(conduit_cpp::c_node(&fin));
+}
+
+// ============================================================================
 // Test: rapid execute with shallow queue (exercises skip path)
 // ============================================================================
 
@@ -585,6 +663,12 @@ int main(int /*argc*/, char* /*argv*/[])
 
   fprintf(stderr, "--- test_async_execute_and_flush ---\n");
   test_async_execute_and_flush();
+
+  fprintf(stderr, "--- test_flush_is_not_executed ---\n");
+  test_flush_is_not_executed();
+
+  fprintf(stderr, "--- test_flush_waits_with_full_queue ---\n");
+  test_flush_waits_with_full_queue();
 
   fprintf(stderr, "--- test_async_rapid_execute ---\n");
   test_async_rapid_execute();

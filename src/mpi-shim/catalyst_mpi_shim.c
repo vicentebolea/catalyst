@@ -117,6 +117,14 @@ static int shim_comm_free(int64_t comm_f)
   return err == MPI_SUCCESS ? CATALYST_MPI_OK : CATALYST_MPI_FAIL;
 }
 
+static int shim_query_thread_multiple(int* is_multiple)
+{
+  int provided = MPI_THREAD_SINGLE;
+  const int err = MPI_Query_thread(&provided);
+  *is_multiple = provided == MPI_THREAD_MULTIPLE;
+  return err == MPI_SUCCESS ? CATALYST_MPI_OK : CATALYST_MPI_FAIL;
+}
+
 static const struct catalyst_mpi_ops catalyst_mpi_ops_table = {
   CATALYST_MPI_OPS_VERSION,
   shim_is_usable,
@@ -126,6 +134,7 @@ static const struct catalyst_mpi_ops catalyst_mpi_ops_table = {
   shim_bcast_int,
   shim_comm_dup,
   shim_comm_free,
+  shim_query_thread_multiple,
 };
 
 CATALYST_MPI_EXPORT const struct catalyst_mpi_ops* catalyst_mpi_get_ops(void)

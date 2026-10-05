@@ -44,7 +44,8 @@ add_test(NAME catalyst-impl-internal-conduit COMMAND test_internal_conduit_impl)
 
 add_executable(test_catalyst_async test_catalyst_async.cpp)
 target_compile_features(test_catalyst_async PRIVATE cxx_std_17)
-target_link_libraries(test_catalyst_async catalyst::catalyst)
+find_package(Threads REQUIRED)
+target_link_libraries(test_catalyst_async catalyst::catalyst Threads::Threads)
 add_test(NAME catalyst-async COMMAND test_catalyst_async)
 catalyst_test_use_stub_backend(catalyst-async)
 
@@ -61,6 +62,16 @@ if (CATALYST_USE_MPI)
     PROPERTIES
       SKIP_RETURN_CODE 125)
   catalyst_test_use_stub_backend(catalyst-async-mpi)
+
+  add_executable(test_catalyst_async_thread_level test_catalyst_async_thread_level.c)
+  target_link_libraries(test_catalyst_async_thread_level catalyst::catalyst MPI::MPI_C)
+  foreach (level IN ITEMS single multiple)
+    add_test(NAME catalyst-async-thread-level-${level}
+      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 1
+              $<TARGET_FILE:test_catalyst_async_thread_level> ${level})
+    set_tests_properties(catalyst-async-thread-level-${level} PROPERTIES SKIP_RETURN_CODE 125)
+    catalyst_test_use_stub_backend(catalyst-async-thread-level-${level})
+  endforeach ()
 endif ()
 
 

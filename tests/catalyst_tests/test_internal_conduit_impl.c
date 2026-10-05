@@ -51,13 +51,13 @@ int main(int argc, char* argv[])
   (void)argc;
   (void)argv;
 
-  int ret = EXIT_SUCCESS;
-
-  int test_ret = test_internal_conduit_impl();
-  if (test_ret != EXIT_SUCCESS)
+  // main must not compile to the same code as test_internal_conduit_impl: with
+  // -O2 or higher, Apple's linker folds identical functions and then loses the
+  // entry point (LC_MAIN entryoff 0), so the test crashes before main runs.
+  const int ret = test_internal_conduit_impl();
+  if (ret != EXIT_SUCCESS)
   {
-    ret = test_ret;
+    fprintf(stderr, "test_internal_conduit_impl failed\n");
   }
-
   return ret;
 }

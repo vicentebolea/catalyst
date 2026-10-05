@@ -1303,6 +1303,34 @@ void print_stats()
   }
 }
 
+// Async execution has two threads making MPI calls at once: the skip decision on
+// the simulation's thread and the implementation's collectives on the worker. MPI
+// allows that only under MPI_THREAD_MULTIPLE, so run synchronously when the
+// simulation initialized MPI at a lower level.
+void disable_async_without_thread_multiple()
+{
+  const struct catalyst_mpi_ops* ops = mpi_ops();
+  if (!ops)
+  {
+    return;
+  }
+
+  int is_multiple = 0;
+  if (ops->query_thread_multiple(&is_multiple) == CATALYST_MPI_OK && is_multiple)
+  {
+    return;
+  }
+
+  int rank = 0;
+  if (ops->comm_rank(g_ctx.mpi_comm, &rank) != CATALYST_MPI_OK || rank == 0)
+  {
+    std::cerr << "catalyst_async: MPI was initialized without MPI_THREAD_MULTIPLE, which async "
+                 "execution requires; running synchronously. Initialize MPI with "
+                 "MPI_Init_thread(..., MPI_THREAD_MULTIPLE, ...) to use async execution.\n";
+  }
+  g_ctx.config.enabled = false;
+}
+
 } // anonymous namespace
 
 // ============================================================================
@@ -1332,6 +1360,11 @@ extern "C"
     }
 
     load_config(params);
+
+    if (g_ctx.config.enabled)
+    {
+      disable_async_without_thread_multiple();
+    }
 
     if (!g_ctx.config.enabled)
     {
@@ -1467,6 +1500,21 @@ extern "C"
     }
     g_ctx.impl_execute = impl_execute;
 
+    // A flush waits for all queued work and is not itself queued. A node that also
+    // carries channels is then executed as a normal step and waited for.
+    const conduit::Node& request = *conduit::cpp_node(const_cast<conduit_node*>(params));
+    const bool flush = request.has_path("catalyst/async/flush") &&
+      request["catalyst/async/flush"].dtype().is_integer() &&
+      request["catalyst/async/flush"].to_int64() != 0;
+    if (flush)
+    {
+      catalyst_async_flush();
+      if (!request.has_path("catalyst/channels"))
+      {
+        return catalyst_status_ok;
+      }
+    }
+
     // ----------------------------------------------------------------
     // Determine if we can enqueue (queue has space)
     // ----------------------------------------------------------------
@@ -1541,15 +1589,9 @@ extern "C"
 
     g_ctx.queue_cv.notify_one();
 
-    // Check for flush request in params
-    // catalyst/async/flush = 1 means wait for all work to complete before returning
-    if (src.has_path("catalyst/async/flush"))
+    if (flush)
     {
-      const auto& flush_node = src["catalyst/async/flush"];
-      if (flush_node.dtype().is_integer() && flush_node.to_int64() != 0)
-      {
-        catalyst_async_flush();
-      }
+      catalyst_async_flush();
     }
 
     return catalyst_status_ok;
