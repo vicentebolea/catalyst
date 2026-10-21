@@ -16,6 +16,10 @@ target_link_libraries(catalyst_mpi
   PRIVATE
     MPI::MPI_C)
 
+# libcatalyst loads this module at runtime instead of linking it, so without
+# this, building only libcatalyst could leave a module with a stale ops table.
+add_dependencies(catalyst catalyst_mpi)
+
 target_include_directories(catalyst_mpi
   PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../catalyst"
