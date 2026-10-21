@@ -27,7 +27,10 @@ long reductions = 0;
 long wrong_results = 0;
 
 // Collectives made by each execute.
-constexpr int kReductionsPerExecute = 100;
+constexpr int kReductionsPerExecute = 200;
+// The driver reduces rank + 1. Reducing a multiple here makes a reduction of
+// this thread matched with one of the driver's on another rank give a wrong sum.
+constexpr int kValueScale = 1000;
 }
 
 //-----------------------------------------------------------------------------
@@ -51,10 +54,10 @@ enum catalyst_status catalyst_execute_async_mpi(const conduit_node* /*params*/)
   int size = 1;
   MPI_Comm_rank(comm, &rank);
   MPI_Comm_size(comm, &size);
-  const int expected = size * (size + 1) / 2;
+  const int expected = kValueScale * size * (size + 1) / 2;
   for (int i = 0; i < kReductionsPerExecute; ++i)
   {
-    const int local = rank + 1;
+    const int local = kValueScale * (rank + 1);
     int sum = 0;
     MPI_Allreduce(&local, &sum, 1, MPI_INT, MPI_SUM, comm);
     ++reductions;

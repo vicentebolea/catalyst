@@ -13,6 +13,6 @@ the skip decisions and once for the implementation, which receives it as
 but must initialize MPI with `MPI_THREAD_MULTIPLE` to use async mode, as now
 documented.
 
-`libcatalyst_mpi` provides two new operations for this, so its operations
-version is now 2: `libcatalyst` and `libcatalyst_mpi` must come from the same
-Catalyst build, as they are installed.
+`libcatalyst_mpi` provides new operations for this and for the thread-level
+check, so its operations version is now 2: `libcatalyst` and `libcatalyst_mpi`
+must come from the same Catalyst build, as they are installed.

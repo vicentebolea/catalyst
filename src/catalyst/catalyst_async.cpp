@@ -1462,7 +1462,11 @@ extern "C"
         {
           g_ctx.worker_thread.join();
         }
-        free_mpi_comms();
+        // Freeing the communicators is collective, and initialization may have
+        // succeeded on other ranks, so they are left to MPI_Finalize.
+        g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
+        g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+        g_ctx.owns_mpi_comms = false;
         g_ctx.initializing = false;
         return init_status;
       }

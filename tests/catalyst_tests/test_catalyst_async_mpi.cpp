@@ -23,26 +23,17 @@
 
 #include <mpi.h>
 
-#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 
 namespace
 {
 constexpr int kSteps = 200;
-constexpr int kReductionsPerStep = 20;
-constexpr auto kWorkPerStep = std::chrono::milliseconds(2);
-
-// Stands in for the simulation's computation, giving the worker time to run.
-void work()
-{
-  const auto deadline = std::chrono::steady_clock::now() + kWorkPerStep;
-  while (std::chrono::steady_clock::now() < deadline)
-  {
-  }
-}
+// Both threads reduce continuously so that their collectives overlap.
+constexpr int kReductionsPerStep = 200;
 }
 
+// NOLINTNEXTLINE(bugprone-exception-escape) - test code using conduit_cpp
 int main(int argc, char* argv[])
 {
   int provided = MPI_THREAD_SINGLE;
@@ -93,7 +84,6 @@ int main(int argc, char* argv[])
   long wrong_results = 0;
   for (int step = 0; step < kSteps; ++step)
   {
-    work();
     for (int i = 0; i < kReductionsPerStep; ++i)
     {
       const int local = rank + 1;
@@ -116,7 +106,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  conduit_cpp::Node fin_params;
+  const conduit_cpp::Node fin_params;
   err = catalyst_finalize(conduit_cpp::c_node(&fin_params));
   if (err != catalyst_status_ok)
   {

@@ -40,7 +40,7 @@ Design Principles
 ``catalyst_execute()`` exactly as before. The async machinery is entirely
 within ``libcatalyst``; no adaptor or implementation changes are required.
 A simulation that uses MPI must initialize it with ``MPI_THREAD_MULTIPLE``
-(see `MPI Thread Support`_).
+(see `MPI and Threads`_).
 
 **Transparent to implementations.** ParaView Catalyst, Ascent, or any custom
 implementation receives ``impl->execute()`` calls as usual, unaware that
@@ -150,30 +150,8 @@ The MPI communicator is obtained from ``params["catalyst/mpi_comm"]`` during
 ``catalyst_initialize()``. If not provided, ``MPI_COMM_WORLD`` is used as
 a fallback (which is correct for the vast majority of HPC codes).
 
-Communicators and threads
--------------------------
-
-In async mode, MPI calls are made from two threads at once: the simulation and
-the skip decisions make collectives on the simulation thread, while the
-implementation makes its own on the worker thread. Two consequences follow:
-
-- The simulation must initialize MPI with ``MPI_Init_thread`` and
-  ``MPI_THREAD_MULTIPLE``, and check that the MPI library provides it. Async
-  mode cannot be used with an MPI that does not.
-
-- Collectives must not share a communicator across the two threads. MPI matches
-  the collectives on a communicator in the order they are called on each rank,
-  whatever the thread, so a collective of the simulation thread on one rank
-  could match one of the worker thread on another rank, giving wrong results or
-  deadlocks. In async mode, the async layer therefore duplicates the
-  communicator during ``catalyst_initialize()``: one duplicate for the skip
-  decisions, and one passed to the implementation as ``catalyst/mpi_comm``.
-  Both are freed by ``catalyst_finalize()``. The simulation keeps using its
-  communicator as before; adaptors need no changes.
-
-
-MPI Thread Support
-==================
+MPI and Threads
+===============
 
 In async mode, two threads make MPI calls at the same time: the simulation's
 thread (its own communication and the skip decision above) and the worker
@@ -195,6 +173,20 @@ A simulation that does not initialize MPI before ``catalyst_initialize()`` is
 treated as single-process: the skip decision is made locally, and only the
 worker thread makes MPI calls (for example when ParaView initializes MPI
 itself).
+
+The two threads must also not make collectives on the same communicator. MPI
+matches the collectives on a communicator in the order they are called on each
+rank, whatever the thread, so a collective of the simulation thread on one rank
+could match one of the worker thread on another rank, giving wrong results or
+deadlocks. In async mode, ``catalyst_initialize()`` therefore duplicates the
+communicator: one duplicate for the skip decisions, and one passed to the
+implementation as ``catalyst/mpi_comm``. ``catalyst_finalize()`` frees both.
+The simulation keeps using its communicator as before; adaptors need no changes.
+
+The duplicate protects the collectives made through ``catalyst/mpi_comm``. A
+pipeline that makes collectives on ``MPI_COMM_WORLD`` directly, for example with
+mpi4py in a Python script, still shares it with a simulation that uses
+``MPI_COMM_WORLD``.
 
 
 Thread Safety
