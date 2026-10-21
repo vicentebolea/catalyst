@@ -148,6 +148,27 @@ The MPI communicator is obtained from ``params["catalyst/mpi_comm"]`` during
 ``catalyst_initialize()``. If not provided, ``MPI_COMM_WORLD`` is used as
 a fallback (which is correct for the vast majority of HPC codes).
 
+Communicators and threads
+-------------------------
+
+In async mode, MPI calls are made from two threads at once: the simulation and
+the skip decisions make collectives on the simulation thread, while the
+implementation makes its own on the worker thread. Two consequences follow:
+
+- The simulation must initialize MPI with ``MPI_Init_thread`` and
+  ``MPI_THREAD_MULTIPLE``, and check that the MPI library provides it. Async
+  mode cannot be used with an MPI that does not.
+
+- Collectives must not share a communicator across the two threads. MPI matches
+  the collectives on a communicator in the order they are called on each rank,
+  whatever the thread, so a collective of the simulation thread on one rank
+  could match one of the worker thread on another rank, giving wrong results or
+  deadlocks. In async mode, the async layer therefore duplicates the
+  communicator during ``catalyst_initialize()``: one duplicate for the skip
+  decisions, and one passed to the implementation as ``catalyst/mpi_comm``.
+  Both are freed by ``catalyst_finalize()``. The simulation keeps using its
+  communicator as before; adaptors need no changes.
+
 
 Thread Safety
 =============

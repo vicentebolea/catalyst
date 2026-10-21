@@ -212,7 +212,11 @@ struct CatalystAsyncContext
   // Worker thread affinity tracking
   std::atomic<int> worker_pinned_core{ -1 }; // -1 = not pinned
 
+  // Communicator for the skip decisions, and the one passed to the
+  // implementation; duplicates of the simulation's when `owns_mpi_comms`.
   int64_t mpi_comm = CATALYST_MPI_NO_COMM;
+  int64_t impl_mpi_comm = CATALYST_MPI_NO_COMM;
+  bool owns_mpi_comms = false;
 };
 
 CatalystAsyncContext g_ctx;
@@ -222,6 +226,60 @@ CatalystAsyncContext g_ctx;
 {
   const struct catalyst_mpi_ops* ops = catalyst_mpi_get_loaded_ops();
   return (ops && ops->is_usable()) ? ops : nullptr;
+}
+
+// In async mode, the simulation and the skip decisions make collectives on the
+// simulation thread while the implementation makes its own on the worker thread.
+// MPI matches the collectives on a communicator in the order they are called on
+// each rank, whatever the thread, so collectives of both threads would match
+// across ranks, giving wrong results or deadlocks. Instead, the skip decisions
+// and the implementation each use a duplicate of the simulation's communicator.
+// Duplicating is collective on that communicator, so this runs on the
+// simulation thread, before the worker starts.
+void duplicate_mpi_comms()
+{
+  g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+  g_ctx.owns_mpi_comms = false;
+  const struct catalyst_mpi_ops* ops = mpi_ops();
+  if (!ops || g_ctx.mpi_comm == CATALYST_MPI_NO_COMM)
+  {
+    return;
+  }
+
+  int64_t skip_comm = CATALYST_MPI_NO_COMM;
+  int64_t impl_comm = CATALYST_MPI_NO_COMM;
+  if (ops->comm_dup(g_ctx.mpi_comm, &skip_comm) != CATALYST_MPI_OK)
+  {
+    std::cerr << "catalyst_async: could not duplicate the MPI communicator; the skip decisions "
+                 "and the implementation share it with the simulation\n";
+    return;
+  }
+  if (ops->comm_dup(g_ctx.mpi_comm, &impl_comm) != CATALYST_MPI_OK)
+  {
+    std::cerr << "catalyst_async: could not duplicate the MPI communicator; the skip decisions "
+                 "and the implementation share it with the simulation\n";
+    ops->comm_free(skip_comm);
+    return;
+  }
+  g_ctx.mpi_comm = skip_comm;
+  g_ctx.impl_mpi_comm = impl_comm;
+  g_ctx.owns_mpi_comms = true;
+}
+
+// Frees the communicators of duplicate_mpi_comms(), once the worker is done.
+void free_mpi_comms()
+{
+  if (g_ctx.owns_mpi_comms)
+  {
+    if (const struct catalyst_mpi_ops* ops = mpi_ops())
+    {
+      ops->comm_free(g_ctx.mpi_comm);
+      ops->comm_free(g_ctx.impl_mpi_comm);
+    }
+  }
+  g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
+  g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+  g_ctx.owns_mpi_comms = false;
 }
 
 // ============================================================================
@@ -1305,6 +1363,8 @@ extern "C"
     // Detect GPU runtime (dlopen-based, no build dependency)
     init_gpu_runtime();
 
+    duplicate_mpi_comms();
+
     // Start worker thread
     g_ctx.worker_thread = std::thread(worker_loop);
 
@@ -1345,6 +1405,10 @@ extern "C"
       {
         conduit::cpp_node(const_cast<conduit_node*>(params))->compact_to(item.data);
       }
+      if (g_ctx.impl_mpi_comm != CATALYST_MPI_NO_COMM)
+      {
+        item.data["catalyst/mpi_comm"].set_int64(g_ctx.impl_mpi_comm);
+      }
 
       {
         const std::scoped_lock lock(g_ctx.queue_mutex);
@@ -1365,6 +1429,7 @@ extern "C"
         {
           g_ctx.worker_thread.join();
         }
+        free_mpi_comms();
         g_ctx.initializing = false;
         return init_status;
       }
@@ -1596,10 +1661,10 @@ extern "C"
     }
 
     print_stats();
+    free_mpi_comms();
 
     g_ctx.initialized = false;
     g_ctx.impl_execute = nullptr;
-    g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
 
     return fin_status;
   }
@@ -1631,7 +1696,11 @@ extern "C"
 
     g_ctx.initialized = false;
     g_ctx.impl_execute = nullptr;
+    // Freeing the communicators is collective, and the other ranks may not be
+    // aborting, so they are left to MPI_Finalize.
     g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
+    g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+    g_ctx.owns_mpi_comms = false;
   }
 
   void catalyst_async_get_stats(conduit_node* stats)

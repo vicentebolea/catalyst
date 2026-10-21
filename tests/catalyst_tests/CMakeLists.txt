@@ -48,6 +48,21 @@ target_link_libraries(test_catalyst_async catalyst::catalyst)
 add_test(NAME catalyst-async COMMAND test_catalyst_async)
 catalyst_test_use_stub_backend(catalyst-async)
 
+if (CATALYST_USE_MPI)
+  add_executable(test_catalyst_async_mpi test_catalyst_async_mpi.cpp)
+  target_compile_features(test_catalyst_async_mpi PRIVATE cxx_std_17)
+  target_link_libraries(test_catalyst_async_mpi catalyst::catalyst MPI::MPI_C)
+  add_test(
+    NAME    catalyst-async-mpi
+    COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 4 ${MPIEXEC_PREFLAGS}
+            $<TARGET_FILE:test_catalyst_async_mpi> ${MPIEXEC_POSTFLAGS}
+            "$<TARGET_FILE_DIR:catalyst-async-mpi>")
+  set_tests_properties(catalyst-async-mpi
+    PROPERTIES
+      SKIP_RETURN_CODE 125)
+  catalyst_test_use_stub_backend(catalyst-async-mpi)
+endif ()
+
 
 if(CATALYST_WRAP_PYTHON)
   catalyst_add_python_test(SCRIPT catalyst_conduit/test_conduit_import.py
