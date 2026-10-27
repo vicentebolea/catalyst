@@ -43,12 +43,19 @@ extern "C"
 
     int (*allreduce_min_int)(int64_t comm_f, int local, int* out);
     int (*bcast_int)(int64_t comm_f, int* value, int root);
+
+    /** Duplicates `comm_f`; `*out_f` is an `MPI_Comm_c2f` handle to release with `comm_free`. */
+    int (*comm_dup)(int64_t comm_f, int64_t* out_f);
+    /** Frees a communicator returned by `comm_dup`. */
+    int (*comm_free)(int64_t comm_f);
+    /** Sets `*is_multiple` non-zero when MPI provides `MPI_THREAD_MULTIPLE`. */
+    int (*query_thread_multiple)(int* is_multiple);
   };
 
   // NOLINTNEXTLINE(performance-enum-size): C ABI boundary; `version` above is int
   enum
   {
-    CATALYST_MPI_OPS_VERSION = 1
+    CATALYST_MPI_OPS_VERSION = 2
   };
 
   /** Entry point exported by `libcatalyst_mpi`; the table is owned by the module. */

@@ -106,7 +106,7 @@ int catalyst_mpi_load(void)
   }
 
   if (!ops->is_usable || !ops->comm_rank || !ops->comm_size || !ops->allreduce_min_int ||
-    !ops->bcast_int)
+    !ops->bcast_int || !ops->comm_dup || !ops->comm_free || !ops->query_thread_multiple)
   {
     fprintf(stderr,
       "catalyst: `%s` reports MPI operations version %d but does not provide every operation\n",

@@ -212,7 +212,11 @@ struct CatalystAsyncContext
   // Worker thread affinity tracking
   std::atomic<int> worker_pinned_core{ -1 }; // -1 = not pinned
 
+  // Communicator for the skip decisions, and the one passed to the
+  // implementation; duplicates of the simulation's when `owns_mpi_comms`.
   int64_t mpi_comm = CATALYST_MPI_NO_COMM;
+  int64_t impl_mpi_comm = CATALYST_MPI_NO_COMM;
+  bool owns_mpi_comms = false;
 };
 
 CatalystAsyncContext g_ctx;
@@ -222,6 +226,60 @@ CatalystAsyncContext g_ctx;
 {
   const struct catalyst_mpi_ops* ops = catalyst_mpi_get_loaded_ops();
   return (ops && ops->is_usable()) ? ops : nullptr;
+}
+
+// In async mode, the simulation and the skip decisions make collectives on the
+// simulation thread while the implementation makes its own on the worker thread.
+// MPI matches the collectives on a communicator in the order they are called on
+// each rank, whatever the thread, so collectives of both threads would match
+// across ranks, giving wrong results or deadlocks. Instead, the skip decisions
+// and the implementation each use a duplicate of the simulation's communicator.
+// Duplicating is collective on that communicator, so this runs on the
+// simulation thread, before the worker starts.
+void duplicate_mpi_comms()
+{
+  g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+  g_ctx.owns_mpi_comms = false;
+  const struct catalyst_mpi_ops* ops = mpi_ops();
+  if (!ops || g_ctx.mpi_comm == CATALYST_MPI_NO_COMM)
+  {
+    return;
+  }
+
+  int64_t skip_comm = CATALYST_MPI_NO_COMM;
+  int64_t impl_comm = CATALYST_MPI_NO_COMM;
+  if (ops->comm_dup(g_ctx.mpi_comm, &skip_comm) != CATALYST_MPI_OK)
+  {
+    std::cerr << "catalyst_async: could not duplicate the MPI communicator; the skip decisions "
+                 "and the implementation share it with the simulation\n";
+    return;
+  }
+  if (ops->comm_dup(g_ctx.mpi_comm, &impl_comm) != CATALYST_MPI_OK)
+  {
+    std::cerr << "catalyst_async: could not duplicate the MPI communicator; the skip decisions "
+                 "and the implementation share it with the simulation\n";
+    ops->comm_free(skip_comm);
+    return;
+  }
+  g_ctx.mpi_comm = skip_comm;
+  g_ctx.impl_mpi_comm = impl_comm;
+  g_ctx.owns_mpi_comms = true;
+}
+
+// Frees the communicators of duplicate_mpi_comms(), once the worker is done.
+void free_mpi_comms()
+{
+  if (g_ctx.owns_mpi_comms)
+  {
+    if (const struct catalyst_mpi_ops* ops = mpi_ops())
+    {
+      ops->comm_free(g_ctx.mpi_comm);
+      ops->comm_free(g_ctx.impl_mpi_comm);
+    }
+  }
+  g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
+  g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+  g_ctx.owns_mpi_comms = false;
 }
 
 // ============================================================================
@@ -1245,6 +1303,34 @@ void print_stats()
   }
 }
 
+// Async execution has two threads making MPI calls at once: the skip decision on
+// the simulation's thread and the implementation's collectives on the worker. MPI
+// allows that only under MPI_THREAD_MULTIPLE, so run synchronously when the
+// simulation initialized MPI at a lower level.
+void disable_async_without_thread_multiple()
+{
+  const struct catalyst_mpi_ops* ops = mpi_ops();
+  if (!ops)
+  {
+    return;
+  }
+
+  int is_multiple = 0;
+  if (ops->query_thread_multiple(&is_multiple) == CATALYST_MPI_OK && is_multiple)
+  {
+    return;
+  }
+
+  int rank = 0;
+  if (ops->comm_rank(g_ctx.mpi_comm, &rank) != CATALYST_MPI_OK || rank == 0)
+  {
+    std::cerr << "catalyst_async: MPI was initialized without MPI_THREAD_MULTIPLE, which async "
+                 "execution requires; running synchronously. Initialize MPI with "
+                 "MPI_Init_thread(..., MPI_THREAD_MULTIPLE, ...) to use async execution.\n";
+  }
+  g_ctx.config.enabled = false;
+}
+
 } // anonymous namespace
 
 // ============================================================================
@@ -1275,6 +1361,11 @@ extern "C"
 
     load_config(params);
 
+    if (g_ctx.config.enabled)
+    {
+      disable_async_without_thread_multiple();
+    }
+
     if (!g_ctx.config.enabled)
     {
       if (g_ctx.config.verbose)
@@ -1304,6 +1395,8 @@ extern "C"
 
     // Detect GPU runtime (dlopen-based, no build dependency)
     init_gpu_runtime();
+
+    duplicate_mpi_comms();
 
     // Start worker thread
     g_ctx.worker_thread = std::thread(worker_loop);
@@ -1345,6 +1438,10 @@ extern "C"
       {
         conduit::cpp_node(const_cast<conduit_node*>(params))->compact_to(item.data);
       }
+      if (g_ctx.impl_mpi_comm != CATALYST_MPI_NO_COMM)
+      {
+        item.data["catalyst/mpi_comm"].set_int64(g_ctx.impl_mpi_comm);
+      }
 
       {
         const std::scoped_lock lock(g_ctx.queue_mutex);
@@ -1365,6 +1462,11 @@ extern "C"
         {
           g_ctx.worker_thread.join();
         }
+        // Freeing the communicators is collective, and initialization may have
+        // succeeded on other ranks, so they are left to MPI_Finalize.
+        g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
+        g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+        g_ctx.owns_mpi_comms = false;
         g_ctx.initializing = false;
         return init_status;
       }
@@ -1401,6 +1503,21 @@ extern "C"
       std::cerr << "catalyst_async: WARNING: impl_execute function pointer changed unexpectedly\n";
     }
     g_ctx.impl_execute = impl_execute;
+
+    // A flush waits for all queued work and is not itself queued. A node that also
+    // carries channels is then executed as a normal step and waited for.
+    const conduit::Node& request = *conduit::cpp_node(const_cast<conduit_node*>(params));
+    const bool flush = request.has_path("catalyst/async/flush") &&
+      request["catalyst/async/flush"].dtype().is_integer() &&
+      request["catalyst/async/flush"].to_int64() != 0;
+    if (flush)
+    {
+      catalyst_async_flush();
+      if (!request.has_path("catalyst/channels"))
+      {
+        return catalyst_status_ok;
+      }
+    }
 
     // ----------------------------------------------------------------
     // Determine if we can enqueue (queue has space)
@@ -1476,15 +1593,9 @@ extern "C"
 
     g_ctx.queue_cv.notify_one();
 
-    // Check for flush request in params
-    // catalyst/async/flush = 1 means wait for all work to complete before returning
-    if (src.has_path("catalyst/async/flush"))
+    if (flush)
     {
-      const auto& flush_node = src["catalyst/async/flush"];
-      if (flush_node.dtype().is_integer() && flush_node.to_int64() != 0)
-      {
-        catalyst_async_flush();
-      }
+      catalyst_async_flush();
     }
 
     return catalyst_status_ok;
@@ -1596,10 +1707,10 @@ extern "C"
     }
 
     print_stats();
+    free_mpi_comms();
 
     g_ctx.initialized = false;
     g_ctx.impl_execute = nullptr;
-    g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
 
     return fin_status;
   }
@@ -1631,7 +1742,11 @@ extern "C"
 
     g_ctx.initialized = false;
     g_ctx.impl_execute = nullptr;
+    // Freeing the communicators is collective, and the other ranks may not be
+    // aborting, so they are left to MPI_Finalize.
     g_ctx.mpi_comm = CATALYST_MPI_NO_COMM;
+    g_ctx.impl_mpi_comm = CATALYST_MPI_NO_COMM;
+    g_ctx.owns_mpi_comms = false;
   }
 
   void catalyst_async_get_stats(conduit_node* stats)

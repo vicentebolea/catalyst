@@ -39,6 +39,8 @@ Design Principles
 **Transparent to adaptors.** Existing adaptor code calls
 ``catalyst_execute()`` exactly as before. The async machinery is entirely
 within ``libcatalyst``; no adaptor or implementation changes are required.
+A simulation that uses MPI must initialize it with ``MPI_THREAD_MULTIPLE``
+(see `MPI and Threads`_).
 
 **Transparent to implementations.** ParaView Catalyst, Ascent, or any custom
 implementation receives ``impl->execute()`` calls as usual, unaware that
@@ -147,6 +149,44 @@ Single-rank execution has no collective ordering concern.
 The MPI communicator is obtained from ``params["catalyst/mpi_comm"]`` during
 ``catalyst_initialize()``. If not provided, ``MPI_COMM_WORLD`` is used as
 a fallback (which is correct for the vast majority of HPC codes).
+
+MPI and Threads
+===============
+
+In async mode, two threads make MPI calls at the same time: the simulation's
+thread (its own communication and the skip decision above) and the worker
+thread (the implementation's collectives, such as ParaView's compositing). MPI
+allows this only when it was initialized with ``MPI_THREAD_MULTIPLE``:
+
+.. code-block:: c
+
+   int provided;
+   MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
+
+``catalyst_initialize()`` checks the level with ``MPI_Query_thread``. If MPI is
+initialized below ``MPI_THREAD_MULTIPLE``, Catalyst prints a warning and runs
+synchronously. Some MPI implementations need more than the request; Cray MPICH,
+for example, provides ``MPI_THREAD_MULTIPLE`` only when
+``MPICH_MAX_THREAD_SAFETY=multiple`` is set.
+
+A simulation that does not initialize MPI before ``catalyst_initialize()`` is
+treated as single-process: the skip decision is made locally, and only the
+worker thread makes MPI calls (for example when ParaView initializes MPI
+itself).
+
+The two threads must also not make collectives on the same communicator. MPI
+matches the collectives on a communicator in the order they are called on each
+rank, whatever the thread, so a collective of the simulation thread on one rank
+could match one of the worker thread on another rank, giving wrong results or
+deadlocks. In async mode, ``catalyst_initialize()`` therefore duplicates the
+communicator: one duplicate for the skip decisions, and one passed to the
+implementation as ``catalyst/mpi_comm``. ``catalyst_finalize()`` frees both.
+The simulation keeps using its communicator as before; adaptors need no changes.
+
+The duplicate protects the collectives made through ``catalyst/mpi_comm``. A
+pipeline that makes collectives on ``MPI_COMM_WORLD`` directly, for example with
+mpi4py in a Python script, still shares it with a simulation that uses
+``MPI_COMM_WORLD``.
 
 
 Thread Safety
@@ -273,7 +313,7 @@ preserving ABI stability. Control is via params:
 
    conduit_node* about = conduit_node_create();
    catalyst_about(about);
-   int enabled = conduit_node_fetch_path_as_int64(about, "catalyst/async/enabled");
+   int enabled = conduit_node_fetch_path_as_int(about, "catalyst/async/enabled");
    conduit_node_destroy(about);
 
 **Flush pending work** via params to ``catalyst_execute()``:
@@ -284,6 +324,11 @@ preserving ABI stability. Control is via params:
    conduit_node_set_path_int64(params, "catalyst/async/flush", 1);
    catalyst_execute(params);  // Waits for all pending work to complete
    conduit_node_destroy(params);
+
+A flush is not passed to the implementation. If the same node also has
+``catalyst/channels``, Catalyst first waits for pending work, then executes the
+node as a timestep and waits for it as well. Call flush on every rank at the
+same step.
 
 The flush is automatically performed by ``catalyst_finalize()``, so most
 simulations don't need to call it explicitly. Use flush if you need
@@ -366,7 +411,7 @@ Usage Examples
    params["catalyst/async/verbose"] = 1;
    catalyst_initialize(conduit::c_node(&params));
 
-**Adaptor code — no changes needed:**
+**Adaptor code: no changes needed** (with MPI initialized at ``MPI_THREAD_MULTIPLE``):
 
 .. code-block:: cpp
 

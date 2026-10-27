@@ -90,6 +90,41 @@ static int shim_bcast_int(int64_t comm_f, int* value, int root)
   return err == MPI_SUCCESS ? CATALYST_MPI_OK : CATALYST_MPI_FAIL;
 }
 
+static int shim_comm_dup(int64_t comm_f, int64_t* out_f)
+{
+  MPI_Comm comm = resolve_comm(comm_f);
+  if (comm == MPI_COMM_NULL)
+  {
+    return CATALYST_MPI_FAIL;
+  }
+  MPI_Comm dup = MPI_COMM_NULL;
+  if (MPI_Comm_dup(comm, &dup) != MPI_SUCCESS)
+  {
+    return CATALYST_MPI_FAIL;
+  }
+  *out_f = (int64_t)MPI_Comm_c2f(dup);
+  return CATALYST_MPI_OK;
+}
+
+static int shim_comm_free(int64_t comm_f)
+{
+  MPI_Comm comm = resolve_comm(comm_f);
+  if (comm == MPI_COMM_NULL || comm == MPI_COMM_WORLD)
+  {
+    return CATALYST_MPI_FAIL;
+  }
+  const int err = MPI_Comm_free(&comm);
+  return err == MPI_SUCCESS ? CATALYST_MPI_OK : CATALYST_MPI_FAIL;
+}
+
+static int shim_query_thread_multiple(int* is_multiple)
+{
+  int provided = MPI_THREAD_SINGLE;
+  const int err = MPI_Query_thread(&provided);
+  *is_multiple = provided == MPI_THREAD_MULTIPLE;
+  return err == MPI_SUCCESS ? CATALYST_MPI_OK : CATALYST_MPI_FAIL;
+}
+
 static const struct catalyst_mpi_ops catalyst_mpi_ops_table = {
   CATALYST_MPI_OPS_VERSION,
   shim_is_usable,
@@ -97,6 +132,9 @@ static const struct catalyst_mpi_ops catalyst_mpi_ops_table = {
   shim_comm_size,
   shim_allreduce_min_int,
   shim_bcast_int,
+  shim_comm_dup,
+  shim_comm_free,
+  shim_query_thread_multiple,
 };
 
 CATALYST_MPI_EXPORT const struct catalyst_mpi_ops* catalyst_mpi_get_ops(void)
