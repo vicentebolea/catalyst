@@ -1,0 +1,16 @@
+# Include the github-sync component
+include:
+  - component: $CI_SERVER_FQDN/vbolea/gh-gl-sync/github-sync@~latest
+    inputs:
+      github_project: vicentebolea/catalyst
+      gitlab_host: https://gitlab.kitware.com/
+      gitlab_project: vbolea/catalyst-mirror
+      gitlab_repo: git@gitlab.kitware.com:paraview/catalyst.git
+      job_stage: .pre
+      prereq_check: format
+      status_context: "Frank CI"
+      sync_draft_prs: true
+      tags: [ 'hpsf', 'hpsf-aarch64' ]
+
+    rules:
+      - if: $CI_SERVER_HOST == "gitlab.kitware.com"

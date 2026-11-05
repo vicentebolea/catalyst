@@ -3,11 +3,13 @@ include:
     - local: .gitlab/rules.yml
     - local: .gitlab/artifacts.yml
     - local: .gitlab/release.yml
+    - local: .gitlab/sync-github.yml
 
     # OS builds.
     - local: .gitlab/os-linux.yml
     - local: .gitlab/os-macos.yml
     - local: .gitlab/os-windows.yml
+    - local: .gitlab/sync-github.yml
 
 stages:
     - build-test
